@@ -75,17 +75,16 @@
 		
 		/* Fetches a single result 
 		*/
-		public function GetDataRow($sql){
+		public function getDataRow($sql){
 			try{
 				$result = mysql_query($sql) or die(mysql_error());
-				$row = mysql_fetch_array($result);
-				return $row[0];
+				return mysql_fetch_array($result);
 			}catch (Exeception $e){
 				
 			}
 		}
 		
-		public function Execute($Sql){
+		public function execute($Sql){
 			try{
 				// We can't execute a SELECT in this function as it doesn't return anything.
 				$pos = strpos($Sql,"SELECT");
@@ -94,9 +93,9 @@
 						$query = mysql_query($Sql);
 						
 						if(!$query) {
-							throw new Exception(mysql_error($query));
+							throw new Exception(mysql_error());
 						} else {
-							return mysql_affected_rows($query);
+							return mysql_affected_rows();
 						}
 					} else {
 						throw new Exception('No DB Connection');

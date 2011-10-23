@@ -21,14 +21,10 @@
 		public static function getDB() {
 			if(self::$db == null) {
 				$db = new DB(self::db_name, self::db_host, self::db_user, self::db_pass);
-
 				self::$db = $db;
 			}
+			
 			return self::$db;
 		}
 	}
-	
-	$app = new App();
-	$app::getDB()->getDataRow("SELECT * FROM user");
-	
 ?>
