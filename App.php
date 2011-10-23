@@ -9,29 +9,26 @@
 	*/
 	require('DB.php');
 
-	public static class App {
+	class App {
 		// DB connection details 
-		private static const $db_name = 'sales' 
-		private static const $db_host = 'localhost' 
-		private static const $db_user = 'root' 
-		private static const $db_pass = '' 
+		const db_name = 'sales';
+		const db_host = 'localhost';
+		const db_user = 'root';
+		const db_pass = '';
 		// DB connection details end
 		private static $db;
 	
-		public static getDB() {
+		public static function getDB() {
 			if(self::$db == null) {
-				DB::$DB_NAME = self::$db_name;
-				DB::$DB_HOST = self::$db_host;
-				DB::$DB_USER = self::$db_user;
-				DB::$DB_PASS = self::$db_pass;
-				self::$db = DB::getInstance();
+				$db = new DB(self::db_name, self::db_host, self::db_user, self::db_pass);
+
+				self::$db = $db;
 			}
-			
 			return self::$db;
 		}
 	}
 	
 	$app = new App();
-	$app::getDB();
+	$app::getDB()->getDataRow("SELECT * FROM user");
 	
 ?>

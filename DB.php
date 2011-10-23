@@ -14,15 +14,17 @@
 		public $DB_PASS;
 		public $DB_USER;
 		
-		function __construct($DB_NAME,$DB_HOST,$DB_PASS,$DB_USER) {
+		public function __construct($DB_NAME,$DB_HOST, $DB_USER, $DB_PASS) {
 			//Setup database Connection
 			$this->DB_NAME = $DB_NAME;
 			$this->DB_HOST = $DB_HOST;
 			$this->DB_PASS = $DB_PASS;
 			$this->DB_USER = $DB_USER;
+			
+			return self::getInstance();
 		}
 		
-		private function DAL() {
+		public function DAL() {
 			try{
 				//Setup Database connection.
 				if ($this->conn == null) {
@@ -37,8 +39,7 @@
 		/* 	If there is no connection, this will start a new one.
 			If there is already a connection, this will return it. 
 		*/
-		public static function getInstance() {
-			
+		public function getInstance() {
 			if ($this->conn == null){	
 				return $this->DAL();	
 			}else{
@@ -61,22 +62,22 @@
 							// This adds a result to the array to return
 							array_push($toReturn,$row);
 						}
-					}
+					} else {
+						throw new Exception('No DB Connection');
+					}	
+					
 					return $toReturn;
-				} else {
-					throw new Exception('No DB Connection');
-				}	
+				
 			} catch (Exception $e) {
 				
 			}
-			
 		}
 		
 		/* Fetches a single result 
 		*/
-		public function GetDataRow($Sql){
+		public function GetDataRow($sql){
 			try{
-				$result = mysql_query($sql);
+				$result = mysql_query($sql) or die(mysql_error());
 				$row = mysql_fetch_array($result);
 				return $row[0];
 			}catch (Exeception $e){
@@ -90,7 +91,13 @@
 				$pos = strpos($Sql,"SELECT");
 				if($pos === false) {
 					if ($this->conn != null) {
-						mysql_query($Sql) or throw new mysql_error();
+						$query = mysql_query($Sql);
+						
+						if(!$query) {
+							throw new Exception(mysql_error($query));
+						} else {
+							return mysql_affected_rows($query);
+						}
 					} else {
 						throw new Exception('No DB Connection');
 					}
