@@ -22,7 +22,6 @@ class User {
 		$sql = "SELECT * FROM user WHERE userId = '".mysql_real_escape_string($userId)."'";
 		$row = $this->conn->getDataRow($sql);
 		$this->getRow($row);
-		return $row;
 	}
 	
 	private function getRow($row){
