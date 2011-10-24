@@ -107,5 +107,12 @@
 				
 			}
 		}
+		
+		public function getNumResults($sql) {
+			if(strpos($sql, "SELECT") === false) 
+				throw new Exception('getNumResults() : Can only be used for SELECT statements.');
+			$query = mysql_query($sql);
+			return mysql_num_rows($query);
+		}
 	}
 ?>
