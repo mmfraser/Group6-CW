@@ -18,12 +18,16 @@ class User {
 		$this->active = $Active;
 	}
 
+	/*	This function gets the object with data given the userId.
+	*/
 	public function populate($userId){
 		$sql = "SELECT * FROM user WHERE userId = '".mysql_real_escape_string($userId)."'";
 		$row = $this->conn->getDataRow($sql);
 		$this->getRow($row);
 	}
 	
+	/*	This function populates the object with data given a datarow
+	*/
 	private function getRow($row){
 		$this->userId = $row['userId'];
 		$this->forename = $row['forename'];
@@ -33,7 +37,14 @@ class User {
 		$this->isLoaded = true;
 	}
 
-	public function save() {		
+	/* 	This function allows the object to be saved back to the database, whether it is a new object or 
+		an object being updated.
+	*/
+	public function save() {	
+		if($this->forename == null || $this->surname == null || $this->password == null || $this->active == null) {
+			throw new exception('One or more required fields are not completed.');
+		}
+		
 		if ($this->isLoaded === true) {
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
@@ -42,7 +53,6 @@ class User {
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
 		} else {
-			// TODO: Some validation here.
 			$SQL = "INSERT INTO user (forename, surname, password, active) VALUES (
 					'".mysql_real_escape_string($this->forename)."', 
 					'".mysql_real_escape_string($this->surname)."', 
@@ -51,6 +61,18 @@ class User {
 		}
 		
 		return $this->conn->execute($SQL);
+	}
+	
+	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
+	*/
+	public function toString() {
+		$str = "<br />";
+		$str .= "<br />userId: " . $this->userId;
+		$str .= "<br />forename: " . $this->forename;
+		$str .= "<br />surname: " . $this->surname;
+		$str .= "<br />password: " . $this->password;
+		$str .= "<br />active: " . $this->active;
+		return $str;
 	}
 }
 
