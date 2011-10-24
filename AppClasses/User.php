@@ -73,6 +73,7 @@ class User {
 		$str .= "<br />surname: " . $this->surname;
 		$str .= "<br />password: " . $this->password;
 		$str .= "<br />active: " . $this->active;
+		return $str;
 	}
 }
 
