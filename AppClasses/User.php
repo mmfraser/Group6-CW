@@ -1,13 +1,13 @@
 <?php
 	/*
 		User.php
-		Created by: Marc Fraser (23/10/11)
+		Created by: Marc (23/10/11)
 		Description: User object
 		Update log:
 			23/10/11 (MF) - Creation.
 			
 	*/
-include('App.php');
+require_once('App.php');
 
 class User {
 	private $userId;
@@ -16,6 +16,7 @@ class User {
   	public $password;
   	public $active;
 	public $username;
+	private $oldPassword;
   	public $isLoaded;
 
 	function __construct($userId = "", $userName = "", $Forename = "", $Surname = "", $Password = "", $Active = "") {
@@ -33,6 +34,8 @@ class User {
 	public function populateId($userId){
 		$sql = "SELECT * FROM user WHERE userId = '".mysql_real_escape_string($userId)."'";
 		$row = $this->conn->getDataRow($sql);
+		if($row == null)
+			return false;
 		$this->getRow($row);
 	}
 	
@@ -41,9 +44,11 @@ class User {
 	public function populateUsername($username){
 		$sql = "SELECT * FROM user WHERE username = '".mysql_real_escape_string($username)."'";
 		$row = $this->conn->getDataRow($sql);
+		if($row == null)
+			return false;
 		$this->getRow($row);
 	}
-	
+		
 	/*	This function populates the object with data given a datarow.
 	*/
 	private function getRow($row){
@@ -51,6 +56,7 @@ class User {
 		$this->forename = $row['forename'];
 		$this->surname = $row['surname'];
 		$this->password = $row['password'];
+		$this->oldPassword = $row['password'];
 		$this->active = $row['active'];
 		$this->username = $row['username'];
 		$this->isLoaded = true;
@@ -73,10 +79,16 @@ class User {
 		}
 		
 		if ($this->isLoaded === true) {
+			if($this->oldPassword == $this->password) {
+				$pass = $this->password;
+			} else {
+				$pass = App::secureString($this->password);
+			}
+		
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
 					surname = '".mysql_real_escape_string($this->surname)."', 
-					password = '".mysql_real_escape_string($this->password)."', 
+					password = '".$pass."', 
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
 		} else {
@@ -86,7 +98,7 @@ class User {
 			$SQL = "INSERT INTO user (forename, surname, password, active, username) VALUES (
 					'".mysql_real_escape_string($this->forename)."', 
 					'".mysql_real_escape_string($this->surname)."', 
-					'".mysql_real_escape_string($this->password)."', 
+					'".App::secureString($this->password)."', 
 					'".mysql_real_escape_string($this->active)."', 
 					'".mysql_real_escape_string($this->username)."')";
 		}
@@ -108,7 +120,7 @@ class User {
 	}
 }
 
-$test = new User();
+/*$test = new User();
 $test->username = "Marc1";
 $test->forename = "Marc1";
 $test->surname = "Fraser1";
@@ -117,6 +129,6 @@ $test->active = true;
 //$test->save();
 $test->populateUsername("Marc1");
 print "<br />" . $test->forename; 
-print $test->toString();
+print $test->toString(); */
 
 ?>

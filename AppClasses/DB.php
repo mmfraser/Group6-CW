@@ -1,7 +1,7 @@
 <?php
 	/*
 		DB.php
-		Created by: Marc Fraser (23/10/11)
+		Created by: Marc (23/10/11)
 		Description: Used to allow connections to the Database.
 		Update log:
 			23/10/11 (MF) - Adding basic connect select and execute functionality. TODO: handle errors
