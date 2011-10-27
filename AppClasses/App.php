@@ -9,6 +9,7 @@
 	*/
 	require_once('DB.php');
 	require_once('Authenticate.php');
+	require_once('page.php');
 	
 	class App {
 		// DB connection details 
@@ -47,6 +48,6 @@
 		}
 	}
 	
-	App::authUser("Marc", "test");
+	//App::authUser("Marc", "test");
 
 ?>
