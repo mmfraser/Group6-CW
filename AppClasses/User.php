@@ -85,9 +85,11 @@ class User {
 				$pass = App::secureString($this->password);
 			}
 		
+		print "here";
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
 					surname = '".mysql_real_escape_string($this->surname)."', 
+					username = '".mysql_real_escape_string($this->username)."', 
 					password = '".$pass."', 
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
@@ -102,8 +104,9 @@ class User {
 					'".mysql_real_escape_string($this->active)."', 
 					'".mysql_real_escape_string($this->username)."')";
 		}
-		
+
 		return $this->conn->execute($SQL);
+		
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
@@ -121,14 +124,18 @@ class User {
 }
 
 /*$test = new User();
-$test->username = "Marc1";
-$test->forename = "Marc1";
-$test->surname = "Fraser1";
-$test->password = "test";
+$test->populateUsername("Marc2");
+$test->username = "Marc2";
+$test->forename = "Marc2";
+$test->surname = "Fraser2";
+$test->password = "test2";
 $test->active = true;
-//$test->save();
-$test->populateUsername("Marc1");
-print "<br />" . $test->forename; 
+$test->save(); 
+$test->username = "marc3";
+$test->save();
+
+//$test->populateUsername("marc3");
+//print "<br />" . $test->forename; 
 print $test->toString(); */
 
 ?>
