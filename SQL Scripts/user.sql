@@ -1,3 +1,5 @@
+USE sales;
+
 CREATE TABLE IF NOT EXISTS `user` (
   `userId` smallint(6) NOT NULL AUTO_INCREMENT,
   `forename` varchar(50) NOT NULL,
