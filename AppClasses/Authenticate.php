@@ -1,5 +1,5 @@
 <?php
-	require_once('App.php');
+	require_once('../App.php');
 	require_once('User.php');
 	
 	// TODO: add in active/disactive functionality.......
@@ -7,8 +7,11 @@
 		private $user;
 		private $isAuthenticated;
 		
-		public function Authenticate() {
+		public function __construct() {
 			$this->conn = App::getDB();
+		}
+		
+		public function Authenticate() {
 			$this->user = null;
 			$this->isAuthenticated = false;
 		}	
@@ -27,7 +30,8 @@
 				$user = new User();
 				$user->populateId($row['userId']);
 				$this->user = $user;
-				return true;
+				$this->isAuthenticated = true;
+				$_SESSION['loggedIn'] = serialize($this);
 			} 
 		}
 		

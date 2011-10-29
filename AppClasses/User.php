@@ -7,7 +7,7 @@
 			23/10/11 (MF) - Creation.
 			
 	*/
-require_once('App.php');
+require_once('../App.php');
 
 class User {
 	private $userId;
@@ -84,8 +84,7 @@ class User {
 			} else {
 				$pass = App::secureString($this->password);
 			}
-		
-		print "here";
+	
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
 					surname = '".mysql_real_escape_string($this->surname)."', 
@@ -94,8 +93,10 @@ class User {
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
 		} else {
-			if(!$this->validUsername())
+			if(!$this->validUsername()) {
 				throw new Exception('Username already in use.');
+				//return false;
+			}
 		
 			$SQL = "INSERT INTO user (forename, surname, password, active, username) VALUES (
 					'".mysql_real_escape_string($this->forename)."', 
@@ -103,6 +104,7 @@ class User {
 					'".App::secureString($this->password)."', 
 					'".mysql_real_escape_string($this->active)."', 
 					'".mysql_real_escape_string($this->username)."')";
+			$this->isLoaded = true;
 		}
 
 		return $this->conn->execute($SQL);
@@ -115,8 +117,8 @@ class User {
 		$str = "<br />";
 		$str .= "<br />userId: " . $this->userId;
 		$str .= "<br />username: " . $this->username;
-		$str .= "<br />forename: " . $this->forename;
 		$str .= "<br />surname: " . $this->surname;
+		$str .= "<br />forename: " . $this->forename;
 		$str .= "<br />password: " . $this->password;
 		$str .= "<br />active: " . $this->active;
 		return $str;
@@ -124,15 +126,15 @@ class User {
 }
 
 /*$test = new User();
-$test->populateUsername("Marc2");
-$test->username = "Marc2";
+//$test->populateUsername("Marc2");
+$test->username = "Marc5";
 $test->forename = "Marc2";
 $test->surname = "Fraser2";
-$test->password = "test2";
+$test->password = "test";
 $test->active = true;
 $test->save(); 
-$test->username = "marc3";
-$test->save();
+//$test->username = "marc3";
+
 
 //$test->populateUsername("marc3");
 //print "<br />" . $test->forename; 
