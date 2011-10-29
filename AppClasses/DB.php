@@ -9,42 +9,26 @@
 
 	class DB {
 		private $conn;
-		public $DB_NAME;
-		public $DB_HOST;
-		public $DB_PASS;
-		public $DB_USER;
+		private static $obj;
+		public $DB_NAME = 'sales';
+		public $DB_HOST = 'localhost';
+		public $DB_PASS = '';
+		public $DB_USER = 'root';
 		
-		public function __construct($DB_NAME,$DB_HOST, $DB_USER, $DB_PASS) {
-			//Setup database Connection
-			$this->DB_NAME = $DB_NAME;
-			$this->DB_HOST = $DB_HOST;
-			$this->DB_PASS = $DB_PASS;
-			$this->DB_USER = $DB_USER;
-			
-			return self::getInstance();
+		public function __construct() {
+			$this->conn = mysql_connect($this->DB_HOST, $this->DB_USER, $this->DB_PASS) or die(mysql_error());
+				mysql_select_db($this->DB_NAME, $this->conn) or die(mysql_error());
 		}
 		
-		public function DAL() {
-			try{
-				//Setup Database connection.
-				if ($this->conn == null) {
-					$this->conn = mysql_connect($this->DB_HOST, $this->DB_USER, $this->DB_PASS) or die(mysql_error());
-					mysql_select_db($this->DB_NAME, $this->conn) or die(mysql_error());
-				}
-				return $this->conn;
-			} catch (Exception $e) {
-				
-			}	
-		}
 		/* 	If there is no connection, this will start a new one.
 			If there is already a connection, this will return it. 
 		*/
-		public function getInstance() {
-			if ($this->conn == null){	
-				return $this->DAL();	
-			}else{
-				return $this->conn;
-			}
+		public static function getInstance() {
+			if (self::$obj == null)
+				self::$obj = new DB;
+
+				
+			return self::$obj;
 		}
 		
 		public function getArrayFromDB($Sql){
