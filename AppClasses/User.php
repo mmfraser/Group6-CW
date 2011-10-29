@@ -51,7 +51,7 @@ class User {
 		
 	/*	This function populates the object with data given a datarow.
 	*/
-	private function getRow($row){
+	public function getRow($row){
 		$this->userId = $row['userId'];
 		$this->forename = $row['forename'];
 		$this->surname = $row['surname'];
@@ -74,9 +74,12 @@ class User {
 		an object being updated.
 	*/
 	public function save() {	
-		if($this->forename == null || $this->surname == null || $this->password == null || $this->active == null || $this->username == null) {
+		if($this->forename == null || $this->surname == null || $this->password == null || $this->username == null) {
 			throw new Exception('One or more required fields are not completed.');
 		}
+		
+		if($this->active == null)
+			$this->active = false;
 		
 		if ($this->isLoaded === true) {
 			if($this->oldPassword == $this->password) {
@@ -95,7 +98,6 @@ class User {
 		} else {
 			if(!$this->validUsername()) {
 				throw new Exception('Username already in use.');
-				//return false;
 			}
 		
 			$SQL = "INSERT INTO user (forename, surname, password, active, username) VALUES (

@@ -2,39 +2,91 @@
 	require_once('../App.php');
 
 	// Page PHP Backend Code Begin
-	$errorMsg = null;
-	if(!App::checkAuth()) {
-		// User not authenticated.
-		$errorMsg = 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=login.php">log in</a>.';
-	}
-	// Page PHP Backend Code End
+		$page = new Page();
+		$page->title = "User Management";
+		$page->getHeader();
+		
+		$errorMsg = null;
+		if(!App::checkAuth()) {
+			// User not authenticated.
+
+			print '<div class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span>You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=login.php">log in</a>.</span></div>';
+			$page->getFooter();
+			die();
+		}
 	
-	$page = new Page();
-	$page->title = "User Management";
-	$page->getHeader();
+		$allUsers = App::getDB()->getArrayFromDB("SELECT * FROM user");
+		$html = "";
+		
+		foreach($allUsers as $arr) {
+			$html .= "<tr>" . PHP_EOL;
+			$html .= "	<td>".$arr['username']."</td>" . PHP_EOL;
+			$html .= "	<td>".$arr['forename']."</td>" . PHP_EOL;
+			$html .= "	<td>".$arr['surname']."</td>" . PHP_EOL;
+			$html .= "	<td>".$arr['active']."</td>" . PHP_EOL;
+			$html .= '	<td class="options" style="width:20px;"><a href="modifyUser.php?userId='.$arr['userId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span></a></td>';
+			//$html .= '	<td><input type="checkbox" name="active" size="15" checked="'.$usr->active.'" /></td>' . PHP_EOL;
+			$html .= "</tr>" . PHP_EOL;
+		}
+	
+	// Page PHP Backend Code End
+
 ?>
 		<div class="ui-state-error ui-corner-all" style="<?php if($errorMsg == null) print "display:none;"?>"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span><?php print $errorMsg; ?></span></div>
 	
 		<script type="text/javascript">
-		
+			$(function() {
+				$("p.result").hide();
+				$( "div#tabs" ).tabs();
+				$("a#addUser").button().click(function() {
+				$( "#dialog-form" ).dialog( "open" );
 	
-		
-	$(function() {
-	
-	
-	
-		$( "div#tabs" ).tabs();
-		$("a#addUser").button();
-		$('#example').dataTable({
+			});
+				$(".options a").button();
+				$('#userlist').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
 				});
+				
+			
+			$( "#dialog-form" ).dialog({
+			autoOpen: false,
+			height: 300,
+			width: 350,
+			modal: true,
+			buttons: {
+				"Create Account": function() {
+					var $form = $( this ),
+					username = $form.find( 'input[name="username"]' ).val(),
+					forename = $form.find( 'input[name="forename"]' ).val(),
+					surname = $form.find( 'input[name="surname"]' ).val(),
+					password = $form.find( 'input[name="password"]' ).val(),
+					
+					active = $form.find( 'input[name="active"]' ).val(),
+					url = $form.attr( 'action' );
+
+					/* Send the data using post and put the results in a div */
+					$.post( "addUser.php?do=add", { username: username, password: password, forename: forename, surname: surname, active: active },
+					  function( data ) {			  
+						$("p.result").show();
+						$("span.result").empty().append(data);
+					  }
+					);
+				},
+				Cancel: function() {
+					location.reload();
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
 		
 		
 	});
-	</script>
+		</script>
 
-	
 	<div id="tabs">
 		<ul>
 			<li><a href="#tabs-1">View Users</a></li>
@@ -43,48 +95,65 @@
 		<div id="tabs-1">
 			<p><a id="addUser" href="#">Add New User</a></p>
 			
-		<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
-	<thead>
-		<tr>
-			<th>Username</th>
-			<th>Forename</th>
-			<th>Surname</th>
-			<th>Active</th>
-			
-		</tr>
+			<table cellpadding="0" cellspacing="0" border="0" class="display" id="userlist">
+				<thead>
+					<tr>
+						<th>Username</th>
+						<th>Forename</th>
+						<th>Surname</th>
+						<th>Active</th>
+						<th>Options</th>
+					</tr>
 
-	</thead>
-	<tbody>
-		<tr>
-			<td>Marc</td><td>Marc</td><td>Marc</td><td>Marc</td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr>
-			<th>Username</th>
-			<th>Forename</th>
-			<th>Surname</th>
-			<th>Active</th>
-		</tr>
-		
-	</tfoot>
-</table>
-
-			<p>Table of users here.</p>
+				</thead>
+				<tbody>
+					<?php print $html; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Username</th>
+						<th>Forename</th>
+						<th>Surname</th>
+						<th>Active</th>
+						<th>Options</th>
+					</tr>
+				</tfoot>
+			</table>
 		</div>
-<!--		<div id="tabs-2">
-			<form method="POST" action="?do=addUser&amp;tab=1">
-  Username: <input type="text" name="username" size="15" value="<?php if(isset($_POST['username'])) print $_POST['username']; ?>" /><br />
-   Forename: <input type="text" name="forname" size="15" value="<?php if(isset($_POST['forename'])) print $_POST['forename']; ?>" /><br />
-    Surname: <input type="text" name="surname" size="15" value="<?php if(isset($_POST['surname'])) print $_POST['surname']; ?>" /><br />
-	 Active: <input type="checkbox" name="active" size="15" checked="<?php if(isset($_POST['active'])) print $_POST['active']; ?>" /><br />
-  Password: <input type="password" name="password" size="15" /><br />
-  <input type="submit" value="Login" class="submit-button" />
-</form>
-		</div> -->
 		
+	<div id="dialog-form" title="Create new user">
+			<p class="validateTips">All form fields are required.</p>
+
+			<form method="POST" id="addUsr" action="?do=addUser&amp;tab=1">
+			<table>
+				<tr>
+					<td><label for="username">Username</label><td>
+					<td><input type="text" name="username" size="15" value="<?php print $username ?>" /></td>
+				</tr>
+				<tr>
+					<td><label for="forename">Forename</label><td>
+					<td><input type="text" name="forename" size="15" value="<?php print $forename ?>" /></td>
+				</tr>
+				<tr>
+					<td><label for="surname">Surname</label><td>
+					<td><input type="text" name="surname" size="15" value="<?php print $surname ?>" /></td>
+				</tr>
+				<tr>
+					<td><label for="username">Password</label><td>
+					<td><input type="password" name="password" size="15" value="<?php print $password ?>" /></td>
+				</tr>
+				<tr>
+					<td><label for="username">Active</label><td>
+					<td><input type="checkbox" name="active" size="15" checked="<?php print $active ?>" /></td>
+				</tr>
+			</table>
+		</form>
+
+		<p class="result"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+			<span class="result"></span></p>
+		</div>
 	</div>
-	
+
 	
 <?php	
 	$page->getFooter();

@@ -7,6 +7,7 @@
 			23/10/11 (MF) - Adding DB stuff.
 			
 	*/
+	error_reporting(E_ERROR | E_WARNING);
 	ob_start();
 	session_start();
 	require_once('AppClasses/DB.php');
