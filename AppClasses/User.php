@@ -77,9 +77,11 @@ class User {
 		if($this->forename == null || $this->surname == null || $this->password == null || $this->username == null) {
 			throw new Exception('One or more required fields are not completed.');
 		}
-		
+	
 		if($this->active == null)
-			$this->active = false;
+			$this->active = 0;
+			
+			print $this->active;
 		
 		if ($this->isLoaded === true) {
 			if($this->oldPassword == $this->password) {

@@ -34,7 +34,6 @@
 			$forename = $usr->forename;
 			$surname = $usr->surname;
 			$active = $usr->active;
-			print $active;
 			if($active == 1)
 				$active = "on";	
 			
@@ -49,10 +48,7 @@
 					$usr->active = false;
 				} else
 					$usr->active = true;
-				
-				$usr->password = $_POST['password'];
-				//print $usr->toString();
-				
+				$usr->password = $_POST['password'];			
 				$usr->save();
 				$infoMsg = "User updated successfully.";	
 			} catch (Exception $e) {
