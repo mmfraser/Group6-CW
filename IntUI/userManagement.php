@@ -25,7 +25,6 @@
 			$html .= "	<td>".$arr['surname']."</td>" . PHP_EOL;
 			$html .= "	<td>".$arr['active']."</td>" . PHP_EOL;
 			$html .= '	<td class="options" style="width:20px;"><a href="modifyUser.php?userId='.$arr['userId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span></a></td>';
-			//$html .= '	<td><input type="checkbox" name="active" size="15" checked="'.$usr->active.'" /></td>' . PHP_EOL;
 			$html .= "</tr>" . PHP_EOL;
 		}
 	
@@ -37,6 +36,7 @@
 		<script type="text/javascript">
 			$(function() {
 				$("p.result").hide();
+				$("img.spinningWheel").hide();
 				$( "div#tabs" ).tabs();
 				$("a#addUser").button().click(function() {
 				$( "#dialog-form" ).dialog( "open" );
@@ -56,18 +56,18 @@
 			modal: true,
 			buttons: {
 				"Create Account": function() {
+					$("img.spinningWheel").show();
 					var $form = $( this ),
 					username = $form.find( 'input[name="username"]' ).val(),
 					forename = $form.find( 'input[name="forename"]' ).val(),
 					surname = $form.find( 'input[name="surname"]' ).val(),
 					password = $form.find( 'input[name="password"]' ).val(),
-					
-					active = $form.find( 'input[name="active"]' ).val(),
-					url = $form.attr( 'action' );
+					active = $form.find( 'input[name="active"]' ).is(':checked');
 
 					/* Send the data using post and put the results in a div */
 					$.post( "addUser.php?do=add", { username: username, password: password, forename: forename, surname: surname, active: active },
-					  function( data ) {			  
+					  function( data ) {
+						$("img.spinningWheel").hide();					  
 						$("p.result").show();
 						$("span.result").empty().append(data);
 					  }
@@ -144,11 +144,11 @@
 				</tr>
 				<tr>
 					<td><label for="username">Active</label><td>
-					<td><input type="checkbox" name="active" size="15" checked="<?php print $active ?>" /></td>
+					<td><input type="checkbox" name="active" size="15"  /></td>
 				</tr>
 			</table>
 		</form>
-
+		<p><img src="../Images/spinningWheel.gif" class="spinningWheel" alt="Loading" /></p>
 		<p class="result"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
 			<span class="result"></span></p>
 		</div>

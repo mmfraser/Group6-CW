@@ -7,7 +7,11 @@ error_reporting(E_ERROR);
 		$usr->username = $_POST['username'];
 		$usr->forename = $_POST['forename'];
 		$usr->surname = $_POST['surname'];
-		$usr->active = $_POST['active'];
+		if($_POST['active'] == "true")
+			$usr->active = true;
+		else
+			$usr->active = false;
+			
 		$usr->password = $_POST['password'];
 		$usr->save();
 		

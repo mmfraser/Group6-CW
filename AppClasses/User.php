@@ -80,9 +80,7 @@ class User {
 	
 		if($this->active == null)
 			$this->active = 0;
-			
-			print $this->active;
-		
+
 		if ($this->isLoaded === true) {
 			if($this->oldPassword == $this->password) {
 				$pass = $this->password;

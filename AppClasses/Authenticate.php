@@ -20,7 +20,7 @@
 			if(is_null($username) || is_null($password)) 
 				return false;
 				
-			$query = "SELECT * FROM user WHERE username = '".mysql_real_escape_string($username)."' AND password = '".App::secureString($password)."'";
+			$query = "SELECT * FROM user WHERE username = '".mysql_real_escape_string($username)."' AND password = '".App::secureString($password)."' AND active=1";
 			
 			$row = $this->conn->getDataRow($query);
 			
