@@ -84,7 +84,10 @@
 						if(!$query) {
 							throw new Exception(mysql_error());
 						} else {
-							return mysql_affected_rows();
+							if(strpos($Sql, "INSERT") !== false)
+								return mysql_insert_id();
+							else
+								return mysql_affected_rows();
 						}
 					} else {
 						throw new Exception('No DB Connection');
@@ -93,7 +96,7 @@
 					throw new Exception('Cannot do SELECTs using this function.');
 				}
 			} catch (Exception $e) {
-				
+				throw $e;
 			}
 		}
 		

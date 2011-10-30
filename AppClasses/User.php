@@ -95,6 +95,7 @@ class User {
 					password = '".$pass."', 
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
+			$this->conn->execute($SQL);
 		} else {
 			if(!$this->validUsername()) {
 				throw new Exception('Username already in use.');
@@ -107,10 +108,8 @@ class User {
 					'".mysql_real_escape_string($this->active)."', 
 					'".mysql_real_escape_string($this->username)."')";
 			$this->isLoaded = true;
-		}
-
-		return $this->conn->execute($SQL);
-		
+			$this->userId = $this->conn->execute($SQL);
+		}		
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
