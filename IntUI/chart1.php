@@ -91,7 +91,11 @@ $myPicture->drawScale($Settings);
 $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
 
 $Config = "";
-$myPicture->drawSplineChart($Config);
+
+$function = "draw" . (string)$xml->chartType . "Chart";
+$myPicture->$function($Config);
+
+//$myPicture->draw{}Chart($Config);
 
 $Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_NOBORDER
 , "Mode"=>LEGEND_HORIZONTAL
