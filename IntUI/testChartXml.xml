@@ -1,0 +1,41 @@
+<chart>
+	<chartSeries>
+		<series>
+			<name>Sales</name>
+			<dbCol>noSales</dbCol>
+			<description>Number Sales</description>
+			<axis>0</axis>
+		</series>
+	</chartSeries>
+	<axes>
+		<axis>
+			<number>0</number>
+			<name>noSales</name>
+			<unit>CDs</unit>
+			<position>AXIS_POSITION_LEFT</position>
+		</axis>
+	</axes>
+	<image>
+		<xSize>700</xSize>
+		<ySize>300</ySize>
+	</image>
+	<legend>
+		<xPos>563</xPos>
+		<yPos>16</yPos>
+	</legend>
+	<abscissa>
+		<name>Month</name>
+		<dbCol>month</dbCol>
+	</abscissa>
+	<chartName>Sales over Time</chartName>
+	<chartType>Spline</chartType>
+	<sqlQuery>
+		<columns>
+			<column>noSales</column>
+			<column>month</column>
+		</columns>
+		<tables>
+			<table>sales</table>
+		</tables>
+	</sqlQuery>
+</chart>

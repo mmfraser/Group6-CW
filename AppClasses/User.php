@@ -5,7 +5,7 @@
 		Description: User object
 		Update log:
 			23/10/11 (MF) - Creation.
-			
+			30/10/11 (MF) - Adding group membership functionality.
 	*/
 require_once('../App.php');
 
@@ -18,6 +18,7 @@ class User {
 	public $username;
 	private $oldPassword;
   	public $isLoaded;
+	public $groupMembership = array();
 
 	function __construct($userId = "", $userName = "", $Forename = "", $Surname = "", $Password = "", $Active = "") {
 		$this->conn = App::getDB();
@@ -48,6 +49,16 @@ class User {
 			return false;
 		$this->getRow($row);
 	}
+	
+	/*	This function gets the user's group memberships and populates the array.
+	*/
+	public function getGroupMembership($userId) {
+		$sql = "SELECT groupId FROM groupmembership WHERE userId = '".mysql_real_escape_string($userId)."'";
+		$memberships = $this->conn->getArrayFromDB($sql);
+		foreach($memberships as $arr) {
+			$this->groupMembership[] = $arr['groupId'];
+		}
+	}
 		
 	/*	This function populates the object with data given a datarow.
 	*/
@@ -59,6 +70,7 @@ class User {
 		$this->oldPassword = $row['password'];
 		$this->active = $row['active'];
 		$this->username = $row['username'];
+		$this->getGroupMembership($this->userId);
 		$this->isLoaded = true;
 	}
 	
@@ -95,7 +107,17 @@ class User {
 					password = '".$pass."', 
 					active = ".mysql_real_escape_string($this->active)." 
 					WHERE userId = '".mysql_real_escape_string($this->userId)."'";
+					
 			$this->conn->execute($SQL);
+			
+			// Update user groups.
+			$SQL = "DELETE FROM groupmembership WHERE userId = '".$this->userId."'; "; 
+			$this->conn->execute($SQL);
+			
+			foreach($this->groupMembership as $arr) {
+				$SQL = "INSERT INTO groupmembership (userId, groupId) VALUES ('".$this->userId."','".$arr."') ";
+				$this->conn->execute($SQL);
+			}			
 		} else {
 			if(!$this->validUsername()) {
 				throw new Exception('Username already in use.');
@@ -122,23 +144,20 @@ class User {
 		$str .= "<br />forename: " . $this->forename;
 		$str .= "<br />password: " . $this->password;
 		$str .= "<br />active: " . $this->active;
+		$str .= "<br />groupMembership: " . print_r($this->groupMembership, true);
 		return $str;
 	}
 }
 
 /*$test = new User();
-//$test->populateUsername("Marc2");
-$test->username = "Marc5";
-$test->forename = "Marc2";
-$test->surname = "Fraser2";
-$test->password = "test";
-$test->active = true;
-$test->save(); 
+$test->populateUsername("Marc");
+
+//$test->save(); 
 //$test->username = "marc3";
 
 
 //$test->populateUsername("marc3");
 //print "<br />" . $test->forename; 
-print $test->toString(); */
+print $test->toString();  */
 
 ?>

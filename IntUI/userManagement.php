@@ -5,14 +5,10 @@
 		$page = new Page();
 		$page->title = "User Management";
 		$page->getHeader();
-		
-		$errorMsg = null;
+
 		if(!App::checkAuth()) {
 			// User not authenticated.
-
-			print '<div class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span>You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=login.php">log in</a>.</span></div>';
-			$page->getFooter();
-			die();
+			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=userManagement.php">log in</a>.');
 		}
 	
 		// Get the User list and populate table.
@@ -37,15 +33,13 @@
 			$groupHtml .= "<tr>" . PHP_EOL;
 			$groupHtml .= "		<td>" . $arr['name'] . "</td>" . PHP_EOL;
 			$groupHtml .= "		<td>" . $arr['description'] . "</td>" . PHP_EOL;
-			$groupHtml .= "		<td></td>" . PHP_EOL;
+			$groupHtml .= '		<td class="options" style="width:20px;"><a href="modifyGroup.php?groupId='.$arr['groupId'].'" title="Modify Group"><span class="ui-icon ui-icon-pencil"></span></a></td>' . PHP_EOL;
 			$groupHtml .= "</tr>". PHP_EOL;
 		}
 	
 	// Page PHP Backend Code End
 
 ?>
-		<div class="ui-state-error ui-corner-all" style="<?php if($errorMsg == null) print "display:none;"?>"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span><?php print $errorMsg; ?></span></div>
-	
 		<script type="text/javascript">
 			$(function() {
 				$("p.result").hide();
