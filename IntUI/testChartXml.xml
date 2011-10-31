@@ -1,3 +1,7 @@
+<!--
+	Marc Fraser's XML chart interface to pChart.  Only works in collaboration with chart.php (also authored by Marc Fraser, but uses the pChart libraries.
+-->
+
 <chart>
 	<chartSeries>
 		<series>
@@ -7,9 +11,9 @@
 			<axis>0</axis>
 		</series>
 		<series>
-			<name>Sales1</name>
+			<name>Sales</name>
 			<dbCol>noSales</dbCol>
-			<description>Number Sales1</description>
+			<description>Number Sales Test</description>
 			<axis>0</axis>
 		</series>
 	</chartSeries>
@@ -41,7 +45,7 @@
 		<dbCol>month</dbCol>
 	</abscissa>
 	<chartName>Sales over Time</chartName>
-	<chartType>Spline</chartType>
+	<chartType>Bar</chartType>
 	<sqlQuery>
 		<columns>
 			<column>otherCol</column>
@@ -53,7 +57,7 @@
 		</tables>
 	</sqlQuery>
 	<title>
-		<name>My first pChart project</name>
+		<name>This is a sample bar chart</name>
 		<xPos>350</xPos>
 		<yPos>25</yPos>
 		<rColour>0</rColour>

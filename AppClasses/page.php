@@ -1,4 +1,12 @@
 <?php
+	/*
+		Page.php
+		Created by: Marc
+		Description: User object
+		Update log:
+			23/10/11 (MF) - Creation.
+			30/10/11 (MF) - Adding group membership functionality.
+	*/
 	
 	class Page {
 		public $title;
