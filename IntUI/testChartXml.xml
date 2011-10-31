@@ -2,7 +2,7 @@
 	<chartSeries>
 		<series>
 			<name>Sales</name>
-			<dbCol>noSales</dbCol>
+			<dbCol>otherCol</dbCol>
 			<description>Number Sales</description>
 			<axis>0</axis>
 		</series>
@@ -10,14 +10,14 @@
 	<axes>
 		<axis>
 			<number>0</number>
-			<name>noSales</name>
+			<name>otherCol</name>
 			<unit>CDs</unit>
 			<position>AXIS_POSITION_LEFT</position>
 		</axis>
 	</axes>
 	<image>
 		<xSize>700</xSize>
-		<ySize>300</ySize>
+		<ySize>250</ySize>
 	</image>
 	<legend>
 		<xPos>563</xPos>
@@ -31,11 +31,42 @@
 	<chartType>Spline</chartType>
 	<sqlQuery>
 		<columns>
-			<column>noSales</column>
+			<column>otherCol</column>
 			<column>month</column>
 		</columns>
 		<tables>
 			<table>sales</table>
 		</tables>
 	</sqlQuery>
+	<title>
+		<name>My first pChart project</name>
+		<xPos>350</xPos>
+		<yPos>25</yPos>
+		<rColour>0</rColour>
+		<gColour>0</gColour>
+		<bColour>0</bColour>
+		<align>TEXT_ALIGN_MIDDLEMIDDLE</align>
+		<fontName>Forgotte.ttf</fontName>
+		<fontSize>14</fontSize>
+	</title>
+	<background>
+		<rColour>170</rColour>
+		<gColour>183</gColour>
+		<bColour>87</bColour>
+		<dash>1</dash><!-- 1 or 0 (off) -->
+		<rColourDash>190</rColourDash>
+		<gColourDash>203</gColourDash>
+		<bColourDash>107</bColourDash>
+		<gradient>
+			<on>1</on><!-- 1 or 0 (off) -->
+			<startRColour></startRColour>
+			<startGColour></startGColour>
+			<startBColour></startBColour>
+			<endRColour></endRColour>
+			<endGColour></endGColour>
+			<endBColour></endBColour>
+			<transparency></transparency> <!-- between 0 and 100% -->
+		</gradient>
+		
+	</background>
 </chart>

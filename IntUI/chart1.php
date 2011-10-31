@@ -8,6 +8,7 @@
 		
 		$chart = App::getDB()->getDataRow("SELECT * FROM chart WHERE chartId = '".$chartId."'");
 		
+		// Load in the XML configuration.
 		$xml = simplexml_load_string($chart['config']);
 		$sqlCols = $xml->sqlQuery->columns;
 		$noCols = count($sqlCols->column);
@@ -28,7 +29,8 @@
 		
 		//TODO: This should be altered to include more than one table..
 		$query .= "FROM " . $xml->sqlQuery->tables->table;
-					
+			
+		// Execute query and put in array.
 		$darr = App::getDB()->getArrayFromDB($query);
 		
 		// Create our data arrays for reference in the series and abscissa.
@@ -39,7 +41,6 @@
 		}
 				
 		$myData = new pData();
-		
 		// Add points and series
 		$series = $xml->chartSeries->series;
 		foreach($series as $serie) {
@@ -63,20 +64,43 @@
 		
 		$myPicture = new pImage((int)$xml->image->xSize, (int)$xml->image->ySize, $myData);
 
-$Settings = array("R"=>170, "G"=>183, "B"=>87, "Dash"=>1, "DashR"=>190, "DashG"=>203, "DashB"=>107);
-$myPicture->drawFilledRectangle(0,0,700,230,$Settings);
+		// This sets the background colour and dash of the chart.
+		$Settings = array("R"=>(int)$xml->background->rColour,
+		"G"=>(int)$xml->background->gColour,
+		"B"=>(int)$xml->background->bColour,
+		"Dash"=>(int)$xml->background->dash,
+		"DashR"=>(int)$xml->background->rColourDash,
+		"DashG"=>(int)$xml->background->gColourDash,
+		"DashB"=>(int)$xml->background->bColourDash);
+		
+		$myPicture->drawFilledRectangle(0,0,(int)$xml->image->xSize,(int)$xml->image->ySize,$Settings);
 
-$Settings = array("StartR"=>219, "StartG"=>231, "StartB"=>139, "EndR"=>1, "EndG"=>138, "EndB"=>68, "Alpha"=>50);
-$myPicture->drawGradientArea(0,0,700,230,DIRECTION_VERTICAL,$Settings);
+		// Optional gradient
+		if((int)$xml->background->gradient->on == 1) {
+			$Settings = array("StartR"=>(int)$xml->background->gradient->startRColour, "StartG"=>(int)$xml->background->gradient->startGColour,
+			"StartB"=>(int)$xml->background->gradient->startBColour,
+			"EndR"=>(int)$xml->background->gradient->endRColour,
+			"EndG"=>(int)$xml->background->gradient->endGColour,
+			"EndB"=>(int)$xml->background->gradient->endBColour,
+			"Alpha"=>(int)$xml->background->gradient->transparency);
+			
+			$myPicture->drawGradientArea(0,0,(int)$xml->image->xSize,(int)$xml->image->ySize,constant((string)$xml->background->gradient->direction),$Settings);
 
-$myPicture->drawRectangle(0,0,699,229,array("R"=>0,"G"=>0,"B"=>0));
+			// This draws the black border around the chart
+			$myPicture->drawRectangle(0,0,(int)$xml->image->xSize-1,(int)$xml->image->ySize-1,array("R"=>0,"G"=>0,"B"=>0));
+		}
+//$Settings = array("StartR"=>219, "StartG"=>231, "StartB"=>139, "EndR"=>1, "EndG"=>138, "EndB"=>68, "Alpha"=>50);
+//$myPicture->drawGradientArea(0,0,700,230,DIRECTION_VERTICAL,$Settings);
 
-$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
+//$myPicture->drawRectangle(0,0,699,229,array("R"=>0,"G"=>0,"B"=>0));
 
-$myPicture->setFontProperties(array("FontName"=>"../pChart/fonts/Forgotte.ttf","FontSize"=>14));
-$TextSettings = array("Align"=>TEXT_ALIGN_MIDDLEMIDDLE
-, "R"=>255, "G"=>255, "B"=>255);
-$myPicture->drawText(350,25,"My first pChart project",$TextSettings);
+//$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
+
+		// This is the chart's title configuration
+		$myPicture->setFontProperties(array("FontName"=>"../pChart/fonts/" . (string)$xml->title->fontName,"FontSize"=>(int)$xml->title->fontSize));
+		$TextSettings = array("Align"=>constant($xml->title->align)
+		, "R"=>(int)$xml->title->rColour, "G"=>(int)$xml->title->gColour, "B"=>(int)$xml->title->bColour);
+		$myPicture->drawText((int)$xml->title->xPos,(int)$xml->title->yPos,(string)$xml->title->name,$TextSettings);
 
 $myPicture->setShadow(FALSE);
 $myPicture->setGraphArea(50,50,675,190);
