@@ -89,21 +89,23 @@
 			// This draws the black border around the chart
 			$myPicture->drawRectangle(0,0,(int)$xml->image->xSize-1,(int)$xml->image->ySize-1,array("R"=>0,"G"=>0,"B"=>0));
 		}
-//$Settings = array("StartR"=>219, "StartG"=>231, "StartB"=>139, "EndR"=>1, "EndG"=>138, "EndB"=>68, "Alpha"=>50);
-//$myPicture->drawGradientArea(0,0,700,230,DIRECTION_VERTICAL,$Settings);
-
-//$myPicture->drawRectangle(0,0,699,229,array("R"=>0,"G"=>0,"B"=>0));
 
 //$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
 
 		// This is the chart's title configuration
-		$myPicture->setFontProperties(array("FontName"=>"../pChart/fonts/" . (string)$xml->title->fontName,"FontSize"=>(int)$xml->title->fontSize));
-		$TextSettings = array("Align"=>constant($xml->title->align)
-		, "R"=>(int)$xml->title->rColour, "G"=>(int)$xml->title->gColour, "B"=>(int)$xml->title->bColour);
+		$myPicture->setFontProperties(array(
+			"FontName"=>"../pChart/fonts/" . (string)$xml->title->fontName,
+			"FontSize"=>(int)$xml->title->fontSize)
+		);
+		$TextSettings = array("Align"=>constant($xml->title->align), 
+		"R"=>(int)$xml->title->rColour, 
+		"G"=>(int)$xml->title->gColour, 
+		"B"=>(int)$xml->title->bColour);
+		
 		$myPicture->drawText((int)$xml->title->xPos,(int)$xml->title->yPos,(string)$xml->title->name,$TextSettings);
 
 $myPicture->setShadow(FALSE);
-$myPicture->setGraphArea(50,50,675,190);
+$myPicture->setGraphArea(50,80,675,200);
 $myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 
 $Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
