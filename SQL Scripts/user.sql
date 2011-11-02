@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `forename` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `active` bit(1) NOT NULL,
+  `active` BOOLEAN NOT NULL,
   `username` varchar(50) NOT NULL,
   PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
