@@ -15,9 +15,9 @@
 		public $DB_PASS = '';
 		public $DB_USER = 'root'; 
 		
-		/*public $DB_NAME = 'marcfras_sales';
+	/*	public $DB_NAME = 'marcfras_sales';
 		public $DB_HOST = 'localhost';
-		public $DB_PASS = '';
+		public $DB_PASS = 'frank1e';
 		public $DB_USER = 'marcfras_sales';*/
 		
 		public function __construct() {
