@@ -6,6 +6,4 @@ CREATE TABLE `store` (
   `address` varchar(100) NOT NULL,
   `city` varchar(50) NOT NULL,
   PRIMARY KEY (`storeId`),
-  FOREIGN KEY (`manager`)
-  	REFERENCES user(`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
