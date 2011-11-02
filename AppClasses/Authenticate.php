@@ -2,6 +2,7 @@
 	require_once('../App.php');
 	require_once('User.php');
 	require_once('Group.php');
+	require_once('store.php');
 	
 	// TODO: add in active/disactive functionality.......
 	class Authenticate {

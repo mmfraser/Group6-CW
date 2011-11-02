@@ -5,7 +5,6 @@ CREATE TABLE `store` (
   `storeName` varchar(50) NOT NULL,
   `address` varchar(100) NOT NULL,
   `city` varchar(50) NOT NULL,
-  `manager` smallint(6) NOT NULL,
   PRIMARY KEY (`storeId`),
   FOREIGN KEY (`manager`)
   	REFERENCES user(`userId`)
