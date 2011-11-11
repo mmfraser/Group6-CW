@@ -57,7 +57,6 @@ class Store {
 					address = '".mysql_real_escape_string($this->address)."', 
 					city = '".mysql_real_escape_string($this->city)."' 
 					WHERE storeId = '".mysql_real_escape_string($this->storeId)."'";
-					echo $SQL;
 			$this->conn->execute($SQL);
 	
 		} else {

@@ -15,13 +15,6 @@
 	require_once('AppClasses/page.php');
 	
 	class App {
-		// DB connection details 
-		const db_name = 'sales';
-		const db_host = 'localhost';
-		const db_user = 'root';
-		const db_pass = '';
-	
-		private static $db;
 		public static $auth = false; // Set to false if not authenticated
 		
 		public static function getDB() {
@@ -47,7 +40,7 @@
 		}
 		
 		public static function logoutUser() {
-			unset(self::$auth);
+			session_destroy();
 			self::$auth = false;
 		}
 		

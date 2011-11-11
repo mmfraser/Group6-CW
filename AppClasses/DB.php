@@ -12,7 +12,7 @@
 		private static $obj;
 		public $DB_NAME = 'sales';
 		public $DB_HOST = 'localhost';
-		public $DB_PASS = 'root';
+		public $DB_PASS = '';
 		public $DB_USER = 'root'; 
 		
 	/*	public $DB_NAME = 'marcfras_sales';

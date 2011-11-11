@@ -5,7 +5,11 @@
 		$page = new Page();
 		$page->title = "User Management";
 		$page->getHeader();
-
+		
+		if($_GET['do'] == "logout") {
+			App::logoutUser();
+			header('Location: login.php');
+		}
 		if(!App::checkAuth()) {
 			// User not authenticated.
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=userManagement.php">log in</a>.');
@@ -95,6 +99,7 @@
 					}
 				},
 				close: function() {
+					location.reload();
 					allFields.val( "" ).removeClass( "ui-state-error" );
 				}
 			});
@@ -127,13 +132,14 @@
 					}
 				},
 				close: function() {
+					location.reload();
 					allFields.val( "" ).removeClass( "ui-state-error" );
 				}
 			});
 			
 	});
 		</script>
-
+<p><a href="?do=logout">Log Out</a></p>
 	<div id="tabs">
 		<ul>
 			<li><a href="#tabs-1">Manage Users</a></li>

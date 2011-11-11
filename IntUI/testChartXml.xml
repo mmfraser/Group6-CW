@@ -11,9 +11,9 @@
 			<axis>0</axis>
 		</series>
 		<series>
-			<name>Sales</name>
+			<name>noSales</name>
 			<dbCol>noSales</dbCol>
-			<description>Number Sales Test</description>
+			<description>Number Sales 1</description>
 			<axis>0</axis>
 		</series>
 	</chartSeries>
@@ -45,7 +45,7 @@
 		<dbCol>month</dbCol>
 	</abscissa>
 	<chartName>Sales over Time</chartName>
-	<chartType>Bar</chartType>
+	<chartType>Line</chartType>
 	<sqlQuery>
 		<columns>
 			<column>otherCol</column>

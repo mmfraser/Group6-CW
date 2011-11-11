@@ -1,4 +1,12 @@
 <?php
+	/*
+		Authenticate.php
+		Created by: Marc
+		Description: Authentication object
+		Update log:
+			23/10/11 (MF) - Creation.
+	*/
+
 	require_once('../App.php');
 	require_once('User.php');
 	require_once('Group.php');

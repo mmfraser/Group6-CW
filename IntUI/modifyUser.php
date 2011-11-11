@@ -70,6 +70,11 @@
 		$allGroups = App::getDB()->getArrayFromDB($groupSql);
 		$groupsHtml = "";
 		
+		if($allGroups == null) {
+			$updateVisible = false;
+			$groupsHtml = '<p>There are no groups in which to assign this user to.  Please add these on the <a href="userManagement.php">Groups Management</a> tab.</p>';
+		}
+		
 		foreach($allGroups as $arr) {
 			$checked = "";
 			if(in_array($arr['groupId'], $usr->groupMembership) && !isset($_POST['usergroup']))
@@ -139,7 +144,7 @@
 				<?php print $groupsHtml ?>
 				
 				
-			<input type="submit" value="Update" class="submit-button" />
+			<input type="submit" value="Update" class="submit-button" style="<?php if($updateVisible === false) print "display:none"; ?>" />
 				
 			<div class="ui-state-error ui-corner-all" style="<?php if($errorMsg == null) print "display:none;"?>"><span class="ui-icon ui-icon-alert" style="float:left;margin:0px 5px 0 0;"></span><span><?php print $errorMsg; ?></span></div>
 			
