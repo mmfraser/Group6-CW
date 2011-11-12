@@ -11,6 +11,7 @@
 
 	require_once('PHPExcel.php');
 	require_once('../App.php');
+	require_once('Customer.php');
 	
 	class ImportFileType {
 		const xlsx = "Excel2007";
@@ -181,25 +182,28 @@
 			// Build up the dynamic SQL
 			$dataArray = $this->getDataArray();
 			for($i = 0; $i < count($dataArray); $i++) {
+				// Insert into customer if required.
+				$cust = new Customer();
+				if($dataArray[$i]["customerEmail"] != null && $cust->populate($dataArray[$i]["customerEmail"]) === false) {
+					// insert new customer
+					$cust->emailAddress = $dataArray[$i]["customerEmail"];
+					$cust->save();
+				}
+			
+				// Join static and dynamic SQL for execution.
 				$sql = $staticSql;
 					for($x = 0; $x < count($insertArray); $x++) {
 						if($x == 0)
 							$comma = "";
 						else
 							$comma = ", ";
-							
 						$sql .= $comma . "'" . mysql_real_escape_string($dataArray[$i][$insertArray[$x]]) . "'";
-						
 					}
 				$sql .= ")";
 					
-				// Execute the sql and trap any errors.
+				// Execute the sql and TODO: trap any errors.
 				$db = App::getDB();
-				// Insert into customer if required.
-				
-				//$db->execute($sql);
-				print $sql;
-					
+				$db->execute($sql);					
 			}
 		}
 	}
@@ -207,11 +211,7 @@
 	$test = new SalesImport();
 	$test->setFileType("xlsx");
 	$test->setFile("TestImport.xlsx");
-	$test->setDBCols(Array(Array("ColName" => "date", "DataType" => "Date", "Ignore" => "False"),Array("ColName" => "storeId", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "cashierName", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "itemId", "DataType" => "int" , "Ignore" => "False"),Array("ColName" => "itemDiscount", "DataType" => "float" , "Ignore" => "False"),Array("ColName" => "CustomerEmail", "DataType" => "string" , "Ignore" => "True")));
+	$test->setDBCols(Array(Array("ColName" => "date", "DataType" => "Date", "Ignore" => "False"),Array("ColName" => "storeId", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "cashierName", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "itemId", "DataType" => "int" , "Ignore" => "False"),Array("ColName" => "itemDiscount", "DataType" => "float" , "Ignore" => "False"),Array("ColName" => "customerEmail", "DataType" => "string" , "Ignore" => "False")));
 	$test->setDBTable("salesdata");
 	$test->import();
-	
-
-	
-
 ?>
