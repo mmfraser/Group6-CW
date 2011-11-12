@@ -8,10 +8,12 @@
 			11/11/11 (MF) - Creation.
 			12/11/11 (MF) - Adding DB import functionality.
 	*/
+		
 
 	require_once('PHPExcel.php');
 	require_once('../App.php');
 	require_once('Customer.php');
+	require_once('ImportLog.php');
 	
 	class ImportFileType {
 		const xlsx = "Excel2007";
@@ -27,9 +29,15 @@
 		protected $dataReader;
 		protected $data = array();
 		protected $ignoreFirstRow = false;
+		protected $importName;
+		protected $log;
 		
 		public function __construct() {
-	
+			$this->log = new ImportLog();
+		}
+		
+		public function setImportName($name) {
+			$this->importName = $name;
 		}
 		
 		public function setFile($file) {
@@ -147,9 +155,13 @@
 					
 				// Execute the sql and trap any errors.
 				$db = App::getDB();
-				$db->execute($sql);
-				print $sql;
+				try {
+					$insertId = $db->execute($sql);
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId);
+				} catch(Exception $e) {
 					
+					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, $insertId);
+				}		
 			}
 		}
 	}
@@ -201,12 +213,20 @@
 					}
 				$sql .= ")";
 					
-				// Execute the sql and TODO: trap any errors.
+				// Execute the sql and log any errors.
 				$db = App::getDB();
-				$db->execute($sql);					
+				try {
+					$insertId = $db->execute($sql);
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId);
+				} catch(Exception $e) {
+					
+					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, $insertId);
+				}		
 			}
 		}
 	}
+	
+	
 	
 	$test = new SalesImport();
 	$test->setFileType("xlsx");
@@ -214,4 +234,5 @@
 	$test->setDBCols(Array(Array("ColName" => "date", "DataType" => "Date", "Ignore" => "False"),Array("ColName" => "storeId", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "cashierName", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "itemId", "DataType" => "int" , "Ignore" => "False"),Array("ColName" => "itemDiscount", "DataType" => "float" , "Ignore" => "False"),Array("ColName" => "customerEmail", "DataType" => "string" , "Ignore" => "False")));
 	$test->setDBTable("salesdata");
 	$test->import();
+
 ?>
