@@ -49,10 +49,56 @@ class ImportLog {
 		$this->isLoaded = true;
 	}
 	
+	
+	/*	This function returns the number of successful data imports.
+	*/
+	public function getNumSuccesses() {
+		$xml = simplexml_load_string("<log>".$this->log."</log>");
+		$xpath = $xml->xpath("//entry[insertId != -1]");
+		return count($xpath);
+	}
+	
+	/*	This function returns the number of unsuccessful data imports.
+	*/
+	public function getNumUnsuccessful() {
+		$xml = simplexml_load_string("<log>".$this->log."</log>");
+		$xpath = $xml->xpath("//entry[insertId = -1]");
+		return count($xpath);
+	}
+	
+	/*	This function returns all log entries in the format of an HTML table.
+	*/
+	public function entriesToTable() {
+		$xml = simplexml_load_string("<log>".$this->log."</log>");
+		$entries = $xml->entry;
+		$html = "<table class=\"logEntries display\">";
+		$html .= '<thead>
+					<tr>
+						<th>Date</th>
+						<th>Import Row (in Spreadsheet)</th>
+						<th>Database Table</th>
+						<th>Message</th>
+						<th>Inserted ID (-1 = error)</th>
+					</tr>
+				</thead>
+				<tbody>';
+		foreach($entries as $entry) {
+			$html .= '<tr>';
+			$html .= '	<td>'.$entry->logDate.'</td>';
+			$html .= '	<td>'.$entry->importRow.'</td>';
+			$html .= '	<td>'.$entry->dbTable.'</td>';
+			$html .= '	<td>'.$entry->message.'</td>';
+			$html .= '	<td>'.$entry->insertId.'</td>';
+			$html .= '</tr>';
+		}
+		$html .= '</tbody></table>';
+		return $html;
+	}
+	
 	/* This function adds an entry to the log.
 	*/
-	public function addEntry($message, $dbTable, $insertId) {
-		$this->log .= "<entry><logDate>".date("d/m/Y")."</logDate><dbTable>".$dbTable."</dbTable><message>" . $message . "</message><insertId>".$insertId."</insertId></entry>";
+	public function addEntry($message, $dbTable, $insertId, $importRow) {
+		$this->log .= "<entry><logDate>".date("d/m/Y")."</logDate><dbTable>".$dbTable."</dbTable><message>" . $message . "</message><insertId>".$insertId."</insertId><importRow>".$importRow."</importRow></entry>";
 		$this->save();
 	}
 	
@@ -60,7 +106,6 @@ class ImportLog {
 		an object being uplogDated.
 	*/
 	public function save() {	
-	
 		if ($this->isLoaded === true) {	
 			$SQL = "UPDATE importlog SET 
 					logDate = NOW(), 

@@ -13,11 +13,13 @@
 		private $groupId;
 		public $name;
 		public $description;
+		public $storeId;
 	 
-		function __construct($groupId = "", $name = "", $description = "") {
+		function __construct($groupId = "", $name = "", $description = "", $storeId = "") {
 			$this->conn = App::getDB();
 			$this->name = $name;
 			$this->description = $description;
+			$this->storeId = $storeId;
 		}
 
 		/*	This function gets the object with data given the groupId.
@@ -36,6 +38,7 @@
 			$this->groupId = $row['groupId'];
 			$this->name = $row['name'];
 			$this->description = $row['description'];
+			$this->storeId = $row['storeId'];
 			
 			$this->isLoaded = true;
 		}
@@ -61,13 +64,16 @@
 				if ($this->isLoaded === true) {
 					$SQL = "UPDATE usergroup SET 
 							name = '".mysql_real_escape_string($this->name)."' , 
-							description = '".mysql_real_escape_string($this->description)."'
+							description = '".mysql_real_escape_string($this->description)."',
+							storeId = '".mysql_real_escape_string($this->storeId)."'
 							WHERE groupId = '".mysql_real_escape_string($this->groupId)."'";
 					 $this->conn->execute($SQL);
 				} else {
-					$SQL = "INSERT INTO usergroup (name, description) VALUES (
+					$SQL = "INSERT INTO usergroup (name, description, storeId) VALUES (
 							'".mysql_real_escape_string($this->name)."', 
-							'".mysql_real_escape_string($this->description)."')";
+							'".mysql_real_escape_string($this->description)."',
+							'".mysql_real_escape_string($this->storeId)."'
+							)";
 					$this->isLoaded = true;
 					$this->groupId = $this->conn->execute($SQL);
 				}

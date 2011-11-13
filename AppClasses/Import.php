@@ -31,13 +31,17 @@
 		protected $ignoreFirstRow = false;
 		protected $importName;
 		protected $log;
+		protected $db;
 		
 		public function __construct() {
 			$this->log = new ImportLog();
+			$this->db = App::getDB();
 		}
 		
 		public function setImportName($name) {
 			$this->importName = $name;
+			$this->log->importName = $name;
+			$this->log->save();
 		}
 		
 		public function setFile($file) {
@@ -75,6 +79,10 @@
 			$this->ignoreFirstRow = $bool;
 		}
 		
+		public function getLog() {
+			return $this->log;
+		}
+		
 		protected function getDataArray() {
 			if($this->fileType == null) 
 				throw new Exception("No import file type specified.");
@@ -90,12 +98,11 @@
 			$rowNo = 0;
 			foreach($objWorksheet->getRowIterator() as $row) {
 				$cellIterator = $row->getCellIterator();
-				
 				$col = 0;
 				$rowData = array();
+				
 				foreach($cellIterator as $cell) {
 					$dbCol = $this->dbCols[$col];
-					
 					if(strtolower($dbCol["Ignore"]) == "true" || $rowNo == 0) {
 						break;
 					} else {
@@ -108,6 +115,7 @@
 					$col++;
 				}
 				
+				// TODO: Handle if top row is not headers
 				if($rowNo != 0)
 					$this->data[] = $rowData;
 				$rowNo++;
@@ -115,10 +123,24 @@
 			return $this->data;
 		}
 		
+		public function getNumRows() {
+			if(count($this->data) == 0) 
+				return count($this->getDataArray());
+			else
+				return count($this->data);
+		}
+		
 		public function import() {
 			if($this->dbTable == null) 
 				throw new Exception("No database table specified.");
 				
+			$dataArray = $this->getDataArray();
+			$dataArray = $this->getDataArray();
+			if(count($dataArray) > 0) {
+				if(count($dataArray[0]) != count($this->dbCols)) 
+					throw new Exception("Data to import does not follow specified format.");					
+			} else throw new Exeption("No data to import.");
+			
 			// Build up the static part of the SQL statement.
 			$insertArray = array();
 			$staticSql = "INSERT INTO " . $this->dbTable . " (";
@@ -139,7 +161,7 @@
 			$staticSql .= ") VALUES (";
 			
 			// Build up the dynamic SQL
-			$dataArray = $this->getDataArray();
+			
 			for($i = 0; $i < count($dataArray); $i++) {
 				$sql = $staticSql;
 					for($x = 0; $x < count($insertArray); $x++) {
@@ -154,9 +176,9 @@
 				$sql .= ")";
 					
 				// Execute the sql and trap any errors.
-				$db = App::getDB();
+				
 				try {
-					$insertId = $db->execute($sql);
+					$insertId = $this->db->execute($sql);
 					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId);
 				} catch(Exception $e) {
 					
@@ -172,9 +194,16 @@
 			if($this->dbTable == null) 
 				throw new Exception("No database table specified.");
 				
+			$dataArray = $this->getDataArray();
+			if(count($dataArray) > 0) {
+				if(count($dataArray[0]) != count($this->dbCols)) 
+					throw new Exception("Data to import does not follow specified format.");					
+			} else throw new Exeption("No data to import.");	
+			
 			// Build up the static part of the SQL statement.
 			$insertArray = array();
 			$staticSql = "INSERT INTO " . $this->dbTable . " (";
+			$cols = 0;
 			for($i = 0; $i < count($this->dbCols); $i++) {
 				$dbCol = $this->dbCols[$i];
 				
@@ -186,13 +215,13 @@
 						$comma = ", ";
 					
 					$staticSql .= $comma . $dbCol["ColName"];
-					$insertArray[] = $dbCol["ColName"];
+					$insertArray[$cols]["ColName"] = $dbCol["ColName"];
+					$insertArray[$cols]["DataType"] = $dbCol["DataType"];
+					$cols++;
 				}	
 			}
 			$staticSql .= ") VALUES (";
-			
 			// Build up the dynamic SQL
-			$dataArray = $this->getDataArray();
 			for($i = 0; $i < count($dataArray); $i++) {
 				// Insert into customer if required.
 				$cust = new Customer();
@@ -209,30 +238,35 @@
 							$comma = "";
 						else
 							$comma = ", ";
-						$sql .= $comma . "'" . mysql_real_escape_string($dataArray[$i][$insertArray[$x]]) . "'";
+						
+						if($insertArray[$x]["DataType"] == "int") 
+							$sql .= $comma . mysql_real_escape_string($dataArray[$i][$insertArray[$x]["ColName"]]);
+						else
+							$sql .= $comma . "'" . mysql_real_escape_string($dataArray[$i][$insertArray[$x]["ColName"]]) . "'";
+						
+						
 					}
 				$sql .= ")";
 					
 				// Execute the sql and log any errors.
-				$db = App::getDB();
 				try {
-					$insertId = $db->execute($sql);
-					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId);
+					$insertId = $this->db->execute($sql);
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId, $i);
 				} catch(Exception $e) {
-					
-					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, $insertId);
+					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, -1, $i);
 				}		
 			}
 		}
 	}
 	
-	
+/*	
 	
 	$test = new SalesImport();
+	$test->setImportName("SalesImport");
 	$test->setFileType("xlsx");
 	$test->setFile("TestImport.xlsx");
 	$test->setDBCols(Array(Array("ColName" => "date", "DataType" => "Date", "Ignore" => "False"),Array("ColName" => "storeId", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "cashierName", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "itemId", "DataType" => "int" , "Ignore" => "False"),Array("ColName" => "itemDiscount", "DataType" => "float" , "Ignore" => "False"),Array("ColName" => "customerEmail", "DataType" => "string" , "Ignore" => "False")));
 	$test->setDBTable("salesdata");
 	$test->import();
-
+*/
 ?>

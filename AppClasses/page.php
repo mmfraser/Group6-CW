@@ -26,7 +26,7 @@
 			$output .= '		<script type="text/javascript">' . $this->headJS . '</script>';
 			$output .= '	</head>' . PHP_EOL;
 			$output .= '	<body>' .PHP_EOL;
-			
+			$output .= '		<h2>'.$this->title.'</h2>';
 			echo $output; 
 		}
 		
@@ -38,6 +38,10 @@
 
 		public function addHeadJS($js) {
 			$this->headJS .= $js;
+		}
+		
+		public function error($err) {
+			print '<div class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span>'.$err.'</span></div>';
 		}
 		
 	}

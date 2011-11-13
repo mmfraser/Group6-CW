@@ -20,12 +20,25 @@
 		$userHtml = "";
 		
 		foreach($allUsers as $arr) {
-			$userHtml .= "<tr>" . PHP_EOL;
-			$userHtml .= "	<td>".$arr['username']."</td>" . PHP_EOL;
-			$userHtml .= "	<td>".$arr['forename']."</td>" . PHP_EOL;
-			$userHtml .= "	<td>".$arr['surname']."</td>" . PHP_EOL;
-			$userHtml .= "	<td>".$arr['active']."</td>" . PHP_EOL;
-			$userHtml .= '	<td class="options" style="width:20px;"><a href="modifyUser.php?userId='.$arr['userId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span></a></td>';
+			$usr = new User();
+			$usr->populateId($arr['userId']);
+			
+			$userHtml .= "<tr id=\"".$arr['userId']."\">" . PHP_EOL;
+			$userHtml .= "	<td>".$usr->username."</td>" . PHP_EOL;
+			$userHtml .= "	<td>".$usr->forename."</td>" . PHP_EOL;
+			$userHtml .= "	<td>".$usr->surname."</td>" . PHP_EOL;
+			$userHtml .= "	<td>".$usr->active."</td>" . PHP_EOL;
+			
+			$groupOutput = "<ul>";
+			foreach($usr->groupMembership as $groupId) {
+				$grp = new Group();
+				$grp->populateId($groupId);
+				$groupOutput .= "	<li>" . $grp->name . "</li>";
+			}
+			$groupOutput .= "</ul>";
+			
+			$userHtml .= "	<td>".$groupOutput."</td>" . PHP_EOL;
+			$userHtml .= '	<td class="options" style=""><a href="modifyUser.php?userId='.$arr['userId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span><a title="Delete User" id="deleteUser"><span class="ui-icon ui-icon-trash"></span></a></td>';
 			$userHtml .= "</tr>" . PHP_EOL;
 		}
 		
@@ -46,14 +59,29 @@
 ?>
 		<script type="text/javascript">
 			$(function() {
+				var userId
 				$("p.result").hide();
 				$("img.spinningWheel").hide();
 				$( "div#tabs" ).tabs({cookie:{}});
+				
 				$("a#addGroup").button().click(function() {
 					$( "#group-dialog-form" ).dialog( "open" );
 				});
+				
 				$("a#addUser").button().click(function() {
 					$( "#user-dialog-form" ).dialog( "open" );
+				});
+				
+				$(".options a").button();
+				
+				$("a#deleteUser").button().click(function() {
+					userId = $(this).parent().parent().attr("id")
+					$( "#dialog-confirm-delete" ).dialog( "open" );
+				});
+				
+				$('#userlist').dataTable({
+					"bJQueryUI": true,
+					"sPaginationType": "full_numbers"
 				});
 				
 				$('#grouplist').dataTable({
@@ -61,14 +89,23 @@
 					"sPaginationType": "full_numbers"
 				
 				});
-			
-				$(".options a").button();
-				$('#userlist').dataTable({
-					"bJQueryUI": true,
-					"sPaginationType": "full_numbers"
+
+				$( "#dialog-confirm-delete" ).dialog({
+					autoOpen: false,
+					resizable: false,
+					height:170,
+					modal: true,
+					buttons: {
+						"Delete user": function() {
+							$.post( "ajaxFunctions.php?do=deleteUser", { userId: userId});
+							location.reload();
+						},
+						Cancel: function() {
+							$( this ).dialog( "close" );
+						}
+					}
 				});
 				
-			
 			$( "#user-dialog-form" ).dialog({
 				autoOpen: false,
 				height: 300,
@@ -103,7 +140,6 @@
 					allFields.val( "" ).removeClass( "ui-state-error" );
 				}
 			});
-			
 			
 			$( "#group-dialog-form" ).dialog({
 				autoOpen: false,
@@ -155,6 +191,7 @@
 						<th>Forename</th>
 						<th>Surname</th>
 						<th>Active</th>
+						<th>User Groups</th>
 						<th>Options</th>
 					</tr>
 
@@ -168,6 +205,7 @@
 						<th>Forename</th>
 						<th>Surname</th>
 						<th>Active</th>
+						<th>User Groups</th>
 						<th>Options</th>
 					</tr>
 				</tfoot>
@@ -256,9 +294,9 @@
 		</div>
 	</div>
 	
-	
-	
-	
+	<div id="dialog-confirm-delete" title="Delete user?">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This user, as well as all things tied to this user (group membership, etc.) will be deleted.  Are you sure?</p>
+</div>
 	
 <?php	
 	$page->getFooter();

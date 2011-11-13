@@ -42,7 +42,19 @@
 			
 			$str->saveStore();
 			
+			// Create store's user group.
+			$grp = new Group();
+			$grp->name = $str->storeName;
+			$grp->description = $str->storeName . " permissions user group.";
+			$grp->storeId = $str->getStoreId();
+			$grp->save();
+			
 			die("Store successfully added.");
+		} else if($do == "deleteUser") {
+			$usr = new User();
+			$usr->populateId($_POST['userId']);
+			$usr->delete(true);
+		
 		} else 
 			die("Error: Invalid request.");
 	} catch (Exception $e) {

@@ -44,6 +44,13 @@ class Store {
 		$this->isLoaded = true;
 	}
 	
+	/*	This function returns the storeId propery's value
+	*/
+	public function getStoreId(){
+		return $this->storeId;
+	}
+	
+	
 	
 	public function saveStore() {	
 		if($this->storeName == null || $this->address == null || $this->city == null) {

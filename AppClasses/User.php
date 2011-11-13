@@ -6,6 +6,7 @@
 		Update log:
 			23/10/11 (MF) - Creation.
 			30/10/11 (MF) - Adding group membership functionality.
+			13/11/11 (MF) - Adding delete() functionality.
 	*/
 require_once('../App.php');
 
@@ -82,6 +83,13 @@ class User {
 		return false;
 	}
 
+	public function delete($boolean) {
+		// Boolean is a secondary "confirmation" check and we can't delete an object from the DB if we don't have it in the DB in the first place!
+		if($this->isLoaded && $boolean) 
+			$q = $this->conn->execute("DELETE FROM user WHERE userId = ". $this->userId);
+			if($q == 1) return true; else return false;
+	}
+	
 	/* 	This function allows the object to be saved back to the database, whether it is a new object or 
 		an object being updated.
 	*/
