@@ -41,7 +41,10 @@
 		}
 		
 		public function error($err) {
-			print '<div class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span>'.$err.'</span></div>';
+			print '<div class="ui-state-error ui-corner-all">
+						<span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span>
+						<span>'.$err.'</span>
+				   </div>';
 		}
 		
 	}

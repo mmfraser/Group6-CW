@@ -49,6 +49,8 @@
 						
 					} catch (Exception $e) {
 						$page->error($e->getMessage());
+						uploadForm("There was an error importing the file, please try again with the correct format.");
+						
 					}
 				} else{
 					uploadForm("There was an error uploading the file, please try again.");
@@ -62,9 +64,9 @@
 		
 		function uploadForm($error) {  
 			if($error != "") { $page->error($error); } ?>
+				
 			<form enctype="multipart/form-data" action="?do=upload" method="POST">
 				<input type="hidden" name="MAX_FILE_SIZE" value="1000000" />
-				
 				<table>
 					<tr>
 						<td>Select file:</td>
@@ -76,7 +78,7 @@
 					</tr>
 				</table>		
 			</form>
-			
+			<p><em>Please note: Spreadsheets are expected to be in a specific format for this import.  If the spreadsheet is not in the specified format the import will fail.</em></p>
 			<p>Spreadsheets are expected to be in the following format:</p>
 			<table border="1">
 				<tr style="font-weight:bold;">
