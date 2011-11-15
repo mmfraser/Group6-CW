@@ -15,8 +15,9 @@ class Artist {
 	public $websiteUrl;
 	public $dob;
 	public $nationality;
+	public $bandName;
 
-	function __construct($artistId = "", $forename = "", $surname = "", $websiteUrl = "", $dob = "", $nationality = "") {
+	function __construct($artistId = "", $forename = "", $surname = "", $websiteUrl = "", $dob = "", $nationality = "", $bandName = "") {
 		$this->conn = App::getDB();
 		$this->artistId = $artistId;
 		$this->forename = $forename;
@@ -24,12 +25,16 @@ class Artist {
 		$this->websiteUrl = $websiteUrl;
 		$this->dob = $dob;
 		$this->nationality = $nationality;
+		$this->bandName = $bandName;
 	}
 
+	public function getArtistId() {
+		return $this->artistId;
+	}
 	/*	This function gets the object with data given the artistId.
 	*/
 	public function populateId($artistId){
-		$sql = "SELECT * FROM artist WHERE artistId = '".mysql_real_escape_string($storeId)."'";
+		$sql = "SELECT * FROM artist WHERE artistId = '".mysql_real_escape_string($artistId)."'";
 		$row = $this->conn->getDataRow($sql);
 		if($row == null)
 			return false;
@@ -39,12 +44,13 @@ class Artist {
 	/*	This function populates the object with data given a datarow.
 	*/
 	public function getRow($row){
-	$this->artistId = $artistId;
+		$this->artistId = $row['artistId'];
 		$this->forename = $row['forename'];
 		$this->surname = $row['surname'];
 		$this->websiteUrl = $row['websiteUrl'];
 		$this->dob = $row['dob'];
 		$this->nationality = $row['nationality'];
+		$this->bandName = $row['bandName'];
 		$this->isLoaded = true;
 	}
 	
@@ -59,17 +65,19 @@ class Artist {
 					surname = '".mysql_real_escape_string($this->surname)."', 
 					dob = '".mysql_real_escape_string($this->dob)."', 
 					nationality = '".mysql_real_escape_string($this->nationality)."', 
+					bandName = '".mysql_real_escape_string($this->bandName)."', 
 					websiteUrl = '".mysql_real_escape_string($this->websiteUrl)."' 
 					WHERE artistId = '".mysql_real_escape_string($this->artistId)."'";
 			$this->conn->execute($SQL);
 	
 		} else {
 		
-			$SQL = "INSERT INTO artist (forename, surname, websiteUrl, dob, nationality) VALUES (
+			$SQL = "INSERT INTO artist (forename, surname, websiteUrl, dob, bandName, nationality) VALUES (
 					'".mysql_real_escape_string($this->forename)."', 
 					'".mysql_real_escape_string($this->surname)."', 
 					'".mysql_real_escape_string($this->websiteUrl)."',
-					'".mysql_real_escape_string($this->dob)."',					
+					'".mysql_real_escape_string($this->dob)."',			
+					'".mysql_real_escape_string($this->bandName)."',					
 					'".mysql_real_escape_string($this->nationality)."')";
 			$this->isLoaded = true;
 			$this->artistId = $this->conn->execute($SQL);
@@ -81,6 +89,7 @@ class Artist {
 	public function toString() {
 		$str = "<br />";
 		$str .= "<br />artistId: " . $this->artistId;
+		$str .= "<br />bandName: " . $this->bandName;
 		$str .= "<br />forename: " . $this->forename;
 		$str .= "<br />surname: " . $this->surname;
 		$str .= "<br />dob: " . $this->dob;

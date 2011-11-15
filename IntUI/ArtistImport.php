@@ -4,7 +4,7 @@
 
 	// Page PHP Backend Code Begin
 		$page = new Page();
-		$page->title = "Import - Sales Import";
+		$page->title = "Import - Artist Import";
 		$page->getHeader();
 		
 		if(!App::checkAuth()) {
@@ -15,9 +15,9 @@
 		$do = $_GET['do'];
 		if(isset($do) && $do == "upload") {
 			// Where the file is going to be placed 
-			$target_path = "Uploads/SalesImport/Incomplete/";
-			$completed_folder = "Uploads/SalesImport/Completed/";
-			$errored_folder = "Uploads/SalesImport/Errored/";
+			$target_path = "Uploads/ArtistImport/Incomplete/";
+			$completed_folder = "Uploads/ArtistImport/Completed/";
+			$errored_folder = "Uploads/ArtistImport/Errored/";
 
 			/* Add the original filename to our target path.  
 			Result is "uploads/filename.extension" */
@@ -32,18 +32,20 @@
 		
 			if($fileType != "") {
 				if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-					$imp = new SalesImport();
-					$imp->setImportName("SalesImport");
-					$imp->setFileType($fileType);
-					$imp->setFile($target_path);
-					$imp->setDBCols(Array(
-					Array("ColName" => "date", 			"DataType" => "Date", 		"Ignore" => "False"),
-					Array("ColName" => "storeId", 		"DataType" => "String" , 	"Ignore" => "False"),
-					Array("ColName" => "cashierName", 	"DataType" => "String" , 	"Ignore" => "False"),
-					Array("ColName" => "itemId", 		"DataType" => "int" , 		"Ignore" => "False"),
-					Array("ColName" => "itemDiscount", 	"DataType" => "float" , 	"Ignore" => "False"),
-					Array("ColName" => "customerEmail", "DataType" => "string" ,	"Ignore" => "False")));
-					$imp->setDBTable("salesdata");
+				
+				$imp = new ArtistImport();
+				$imp->setImportName("ArtistImport");
+				$imp->setFileType($fileType);
+				$imp->setFile($target_path);
+				$imp->setDBCols(Array(
+				Array("ColName" => "forename", "DataType" => "String", "Ignore" => "False"),
+				Array("ColName" => "surname", "DataType" => "String" , "Ignore" => "False"),
+				Array("ColName" => "websiteUrl", "DataType" => "String" , "Ignore" => "False"),
+				Array("ColName" => "dob", "DataType" => "Date" , "Ignore" => "False"),
+				Array("ColName" => "nationality", "DataType" => "String" , "Ignore" => "False"), 
+				Array("ColName" => "bandName", "DataType" => "String" , "Ignore" => "False")));
+				$imp->setDBTable("artist");
+					
 					
 					try {
 						$imp->import();		
@@ -53,7 +55,6 @@
 					} catch (Exception $e) {
 						rename($target_path, $errored_folder . $filename);
 						uploadForm("There was an error importing the file, please try again with the correct format.", $page);
-						
 					}
 				} else{
 					uploadForm("There was an error uploading the file, please try again.", $page);
@@ -85,12 +86,11 @@
 			<p>Spreadsheets are expected to be in the following format:</p>
 			<table border="1">
 				<tr style="font-weight:bold;">
-					<td>Date</td>
-					<td>Store ID</td>
-					<td>Cashier Name</td>
-					<td>Item ID</td>
-					<td>Item Discount (%)</td>
-					<td>Customer Email</td>
+					<td>Forename</td>
+					<td>Surname</td>
+					<td>Website URL</td>
+					<td>Date of Birth</td>
+					<td>Nationality</td>
 				</tr>
 				<tr>
 					<td>11/11/2011</td>
@@ -98,7 +98,6 @@
 					<td>Marc Fraser</td>
 					<td>1234</td>
 					<td>10</td>
-					<td>mf111@hw.ac.uk</td>
 				</tr>
 					<tr>
 					<td>11/11/2011</td>
@@ -106,7 +105,6 @@
 					<td>James Dickinson</td>
 					<td>4321</td>
 					<td>0</td>
-					<td>jd@somemail.co.uk</td>
 				</tr>
 			</table>
 		

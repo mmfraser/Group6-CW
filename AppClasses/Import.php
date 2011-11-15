@@ -13,7 +13,10 @@
 	require_once('PHPExcel.php');
 	require_once('../App.php');
 	require_once('Customer.php');
+	require_once('Sale.php');
 	require_once('ImportLog.php');
+	require_once('Artist.php');
+	require_once('Product.php');
 	
 	class ImportFileType {
 		const xlsx = "Excel2007";
@@ -200,66 +203,104 @@
 					throw new Exception("Data to import does not follow specified format.");					
 			} else throw new Exeption("No data to import.");	
 			
-			// Build up the static part of the SQL statement.
-			$insertArray = array();
-			$staticSql = "INSERT INTO " . $this->dbTable . " (";
-			$cols = 0;
-			for($i = 0; $i < count($this->dbCols); $i++) {
-				$dbCol = $this->dbCols[$i];
-				
-				// Don't include columns that are to be ignored.
-				if(strtolower($dbCol["Ignore"]) != "true") {
-					if($i == 0)
-						$comma = "";
-					else
-						$comma = ", ";
-					
-					$staticSql .= $comma . $dbCol["ColName"];
-					$insertArray[$cols]["ColName"] = $dbCol["ColName"];
-					$insertArray[$cols]["DataType"] = $dbCol["DataType"];
-					$cols++;
-				}	
-			}
-			$staticSql .= ") VALUES (";
-			// Build up the dynamic SQL
 			for($i = 0; $i < count($dataArray); $i++) {
-				// Insert into customer if required.
-				$cust = new Customer();
-				if($dataArray[$i]["customerEmail"] != null && $cust->populate($dataArray[$i]["customerEmail"]) === false) {
-					// insert new customer
-					$cust->emailAddress = $dataArray[$i]["customerEmail"];
-					$cust->save();
-				}
-			
-				// Join static and dynamic SQL for execution.
-				$sql = $staticSql;
-					for($x = 0; $x < count($insertArray); $x++) {
-						if($x == 0)
-							$comma = "";
-						else
-							$comma = ", ";
-						
-						if($insertArray[$x]["DataType"] == "int") 
-							$sql .= $comma . mysql_real_escape_string($dataArray[$i][$insertArray[$x]["ColName"]]);
-						else
-							$sql .= $comma . "'" . mysql_real_escape_string($dataArray[$i][$insertArray[$x]["ColName"]]) . "'";
-						
-						
-					}
-				$sql .= ")";
-					
-				// Execute the sql and log any errors.
 				try {
-					$insertId = $this->db->execute($sql);
-					$this->log->addEntry("Entry added successfully", $this->dbTable, $insertId, $i);
-				} catch(Exception $e) {
+					$sale = new Sale();
+					$sale->date = $dataArray[$i]["date"];
+					$sale->storeId = $dataArray[$i]["storeId"];
+					$sale->cashierName = $dataArray[$i]["cashierName"];
+					$sale->itemId = $dataArray[$i]["itemId"];
+					$sale->itemDiscount = $dataArray[$i]["itemDiscount"];
+					$sale->customerEmail = $dataArray[$i]["customerEmail"];
+					$sale->save();
+					
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $sale->getSaleId(), $i);
+				} catch (Exception $e) {
 					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, -1, $i);
-				}		
+				}
 			}
 		}
 	}
 	
+	/* This class extension is required for the artist import
+	*/
+	class ArtistImport extends Import {
+		public function import() {
+			if($this->dbTable == null) 
+				throw new Exception("No database table specified.");
+				
+			$dataArray = $this->getDataArray();
+			if(count($dataArray) > 0) {
+				if(count($dataArray[0]) != count($this->dbCols)) 
+					throw new Exception("Data to import does not follow specified format.");					
+			} else throw new Exeption("No data to import.");	
+			
+			for($i = 0; $i < count($dataArray); $i++) {
+				try {
+					$artist = new Artist();
+					$artist->forename = $dataArray[$i]["forename"];
+					$artist->surname = $dataArray[$i]["surname"];
+					$artist->websiteUrl = $dataArray[$i]["websiteUrl"];
+					$artist->dob = $dataArray[$i]["dob"];
+					$artist->nationality = $dataArray[$i]["nationality"];
+					$artist->bandName = $dataArray[$i]["bandName"];
+					$artist->save();
+										
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $artist->getArtistId(), $i);
+				} catch (Exception $e) {
+					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, -1, $i);
+				}
+			}
+		}
+	}
+	
+	/* This class extension is required for the product import
+	*/
+	class ProductImport extends Import {
+		public function import() {
+			if($this->dbTable == null) 
+				throw new Exception("No database table specified.");
+				
+			$dataArray = $this->getDataArray();
+			if(count($dataArray) > 0) {
+				if(count($dataArray[0]) != count($this->dbCols)) 
+					throw new Exception("Data to import does not follow specified format.");					
+			} else throw new Exeption("No data to import.");	
+			
+			for($i = 0; $i < count($dataArray); $i++) {
+				try {
+					$product = new Product();
+					$product->artistId = $dataArray[$i]["artistId"];
+					$product->genreId = $dataArray[$i]["genreId"];
+					$product->name = $dataArray[$i]["name"];
+					$product->releaseDate = $dataArray[$i]["releaseDate"];
+					$product->price = $dataArray[$i]["price"];
+					$product->save();
+										
+					$this->log->addEntry("Entry added successfully", $this->dbTable, $product->getProductId(), $i);
+				} catch (Exception $e) {
+					$this->log->addEntry("Error adding entry: " . $e->getMessage(), $this->dbTable, -1, $i);
+				}
+			}
+		}
+	}
+
 /*	
+	$test = new ProductImport();
+	$test->setImportName("ProductImport");
+	$test->setFileType("xlsx");
+	$test->setFile("ProductTestImport.xlsx");
+	$test->setDBCols(Array(Array("ColName" => "artistId", "DataType" => "int", "Ignore" => "False"),Array("ColName" => "genreId", "DataType" => "int" , "Ignore" => "False"),Array("ColName" => "name", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "releaseDate", "DataType" => "Date" , "Ignore" => "False"),Array("ColName" => "price", "DataType" => "String" , "Ignore" => "False")));
+	$test->setDBTable("product");
+	$test->import();
+
+	$test = new ArtistImport();
+	$test->setImportName("ArtistImport");
+	$test->setFileType("xlsx");
+	$test->setFile("ArtistTestImport.xlsx");
+	$test->setDBCols(Array(Array("ColName" => "forename", "DataType" => "String", "Ignore" => "False"),Array("ColName" => "surname", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "websiteUrl", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "dob", "DataType" => "Date" , "Ignore" => "False"),Array("ColName" => "nationality", "DataType" => "String" , "Ignore" => "False"),Array("ColName" => "bandName", "DataType" => "String" , "Ignore" => "False")));
+	$test->setDBTable("artist");
+	$test->import();
 	
 	$test = new SalesImport();
 	$test->setImportName("SalesImport");
