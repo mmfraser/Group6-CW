@@ -58,6 +58,10 @@ class Artist {
 		if($this->forename == null || $this->surname == null || $this->dob == null || $this->nationality == null) {
 			throw new Exception('One or more required fields are not completed.');
 		}
+		print $this->date;
+		
+		if(strpos($this->date, "/") === true)
+			throw new Exception('Invalid date format.  Expecting YYYY-MM-DD.');
 
 		if ($this->isLoaded === true) {
 			$SQL = "UPDATE artist SET 
@@ -82,6 +86,13 @@ class Artist {
 			$this->isLoaded = true;
 			$this->artistId = $this->conn->execute($SQL);
 		}		
+	}
+	
+	public function delete($boolean) {
+		// Boolean is a secondary "confirmation" check and we can't delete an object from the DB if we don't have it in the DB in the first place!
+		if($this->isLoaded && $boolean) 
+			$q = $this->conn->execute("DELETE FROM artist WHERE artistId = ". $this->artistId);
+			if($q == 1) return true; else return false;
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.

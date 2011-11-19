@@ -26,6 +26,10 @@
 			$output .= '		<script type="text/javascript">' . $this->headJS . '</script>';
 			$output .= '	</head>' . PHP_EOL;
 			$output .= '	<body>' .PHP_EOL;
+			$output .= '		<div class="navigation">' .PHP_EOL;
+			$output .= '			<ul>'.PHP_EOL;
+			$output .= '			</ul>'.PHP_EOL;
+			$output .= '		</div>' .PHP_EOL;
 			$output .= '		<h2>'.$this->title.'</h2>';
 			echo $output; 
 		}

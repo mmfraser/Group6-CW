@@ -2,6 +2,7 @@
 	error_reporting(E_ERROR);
 	require_once('../App.php');
 	require_once('../AppClasses/store.php');
+	require_once('../AppClasses/Artist.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -54,7 +55,23 @@
 			$usr = new User();
 			$usr->populateId($_POST['userId']);
 			$usr->delete(true);
-		
+		}  else if($do == "addArtist") {
+			$artist = new Artist();
+			$artist->forename = $_POST['forename'];
+			$artist->surname = $_POST['surname'];
+			$artist->websiteUrl = $_POST['websiteUrl'];
+			$dob = strtotime($_POST['dob']);
+			$artist->dob = date("Y-m-d", $dob);
+			$artist->nationality = $_POST['nationality'];
+			$artist->bandName = $_POST['bandName'];
+			$artist->save();
+			
+			die("Artist successfully added.");
+		}  else if($do == "deleteArtist") {
+			$artist = new Artist();
+			$artist->populateId($_POST['artistId']);
+			print "here";
+			$artist->delete(true);
 		} else 
 			die("Error: Invalid request.");
 	} catch (Exception $e) {

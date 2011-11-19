@@ -11,7 +11,10 @@
 				// Do the login.
 				$loggedIn = App::authUser($_POST['username'], $_POST['password']);
 				if($loggedIn) {
-					header('Location: userManagement.php');
+					if(isset($_GET['page']))
+						header('Location: ' . $_GET['page']);
+					else 
+						header('Location: userManagement.php');
 				} else 
 					$errorMsg = "Username and/or password incorrect.";
 			}

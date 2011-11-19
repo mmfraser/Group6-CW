@@ -24,11 +24,14 @@
 			$filename = basename(date("d-m-Y-His") . $_FILES['uploadedfile']['name']);
 			$target_path = $target_path . $filename;
 						
+						
+			print "blah" . $_FILES["uploadedfile"]["type"];
 			$fileType = "";
 			if($_FILES["uploadedfile"]["type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") 
 				$fileType = "xlsx";
 			else if($_FILES["uploadedfile"]["type"] == "application/vnd.ms-excel") 
 				$fileType = "xls";
+				
 		
 			if($fileType != "") {
 				if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
@@ -52,6 +55,7 @@
 						rename($target_path, $completed_folder . $filename);
 					} catch (Exception $e) {
 						rename($target_path, $errored_folder . $filename);
+						print $e->getMessage();
 						uploadForm("There was an error importing the file, please try again with the correct format.", $page);
 						
 					}
