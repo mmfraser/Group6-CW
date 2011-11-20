@@ -3,6 +3,7 @@
 	require_once('../App.php');
 	require_once('../AppClasses/store.php');
 	require_once('../AppClasses/Artist.php');
+	require_once('../AppClasses/Product.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -69,11 +70,25 @@
 			die("Artist successfully added.");
 		}  else if($do == "deleteArtist") {
 			$artist = new Artist();
-			$artist->populateId($_POST['artistId']);
-			print "here";
+			$artist->populateId($_POST['artist']);
 			$artist->delete(true);
+		}  else if($do == "addProduct") {
+			$product = new Product();
+			$product->artistId = $_POST['artistId'];
+			$product->genreId = $_POST['genreId'];
+			$product->name = $_POST['name'];
+			$product->releaseDate = $_POST['releaseDate'];
+			$product->price = $_POST['price'];
+			$product->save();
+			
+			die("Product successfully added.");
+		}  else if($do == "deleteProduct") {
+			$product = new Product();
+			$product->populateId($_POST['product']);
+			$product->delete(true);
 		} else 
 			die("Error: Invalid request.");
+		
 	} catch (Exception $e) {
 		die("Error: " . $e->getMessage());
 	}

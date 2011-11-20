@@ -113,7 +113,7 @@
 				</tr>
 				<tr>
 					<td><label for="website">Website</label><td>
-					<td><input type="text" name="website" size="30" value="http://" value="<?php print $websiteUrl ?>" /></td>
+					<td><input type="text" name="website" size="30" value="<?php print $websiteUrl ?>" /></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

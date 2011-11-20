@@ -2,6 +2,8 @@ body {
 	margin:0;
 	padding:0;
 	width:100%;
+	background: url(../Images/IntUIGrad.png) repeat-x;
+	font-family: verdana;
 }
 
 div.ui-state-info, div.ui-state-error {
@@ -9,3 +11,18 @@ div.ui-state-info, div.ui-state-error {
 	padding:5px;
 }
 
+div#container {
+	width: 800px;
+	margin:0 auto;
+	background-color:#fff!important;
+}
+
+div#navigation {
+	float:left;
+	width:180px;
+}
+
+div#mainContent {
+	float:right;
+	width:600px;
+}

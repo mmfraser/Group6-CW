@@ -17,6 +17,8 @@ class Product {
 	public $name;
 	public $releaseDate;
 	public $price;
+	public $artist;
+	public $genre;
 
 	function __construct($productId = "", $artistId = "", $genreId = "", $name = "", $releaseDate = "", $price = "") {
 		$this->conn = App::getDB();
@@ -36,7 +38,7 @@ class Product {
 	/*	This function gets the object with data given the artistId.
 	*/
 	public function populateId($productId){
-		$sql = "SELECT * FROM product WHERE productId = '".mysql_real_escape_string($storeId)."'";
+		$sql = "SELECT * FROM product WHERE productId = '".mysql_real_escape_string($productId)."'";
 		$row = $this->conn->getDataRow($sql);
 		if($row == null)
 			return false;
@@ -53,6 +55,15 @@ class Product {
 		$this->name = $row['name'];
 		$this->releaseDate = $row['releaseDate'];
 		$this->price = $row['price'];
+		
+		$artist = new Artist();
+		$artist->populateId($this->artistId);
+		$this->artist = $artist;
+		
+		$genre = new Genre();
+		$genre->populateId($this->genreId);
+		$this->genre = $genre;
+		
 		$this->isLoaded = true;
 	}
 	
@@ -103,6 +114,14 @@ class Product {
 		}		
 	}
 	
+	public function delete($boolean) {
+		// Boolean is a secondary "confirmation" check and we can't delete an object from the DB if we don't have it in the DB in the first place!
+		if($this->isLoaded && $boolean) 
+			$q = $this->conn->execute("DELETE FROM product WHERE productId = ". $this->productId);
+			if($q == 1) return true; else return false;
+			
+	}
+	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
 	*/
 	public function toString() {
@@ -126,4 +145,5 @@ $test->price = "10.99";
 $test->save();
 print $test->toString();
 */
+
 ?>

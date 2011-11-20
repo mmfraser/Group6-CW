@@ -26,16 +26,35 @@
 			$output .= '		<script type="text/javascript">' . $this->headJS . '</script>';
 			$output .= '	</head>' . PHP_EOL;
 			$output .= '	<body>' .PHP_EOL;
-			$output .= '		<div class="navigation">' .PHP_EOL;
-			$output .= '			<ul>'.PHP_EOL;
-			$output .= '			</ul>'.PHP_EOL;
-			$output .= '		</div>' .PHP_EOL;
-			$output .= '		<h2>'.$this->title.'</h2>';
+			$output .= '		<div id="container">' . PHP_EOL;
+			$output .= $this->navigation();
+			$output .= '		<div id="mainContent">' . PHP_EOL;;
+			$output .= '			<h2>'.$this->title.'</h2>' . PHP_EOL;;
 			echo $output; 
 		}
 		
+		private function navigation() {
+			$output = '		<div id="navigation">' .PHP_EOL;
+			$output .= '		<ul>'.PHP_EOL;
+			$output .= '			<li><a href="">Dashboard</a></li>' .PHP_EOL;
+			$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
+			$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
+			$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
+			$output .= '			<li>Data Management
+										<ul>
+											<li><a href="">Import Overview</a></li>
+											<li><a href="SalesImport.php">Sales Import</a></li>
+											<li><a href="ArtistImport.php">Artist Import</a></li>
+											<li><a href="ProductImport.php">Products Import</a></li>
+										</ul>
+									</li>' .PHP_EOL;
+			$output .= '		</ul>'.PHP_EOL;
+			$output .= '	</div>' .PHP_EOL;
+			return $output;
+		}
+		
 		public function getFooter() {
-			$output = '		</body>';
+			$output = '		</div></div></body>';
 			$output .= '</html>';
 			echo $output;
 		}	

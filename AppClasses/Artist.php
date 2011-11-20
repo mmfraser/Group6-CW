@@ -62,7 +62,13 @@ class Artist {
 		
 		if(strpos($this->date, "/") === true)
 			throw new Exception('Invalid date format.  Expecting YYYY-MM-DD.');
-
+			
+			
+		if($this->websiteUrl == null)
+			$this->websiteUrl == null;
+		else if(strpos($this->websiteUrl, "http://") !== true) 
+			$this->websiteUrl = "http://" . $this->websiteUrl;
+	
 		if ($this->isLoaded === true) {
 			$SQL = "UPDATE artist SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
@@ -93,6 +99,7 @@ class Artist {
 		if($this->isLoaded && $boolean) 
 			$q = $this->conn->execute("DELETE FROM artist WHERE artistId = ". $this->artistId);
 			if($q == 1) return true; else return false;
+			
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
