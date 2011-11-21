@@ -44,6 +44,7 @@
 				$artist->surname = $_POST['surname'];
 				$artist->websiteUrl = $_POST['website'];
 				$artist->dob = $_POST['dob'];
+				print $_POST['dob'];;
 				$artist->nationality = $_POST['nationality'];
 			
 				$artist->save();

@@ -81,9 +81,21 @@
 					</tr>
 				</table>		
 			</form>
-			<p><em>Please note: Spreadsheets are expected to be in a specific format for this import.  If the spreadsheet is not in the specified format the import will fail.</em></p>
-			<p>Spreadsheets are expected to be in the following format:</p>
-			<table border="1">
+			
+			<div id="tabs">
+				<ul>
+					<li><a href="#tabs-1">Recent Imports</a></li>
+					<li><a href="#tabs-2">Import Specification</a></li>
+				</ul>
+
+				<div id="tabs-1">
+				</div>
+				
+				<div id="tabs-2">
+					<p>Spreadsheets are expected to be in the format outlined below or else the import may fail or the data within the datbase may not be reliable.</p>
+					<p>The only allowable spreadsheets are .xls and .xlsx spreadsheets.</p>
+					<p><strong>Dependancies:</strong> both the Artist ID and Genre ID must already exist in the database.</p>
+					<table border="1">
 				<tr style="font-weight:bold;">
 					<td>Artist ID</td>
 					<td>Genre ID</td>
@@ -106,11 +118,15 @@
 					<td>5.99</td>
 				</tr>
 			</table>
+				</div>
+			</div>
+						
 		
 <? }	// Page PHP Backend Code End
 ?>
 		<script type="text/javascript">
-			$(function() {		
+			$(function() {
+				$( "div#tabs" ).tabs({cookie:{}});
 				$('.logEntries').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"

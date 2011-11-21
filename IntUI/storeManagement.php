@@ -34,7 +34,6 @@
 			$(function() {
 				$("p.result").hide();
 				$("img.spinningWheel").hide();
-				$( "div#tabs" ).tabs({cookie:{}});
 				$("a#addGroup").button().click(function() {
 					$( "#group-dialog-form" ).dialog( "open" );
 				});
@@ -45,7 +44,6 @@
 				$('#grouplist').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
-				
 				});
 			
 				$(".options a").button();
@@ -53,7 +51,6 @@
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
 				});
-				
 			
 			$( "#store-dialog-form" ).dialog({
 				autoOpen: false,
@@ -94,12 +91,6 @@
 	});
 		</script>
 
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">Manage Stores</a></li>
-			<!--<li><a href="#tabs-2">Manage Groups</a></li>-->
-		</ul>
-		<div id="tabs-1">
 			<p><a id="addStore" href="#">Add New Store</a></p>
 			
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="storelist">
@@ -124,7 +115,6 @@
 					</tr>
 				</tfoot>
 			</table>
-		</div>
 	
 		
 		
@@ -150,10 +140,10 @@
 		<p><img src="../Images/spinningWheel.gif" class="spinningWheel" alt="Loading" /></p>
 		<p class="result"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
 			<span class="result"></span></p>
-		</div>
 	</div>
 
-	</div>
+
+
 	
 	
 	

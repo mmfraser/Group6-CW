@@ -50,12 +50,20 @@
 				$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
-				$output .= '			<li>Data Management
+				$output .= '			<li>Data Import
 											<ul>
 												<li><a href="">Import Overview</a></li>
-												<li><a href="SalesImport.php">Sales Import</a></li>
 												<li><a href="ArtistImport.php">Artist Import</a></li>
 												<li><a href="ProductImport.php">Products Import</a></li>
+												<li><a href="SalesImport.php">Sales Import</a></li>
+
+											</ul>
+										</li>' .PHP_EOL;
+				$output .= '			<li>Data Management
+											<ul>
+												<li><a href="artistManagement.php">Artist Management</a></li>
+												<li><a href="productManagement.php">Product Management</a></li>
+												<li><a href="saleManagement.php">Sales Management</a></li>
 											</ul>
 										</li>' .PHP_EOL;
 				$output .= '			<li><a href="login.php?do=logout">Log Out</a></li>' .PHP_EOL;
@@ -69,7 +77,7 @@
 		}
 
 		private function footerContent() {
-			$output = '		<div class="clear">'.PHP_EOL;
+			$output = '		<div class="clear"></div>'.PHP_EOL;
 			$output .= '	<div id="footer">'.PHP_EOL;
 			$output .= '		test'.PHP_EOL;
 			$output .= '	</div>'.PHP_EOL;

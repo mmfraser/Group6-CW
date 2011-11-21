@@ -3,8 +3,9 @@ body {
 	padding:0;
 	width:100%;
 	height:100%;
-	background: url(../Images/IntUIGrad.png) repeat-x;
-	font-family: verdana;
+/*	background: url(../Images/IntUIGrad.png) repeat;*/
+	background: #88D1CA;
+	font: normal 80% Verdana;
 }
 
 div.ui-state-info, div.ui-state-error {
@@ -13,7 +14,8 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
-	width: 850px;
+	width: 80%;
+	min-width: 850px;
 	margin:0 auto;
 	min-height:200px;
 }
@@ -27,17 +29,17 @@ div#navigation {
 
 div#mainContent {
 	float:right;
-	width:75.5%;
+	width:74.3%;
 	min-height:200px;
 	background:#fff;
-	margin:0 0 0 8px;
+	padding:0 8px 8px 8px;
 }
 
 div#header {
 	width:100%;
 	min-height:100px;
-	margin:0 0 10px 0;
 	background:#fff;
+	border-bottom: 5px solid #000;
 }
 
 .clear {
@@ -46,10 +48,29 @@ div#header {
 
 div#footer {
 	width:100%;
-	margin:10px 0 0 0;
 	background:#fff;
+	border-top:5px solid #000;
+	min-height:60px;
 }
 
 div#tabs {
-	margin:5px!important;
+	margin:10px 0 0 0;
 }
+
+h1, h2, h3, h4 {
+	color:#0B486B;
+}	
+
+div.fg-toolbar {
+	font-size: 10px;
+}
+
+div.fg-toolbar  select{
+	font-size: 10px;
+}
+
+div.ui-widget {
+	margin:10px 0 0 0;
+	padding:0 5px 0 5px;
+}
+

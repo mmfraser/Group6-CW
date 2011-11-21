@@ -58,17 +58,26 @@ class Artist {
 		if($this->forename == null || $this->surname == null || $this->dob == null || $this->nationality == null) {
 			throw new Exception('One or more required fields are not completed.');
 		}
-		print $this->date;
 		
-		if(strpos($this->date, "/") === true)
-			throw new Exception('Invalid date format.  Expecting YYYY-MM-DD.');
-			
+		try {
+			if(strpos($this->dob, '/') !== false) {
+				$dateArr = date_parse_from_format("m/d/Y", $this->dob);
+				$dateFormat = $dateArr["year"] . "-" . $dateArr["month"] . "-" . $dateArr["day"];
+			} else if(strpos($this->dob, '-') !== false) {
+				$dateFormat = $this->dob;
+			} else 
+				throw new Exception("Invalid date format");
+		} catch(Exception $e) {
+			throw $e;
+		}
+			$this->dob = $dateFormat;
 			
 		if($this->websiteUrl == null)
 			$this->websiteUrl == null;
-		else if(strpos($this->websiteUrl, "http://") !== true) 
+		else if(strpos($this->websiteUrl, "http://") === false) {
+			print "here";
 			$this->websiteUrl = "http://" . $this->websiteUrl;
-	
+		}
 		if ($this->isLoaded === true) {
 			$SQL = "UPDATE artist SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 

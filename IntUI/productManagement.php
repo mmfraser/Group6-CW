@@ -131,11 +131,7 @@
 			});			
 	});
 		</script>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">Manage Artists</a></li>
-		</ul>
-		<div id="tabs-1">
+
 			<p><a id="addProduct" href="#">Add New Product</a></p>
 			
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="productList">
@@ -164,7 +160,7 @@
 					</tr>
 				</tfoot>
 			</table>
-		</div>
+	
 		
 	<div id="product-dialog-form" title="Create new Product">
 			<p class="validateTips">All form fields are required.</p>
@@ -206,7 +202,7 @@
 	
 	<div id="dialog-confirm-delete" title="Delete Product?">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This product, as well as all things tied to this product (sales, etc.) will be deleted.  Are you sure?</p>
-</div>
+
 	
 <?php	
 	$page->getFooter();

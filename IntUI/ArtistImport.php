@@ -82,9 +82,24 @@
 					</tr>
 				</table>		
 			</form>
-			<p><em>Please note: Spreadsheets are expected to be in a specific format for this import.  If the spreadsheet is not in the specified format the import will fail.</em></p>
-			<p>Spreadsheets are expected to be in the following format:</p>
-			<table border="1">
+			
+				<div class="ui-widget ui-state-highlight ui-corner-all">
+					<p><span class=" ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>Please note that there is a defined specification for this import which can be found on the 'Import Specification' tab below.</p>
+				</div>
+			
+			<div id="tabs">
+				<ul>
+					<li><a href="#tabs-1">Recent Imports</a></li>
+					<li><a href="#tabs-2">Import Specification</a></li>
+				</ul>
+
+				<div id="tabs-1">
+				</div>
+				
+				<div id="tabs-2">
+					<p>Spreadsheets are expected to be in the format outlined below or else the import may fail or the data within the database may not be reliable.</p>
+					<p>The only allowable spreadsheets are .xls and .xlsx spreadsheets.</p>
+						<table border="1">
 				<tr style="font-weight:bold;">
 					<td>Forename</td>
 					<td>Surname</td>
@@ -107,11 +122,15 @@
 					<td>0</td>
 				</tr>
 			</table>
+				</div>
+			
+			</div>
 		
 <? }	// Page PHP Backend Code End
 ?>
 		<script type="text/javascript">
-			$(function() {		
+			$(function() {
+				$( "div#tabs" ).tabs({cookie:{}});
 				$('.logEntries').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"

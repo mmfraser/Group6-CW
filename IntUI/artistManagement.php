@@ -53,7 +53,6 @@
 				
 				$("p.result").hide();
 				$("img.spinningWheel").hide();
-				$( "div#tabs" ).tabs({cookie:{}});
 				
 				$("a#addArtist").button().click(function() {
 					$( "#artist-dialog-form" ).dialog( "open" );
@@ -131,11 +130,7 @@
 			});			
 	});
 		</script>
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">Manage Artists</a></li>
-		</ul>
-		<div id="tabs-1">
+	
 			<p><a id="addArtist" href="#">Add New Artist</a></p>
 			
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="artistList">
@@ -166,7 +161,7 @@
 					</tr>
 				</tfoot>
 			</table>
-		</div>
+		
 		
 	<div id="artist-dialog-form" title="Create new Artist">
 			<p class="validateTips">All form fields are required.</p>
@@ -208,7 +203,7 @@
 	
 	<div id="dialog-confirm-delete" title="Delete artist?">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This artist, as well as all things tied to this user (sales, etc.) will be deleted.  Are you sure?</p>
-</div>
+
 	
 <?php	
 	$page->getFooter();
