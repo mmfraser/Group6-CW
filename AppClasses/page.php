@@ -26,35 +26,61 @@
 			$output .= '		<script type="text/javascript">' . $this->headJS . '</script>';
 			$output .= '	</head>' . PHP_EOL;
 			$output .= '	<body>' .PHP_EOL;
-			$output .= '		<div id="container">' . PHP_EOL;
-			$output .= $this->navigation();
-			$output .= '		<div id="mainContent">' . PHP_EOL;;
-			$output .= '			<h2>'.$this->title.'</h2>' . PHP_EOL;;
+			$output .= '		<div id="wrapper">' . PHP_EOL;
+			$output .= 			$this->header();
+			$output .= 			$this->navigation();
+			$output .= '		<div id="mainContent">' . PHP_EOL;
+			$output .= '			<h2>'.$this->title.'</h2>' . PHP_EOL;
 			echo $output; 
+		
+		}
+		
+		private function header() { 
+			$output = '<div id="header">'. PHP_EOL;
+			$output .= '	Test'. PHP_EOL;
+			$output .='</div>'. PHP_EOL;
+			return $output;
 		}
 		
 		private function navigation() {
-			$output = '		<div id="navigation">' .PHP_EOL;
-			$output .= '		<ul>'.PHP_EOL;
-			$output .= '			<li><a href="">Dashboard</a></li>' .PHP_EOL;
-			$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
-			$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
-			$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
-			$output .= '			<li>Data Management
-										<ul>
-											<li><a href="">Import Overview</a></li>
-											<li><a href="SalesImport.php">Sales Import</a></li>
-											<li><a href="ArtistImport.php">Artist Import</a></li>
-											<li><a href="ProductImport.php">Products Import</a></li>
-										</ul>
-									</li>' .PHP_EOL;
-			$output .= '		</ul>'.PHP_EOL;
-			$output .= '	</div>' .PHP_EOL;
+			if(App::checkAuth()) {
+				$output = '		<div id="navigation">' .PHP_EOL;
+				$output .= '		<ul>'.PHP_EOL;
+				$output .= '			<li><a href="">Dashboard</a></li>' .PHP_EOL;
+				$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
+				$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
+				$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
+				$output .= '			<li>Data Management
+											<ul>
+												<li><a href="">Import Overview</a></li>
+												<li><a href="SalesImport.php">Sales Import</a></li>
+												<li><a href="ArtistImport.php">Artist Import</a></li>
+												<li><a href="ProductImport.php">Products Import</a></li>
+											</ul>
+										</li>' .PHP_EOL;
+				$output .= '			<li><a href="login.php?do=logout">Log Out</a></li>' .PHP_EOL;
+				$output .= '		</ul>'.PHP_EOL;
+				$output .= '	</div>' .PHP_EOL;
+			} else {
+				// User is not logged in therefore no need to see the navigation.
+				$output = "";
+			}
+			return $output;
+		}
+
+		private function footerContent() {
+			$output = '		<div class="clear">'.PHP_EOL;
+			$output .= '	<div id="footer">'.PHP_EOL;
+			$output .= '		test'.PHP_EOL;
+			$output .= '	</div>'.PHP_EOL;
 			return $output;
 		}
 		
 		public function getFooter() {
-			$output = '		</div></div></body>';
+			$output = '				</div>' .PHP_EOL; // This is the content div close tag
+			$output .=  $this->footerContent();
+			$output .= '		</div>' .PHP_EOL; // This is the wrapper div close tag
+			$output .= '	</body>' .PHP_EOL;
 			$output .= '</html>';
 			echo $output;
 		}	

@@ -18,6 +18,9 @@
 				} else 
 					$errorMsg = "Username and/or password incorrect.";
 			}
+		} else if(isset($_GET['do']) && $_GET['do'] == "logout") {
+			App::logoutUser();
+			header('Location: login.php');
 		}
 
 	// Page PHP Backend Code End

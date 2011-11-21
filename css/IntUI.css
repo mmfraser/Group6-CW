@@ -2,6 +2,7 @@ body {
 	margin:0;
 	padding:0;
 	width:100%;
+	height:100%;
 	background: url(../Images/IntUIGrad.png) repeat-x;
 	font-family: verdana;
 }
@@ -11,18 +12,44 @@ div.ui-state-info, div.ui-state-error {
 	padding:5px;
 }
 
-div#container {
-	width: 800px;
+div#wrapper {
+	width: 850px;
 	margin:0 auto;
-	background-color:#fff!important;
+	min-height:200px;
 }
 
 div#navigation {
 	float:left;
-	width:180px;
+	width:23.5%;
+	min-height:200px;
+	background:#fff;
 }
 
 div#mainContent {
 	float:right;
-	width:600px;
+	width:75.5%;
+	min-height:200px;
+	background:#fff;
+	margin:0 0 0 8px;
+}
+
+div#header {
+	width:100%;
+	min-height:100px;
+	margin:0 0 10px 0;
+	background:#fff;
+}
+
+.clear {
+	clear:both;
+}
+
+div#footer {
+	width:100%;
+	margin:10px 0 0 0;
+	background:#fff;
+}
+
+div#tabs {
+	margin:5px!important;
 }
