@@ -20,6 +20,7 @@
 			$artist = new Artist();
 			$artist->populateId($arr['artistId']);
 			$artistHtml .= "<tr id=\"".$arr['artistId']."\">" . PHP_EOL;
+			$artistHtml .= "	<td>".$artist->getArtistId()."</td>" . PHP_EOL;
 			$artistHtml .= "	<td>".$artist->bandName."</td>" . PHP_EOL;
 			$artistHtml .= "	<td>".$artist->forename."</td>" . PHP_EOL;
 			$artistHtml .= "	<td>".$artist->surname."</td>" . PHP_EOL;
@@ -136,6 +137,7 @@
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="artistList">
 				<thead>
 					<tr>
+						<th>Artist ID</th>
 						<th>Band Name</th>
 						<th>Forename</th>
 						<th>Surname</th>
@@ -151,6 +153,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
+						<th>Artist ID</th>
 						<th>Band Name</th>
 						<th>Forename</th>
 						<th>Surname</th>

@@ -51,6 +51,7 @@
 				$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
+				$output .= '			<li><a href="genreManagement.php">Genre Management</a></li>' .PHP_EOL;
 				$output .= '			<li>Data Import
 											<ul>
 												<li><a href="">Import Overview</a></li>

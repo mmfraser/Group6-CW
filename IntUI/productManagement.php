@@ -22,6 +22,7 @@
 			$product = new Product();
 			$product->populateId($arr['productId']);
 			$html .= "<tr id=\"".$arr['productId']."\">" . PHP_EOL;
+			$html .= "	<td>".$product->getProductId()."</td>" . PHP_EOL;
 			$html .= "	<td>".$product->artist->bandName."</td>" . PHP_EOL;
 			$html .= "	<td>".$product->genre->genreName."</td>" . PHP_EOL;
 			$html .= "	<td>".$product->name."</td>" . PHP_EOL;
@@ -137,6 +138,7 @@
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="productList">
 				<thead>
 					<tr>
+						<th>Product ID</th>
 						<th>Artist</th>
 						<th>Genre</th>
 						<th>Name</th>
@@ -151,6 +153,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
+						<th>Product ID</th>
 						<th>Artist</th>
 						<th>Genre</th>
 						<th>Name</th>

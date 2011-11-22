@@ -4,6 +4,7 @@
 	require_once('../AppClasses/store.php');
 	require_once('../AppClasses/Artist.php');
 	require_once('../AppClasses/Product.php');
+	require_once('../AppClasses/Genre.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -86,6 +87,12 @@
 			$product = new Product();
 			$product->populateId($_POST['product']);
 			$product->delete(true);
+			
+		} else if($do == "addGenre") {
+			$genre = new Genre();
+			$genre->genreName = $_POST['genreName'];
+			$genre->save();
+			die("Genre successfully added.");
 		} else 
 			die("Error: Invalid request.");
 		
