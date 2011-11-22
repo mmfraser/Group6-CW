@@ -74,3 +74,9 @@ div.ui-widget {
 	padding:0 5px 0 5px;
 }
 
+button.ui-datepicker-trigger {
+	background: url(../Images/calendar.gif) no-repeat;
+	width:16px;
+	height:15px;
+}
+

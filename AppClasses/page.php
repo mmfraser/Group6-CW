@@ -64,7 +64,7 @@
 											<ul>
 												<li><a href="artistManagement.php">Artist Management</a></li>
 												<li><a href="productManagement.php">Product Management</a></li>
-												<li><a href="saleManagement.php">Sales Management</a></li>
+												<li><a href="salesManagement.php">Sales Management</a></li>
 											</ul>
 										</li>' .PHP_EOL;
 				$output .= '			<li><a href="login.php?do=logout">Log Out</a></li>' .PHP_EOL;
