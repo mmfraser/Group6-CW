@@ -44,7 +44,6 @@
 				$artist->surname = $_POST['surname'];
 				$artist->websiteUrl = $_POST['website'];
 				$artist->dob = $_POST['dob'];
-				print $_POST['dob'];;
 				$artist->nationality = $_POST['nationality'];
 			
 				$artist->save();
@@ -78,7 +77,7 @@
 				$( "#nationality" ).autocomplete({
 					source: availableTags
 				});
-				$( "#dob" ).datepicker({ formatDate: 'yyyy-mm-dd',  yearRange: '1900:' + new Date().getFullYear(), maxDate: '0', changeYear: true, changeMonth: true, showOn: 'button'   });
+				$( "#dob" ).datepicker({ dateFormat: 'yy-mm-dd',  yearRange: '1900:' + new Date().getFullYear(), maxDate: '0', changeYear: true, changeMonth: true, showOn: 'button'   });
 
 			});
 		</script>

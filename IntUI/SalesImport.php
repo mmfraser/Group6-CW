@@ -1,7 +1,7 @@
 <?php
 	require_once('../App.php');
 	require_once('../AppClasses/Import.php');
-	require_once('../AppClasses/ImportCollection.php');
+	require_once('../AppClasses/ImportLogCollection.php');
 
 
 	// Page PHP Backend Code Begin
@@ -46,6 +46,7 @@
 					Array("ColName" => "itemDiscount", 	"DataType" => "float" , 	"Ignore" => "False"),
 					Array("ColName" => "customerEmail", "DataType" => "string" ,	"Ignore" => "False")));
 					$imp->setDBTable("salesdata");
+					$imp->setRanBy(App::getAuthUser()->getUserId());
 					
 					try {
 						$imp->import();		
@@ -68,11 +69,11 @@
 			uploadForm("", $page);
 		}
 		
-		/* Populate the recent imports */
-		$recentImports = new ImportCollection();
+		/* Populate the recent imports table */
+		$recentImports = new ImportLogCollection();
 		$recentImports->populateImportName("SalesImport");
+		$recentHtml = $recentImports->getHtmlTable();
 	
-		
 		
 		function uploadForm($error, $page) {  
 			if($error != "") { $page->error($error); } ?>
@@ -90,9 +91,13 @@
 						</tr>
 					</table>		
 				</form>
+				
 				<div class="ui-widget ui-state-highlight ui-corner-all">
 					<p><span class=" ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>Please note that there is a defined specification for this import which can be found on the 'Import Specification' tab below.</p>
 				</div>
+				
+		<?php } ?>	
+				
 			
 			<div id="tabs">
 				<ul>
@@ -100,7 +105,9 @@
 					<li><a href="#tabs-2">Import Specification</a></li>
 				</ul>
 
+				
 				<div id="tabs-1">
+				<?php print $recentHtml; ?>
 				</div>
 				
 				<div id="tabs-2">
@@ -138,15 +145,11 @@
 			
 			<script type="text/javascript">
 			$(function() {		
-				$('.logEntries').dataTable({
-					"bJQueryUI": true,
-					"sPaginationType": "full_numbers"
-				});	
 				$( "div#tabs" ).tabs({cookie:{}});
 			});
 		</script>
 		
-<? }	// Page PHP Backend Code End
+<? 	// Page PHP Backend Code End
 	
 	$page->getFooter();
 ?>

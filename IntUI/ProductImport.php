@@ -1,6 +1,7 @@
 <?php
 	require_once('../App.php');
 	require_once('../AppClasses/Import.php');
+	require_once('../AppClasses/ImportLogCollection.php');
 
 	// Page PHP Backend Code Begin
 		$page = new Page();
@@ -65,6 +66,11 @@
 			uploadForm("", $page);
 		}
 		
+		/* Populate the recent imports table */
+		$recentImports = new ImportLogCollection();
+		$recentImports->populateImportName("ProductImport");
+		$recentHtml = $recentImports->getHtmlTable();
+		
 		function uploadForm($error, $page) {  
 			if($error != "") { $page->error($error); } ?>
 				
@@ -81,7 +87,7 @@
 					</tr>
 				</table>		
 			</form>
-			
+			<?php } ?>
 			<div id="tabs">
 				<ul>
 					<li><a href="#tabs-1">Recent Imports</a></li>
@@ -89,6 +95,7 @@
 				</ul>
 
 				<div id="tabs-1">
+					<?php print $recentHtml; ?>
 				</div>
 				
 				<div id="tabs-2">
@@ -121,16 +128,9 @@
 				</div>
 			</div>
 						
-		
-<? }	// Page PHP Backend Code End
-?>
 		<script type="text/javascript">
 			$(function() {
 				$( "div#tabs" ).tabs({cookie:{}});
-				$('.logEntries').dataTable({
-					"bJQueryUI": true,
-					"sPaginationType": "full_numbers"
-				});	
 			});
 		</script>
 

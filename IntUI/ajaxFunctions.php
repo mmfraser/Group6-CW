@@ -60,7 +60,7 @@
 			$artist = new Artist();
 			$artist->forename = $_POST['forename'];
 			$artist->surname = $_POST['surname'];
-			$artist->websiteUrl = $_POST['websiteUrl'];
+			$artist->websiteUrl = $_POST['website'];
 			$dob = strtotime($_POST['dob']);
 			$artist->dob = date("Y-m-d", $dob);
 			$artist->nationality = $_POST['nationality'];

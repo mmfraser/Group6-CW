@@ -35,6 +35,7 @@
 		protected $importName;
 		protected $log;
 		protected $db;
+		protected $ranBy;
 		
 		public function __construct() {
 			$this->log = new ImportLog();
@@ -44,11 +45,18 @@
 		public function setImportName($name) {
 			$this->importName = $name;
 			$this->log->importName = $name;
+			
 			$this->log->save();
 		}
 		
 		public function setFile($file) {
 			$this->file = $file;
+		}
+		
+		public function setRanBy($userId) {
+			$this->ranBy = $userId;
+			$this->log->ranBy = $this->ranBy;
+			$this->log->save();
 		}
 		
 		public function setFileType($type) {

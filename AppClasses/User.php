@@ -75,6 +75,10 @@ class User {
 		$this->isLoaded = true;
 	}
 	
+	public function getUserId() {
+		return $this->userId;
+	}
+	
 	/*	This function checks that the username is not in use before adding a new user.
 	*/
 	private function validUsername() {

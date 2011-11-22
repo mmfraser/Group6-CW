@@ -23,6 +23,7 @@
 			$output .= '		<script type="text/javascript" src="../js/jquery.cookie.js"></script>' . PHP_EOL;
 			$output .= '		<script type="text/javascript" src="../js/jquery-ui-1.8.16.custom.min.js"></script>' . PHP_EOL; 	
 			$output .= '		<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>' . PHP_EOL;
+			$output .= '		<script type="text/javascript" src="../js/custom.js"></script>' . PHP_EOL;
 			$output .= '		<script type="text/javascript">' . $this->headJS . '</script>';
 			$output .= '	</head>' . PHP_EOL;
 			$output .= '	<body>' .PHP_EOL;

@@ -70,8 +70,7 @@ class Product {
 	public function save() {	
 		if($this->artistId == null || $this->genreId == null || $this->name == null || $this->releaseDate == null || $this->price == null) 
 			throw new Exception('One or more required fields are not completed.');
-		
-		
+
 		try {
 			if(strpos($this->releaseDate, '/') !== false) {
 				$dateArr = date_parse_from_format("d/m/Y", $this->releaseDate);
@@ -79,7 +78,7 @@ class Product {
 			} else if(strpos($this->releaseDate, '-') !== false) {
 				$dateFormat = $this->releaseDate;
 			} else 
-				throw new Exception("Invalid date format");
+				throw new Exception("Invalid date format.  Expected dd/mm/yyyy or yyyy-mm-dd.");
 		} catch(Exception $e) {
 			throw $e;
 		}

@@ -61,12 +61,12 @@ class Artist {
 		
 		try {
 			if(strpos($this->dob, '/') !== false) {
-				$dateArr = date_parse_from_format("m/d/Y", $this->dob);
+				$dateArr = date_parse_from_format("d/m/Y", $this->dob);
 				$dateFormat = $dateArr["year"] . "-" . $dateArr["month"] . "-" . $dateArr["day"];
 			} else if(strpos($this->dob, '-') !== false) {
 				$dateFormat = $this->dob;
 			} else 
-				throw new Exception("Invalid date format");
+				throw new Exception("Invalid date format.  Expected dd/mm/yyyy or yyyy-mm-dd.");
 		} catch(Exception $e) {
 			throw $e;
 		}
@@ -75,7 +75,6 @@ class Artist {
 		if($this->websiteUrl == null)
 			$this->websiteUrl == null;
 		else if(strpos($this->websiteUrl, "http://") === false) {
-			print "here";
 			$this->websiteUrl = "http://" . $this->websiteUrl;
 		}
 		if ($this->isLoaded === true) {

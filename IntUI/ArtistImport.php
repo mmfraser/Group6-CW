@@ -1,6 +1,7 @@
 <?php
 	require_once('../App.php');
 	require_once('../AppClasses/Import.php');
+	require_once('../AppClasses/ImportLogCollection.php');
 
 	// Page PHP Backend Code Begin
 		$page = new Page();
@@ -66,6 +67,11 @@
 			uploadForm("", $page);
 		}
 		
+		/* Populate the recent imports table */
+		$recentImports = new ImportLogCollection();
+		$recentImports->populateImportName("ArtistImport");
+		$recentHtml = $recentImports->getHtmlTable();
+		
 		function uploadForm($error, $page) {  
 			if($error != "") { $page->error($error); } ?>
 				
@@ -86,7 +92,7 @@
 				<div class="ui-widget ui-state-highlight ui-corner-all">
 					<p><span class=" ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>Please note that there is a defined specification for this import which can be found on the 'Import Specification' tab below.</p>
 				</div>
-			
+			<?php } ?>
 			<div id="tabs">
 				<ul>
 					<li><a href="#tabs-1">Recent Imports</a></li>
@@ -94,6 +100,7 @@
 				</ul>
 
 				<div id="tabs-1">
+				<?php print $recentHtml; ?>
 				</div>
 				
 				<div id="tabs-2">
@@ -126,15 +133,9 @@
 			
 			</div>
 		
-<? }	// Page PHP Backend Code End
-?>
 		<script type="text/javascript">
 			$(function() {
 				$( "div#tabs" ).tabs({cookie:{}});
-				$('.logEntries').dataTable({
-					"bJQueryUI": true,
-					"sPaginationType": "full_numbers"
-				});	
 			});
 		</script>
 

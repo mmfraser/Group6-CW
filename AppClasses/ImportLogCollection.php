@@ -9,7 +9,7 @@
 require_once('../App.php');
 require_once('ImportLog.php');
 
-class ImportCollection {
+class ImportLogCollection {
 	private $imports = array();
 
 	function __construct($imports = "") {
@@ -34,6 +34,37 @@ class ImportCollection {
 	public function getImports() {
 		return $this->imports;
 	}
+	
+	/* 	This function will output the imports in the form of an HTML table ready for use by jQuery datatable.
+	*/
+	public function getHtmlTable() {
+		$html = "<table class=\"logEntries display\">";
+		$html .= '<thead>
+					<tr>
+						<th>Date</th>
+						<th>Total Entries</th>
+						<th>Entries Succeeded</th>
+						<th>Entries Failed</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>'. PHP_EOL;
+		foreach($this->imports as $entry) {
+			$successes = $entry->getNumSuccesses();
+			$unsuccessful = $entry->getNumUnsuccessful();
+			$totalEntries = $successes + $unsuccessful;
+			$html .= '<tr>';
+			$html .= '	<td>'.$entry->logDate.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$totalEntries.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$successes.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$unsuccessful.'</td>'. PHP_EOL;
+			$html .= '	<td><a href="ViewImportLog.php?logId='.$entry->getLogId().'">View Log</a></td>'. PHP_EOL;
+			$html .= '</tr>'. PHP_EOL;
+		}
+		$html .= '</tbody></table>';
+		return $html;
+	}	
+
 		
 	/*	This function populates the object with data given a datarow.
 	*/

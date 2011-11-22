@@ -16,6 +16,7 @@ class ImportLog {
 	public $inputtedIds;
 	public $importName;
   	public $isLoaded;
+	public $ranBy;
 
 	function __construct($logId = "", $logDate = "", $dbTable = "", $log = "", $inputtedIds = "", $importName = "") {
 		$this->conn = App::getDB();
@@ -46,9 +47,13 @@ class ImportLog {
 		$this->log = $row['log'];
 		$this->inputtedIds = $row['inputtedIds'];
 		$this->importName = $row['importName'];
+		$this->ranBy = $row['ranBy'];
 		$this->isLoaded = true;
 	}
 	
+	public function getLogId() {
+		return $this->logId;
+	}
 	
 	/*	This function returns the number of successful data imports.
 	*/
@@ -63,6 +68,14 @@ class ImportLog {
 	public function getNumUnsuccessful() {
 		$xml = simplexml_load_string("<log>".$this->log."</log>");
 		$xpath = $xml->xpath("//entry[insertId = -1]");
+		return count($xpath);
+	}
+	
+	/*	This function returns the number of	data rows.
+	*/
+	public function getNumRows() {
+		$xml = simplexml_load_string("<log>".$this->log."</log>");
+		$xpath = $xml->xpath("//entry");
 		return count($xpath);
 	}
 	
@@ -84,11 +97,11 @@ class ImportLog {
 				<tbody>';
 		foreach($entries as $entry) {
 			$html .= '<tr>';
-			$html .= '	<td>'.$entry->logDate.'</td>';
-			$html .= '	<td>'.$entry->importRow.'</td>';
-			$html .= '	<td>'.$entry->dbTable.'</td>';
-			$html .= '	<td>'.$entry->message.'</td>';
-			$html .= '	<td>'.$entry->insertId.'</td>';
+			$html .= '	<td>'.$entry->logDate.'</td>' . PHP_EOL;
+			$html .= '	<td>'.$entry->importRow.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$entry->dbTable.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$entry->message.'</td>'. PHP_EOL;
+			$html .= '	<td>'.$entry->insertId.'</td>'. PHP_EOL;
 			$html .= '</tr>';
 		}
 		$html .= '</tbody></table>';
@@ -109,19 +122,20 @@ class ImportLog {
 		if ($this->isLoaded === true) {	
 			$SQL = "UPDATE importlog SET 
 					logDate = NOW(), 
-					dbTable = '".mysql_real_escape_string($this->dbTable)."',
 					log = '".mysql_real_escape_string($this->log)."', 
 					inputtedIds = '".mysql_real_escape_string($this->inputtedIds)."', 
+					ranBy = '".mysql_real_escape_string($this->ranBy)."', 
 					importName = '".mysql_real_escape_string($this->importName)."' 
 					WHERE logId = ".mysql_real_escape_string($this->logId);
 			$this->conn->execute($SQL);
 		} else {		
-			$SQL = "INSERT INTO importlog (logDate, dbTable, log, inputtedIds, importName) VALUES (
+		print $this->ranBy;
+			$SQL = "INSERT INTO importlog (logDate,log, inputtedIds, importName, ranBy) VALUES (
 					NOW(), 
-					'".mysql_real_escape_string($this->dbTable)."', 
 					'".mysql_real_escape_string($this->log)."', 
-					'".mysql_real_escape_string($this->inputtedIds)."', 
-					'".mysql_real_escape_string($this->importName)."')";
+					'".mysql_real_escape_string($this->inputtedIds)."',
+					'".mysql_real_escape_string($this->importName)."',
+					'".mysql_real_escape_string($this->ranBy)."')";
 			$this->isLoaded = true;
 			$this->logId = $this->conn->execute($SQL);
 		}		
@@ -141,6 +155,7 @@ class ImportLog {
 		$str .= "<br />city: " . $this->city;
 		$str .= "<br />postcode: " . $this->postcode;
 		$str .= "<br />telephoneNumber: " . $this->telephoneNumber;
+		$str .= "<br />ranBy: " . $this->ranBy;
 		return $str;
 	}
 }

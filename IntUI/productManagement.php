@@ -27,7 +27,7 @@
 			$html .= "	<td>".$product->name."</td>" . PHP_EOL;
 			$html .= "	<td>".$product->releaseDate."</td>" . PHP_EOL;
 			$html .= "	<td>&pound;".$product->price."</td>" . PHP_EOL;
-			$html .= '	<td class="options" style=""><a href="modifyArtist.php?artistId='.$arr['productId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span><a title="Delete Product" id="deleteArtist"><span class="ui-icon ui-icon-trash"></span></a></td>';
+			$html .= '	<td class="options" style=""><a href="modifyProduct.php?productId='.$arr['productId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span><a title="Delete Product" id="deleteArtist"><span class="ui-icon ui-icon-trash"></span></a></td>';
 			$html .= "</tr>" . PHP_EOL;
 		}
 	
@@ -77,7 +77,7 @@
 					"sPaginationType": "full_numbers"
 				});
 				
-				$( "#releaseDate" ).datepicker({ formatDate: 'yyyy-mm-dd',  yearRange: '1900:' + new Date().getFullYear(), maxDate: '0', changeYear: true, changeMonth: true, showOn: 'button'   });
+				$( "#releaseDate" ).datepicker({  dateFormat: 'yy-mm-dd',  yearRange: '1900:' + new Date().getFullYear(), maxDate: '0', changeYear: true, changeMonth: true, showOn: 'button'   });
 
 				$( "#dialog-confirm-delete" ).dialog({
 					autoOpen: false,
