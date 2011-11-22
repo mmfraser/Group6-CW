@@ -114,7 +114,6 @@
 				$joinString .= $joins[$i];
 			}
 			
-			print $query . " " . $joinString . " " . $filterString;
 			$sales = App::getDB()->getArrayFromDB($query . " " . $joinString . " " . $filterString);
 			
 			$saleHtml = '';
@@ -135,6 +134,7 @@
 				$saleHtml .= '	<td>'.$product->name.'</td>'.PHP_EOL;
 				$saleHtml .= '	<td>'.$sale->itemDiscount.'</td>'.PHP_EOL;
 				$saleHtml .= '	<td>'.$sale->customerEmail.'</td>'.PHP_EOL;
+				$saleHtml .= '	<td class="options" style="width:20px;"><a href="modifySale.php?saleId='.$sale->getSaleId().'" title="Modify Sale"><span class="ui-icon ui-icon-pencil"></span></a></td>'.PHP_EOL;
 				$saleHtml .= '</tr>'.PHP_EOL;
 				
 			}		
@@ -206,6 +206,7 @@
 						<th>Item Name</th>
 						<th>Discount</th>
 						<th>Customer</th>
+						<th>Options</th>
 					</tr>
 
 				</thead>
@@ -222,6 +223,7 @@
 						<th>Item Name</th>
 						<th>Discount</th>
 						<th>Customer</th>
+						<th>Options</th>
 					</tr>
 				</tfoot>
 			</table>
