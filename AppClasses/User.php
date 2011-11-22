@@ -101,6 +101,11 @@ class User {
 		if($this->forename == null || $this->surname == null || $this->password == null || $this->username == null) {
 			throw new Exception('One or more required fields are not completed.');
 		}
+		
+		$pwCheck = preg_match("/^[a-zA-Z]\w{5,15}$/", $this->password);
+			if(!$pwCheck) {
+				throw new Exception('Password not valid.  Must be at least 6 characters long and contain a number.');
+			}
 	
 		if($this->active == null)
 			$this->active = 0;
@@ -111,6 +116,8 @@ class User {
 			} else {
 				$pass = App::secureString($this->password);
 			}
+			
+			
 	
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
