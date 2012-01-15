@@ -94,6 +94,13 @@ class User {
 			if($q == 1) return true; else return false;
 	}
 	
+	private static function checkPassword($password) {
+			$pwCheck = preg_match("/^[a-zA-Z]\w{5,15}$/", $password);
+			if(!$pwCheck) {
+				throw new Exception('Password not valid.  Must be at least 6 characters long and contain a number.');
+			}
+	}
+	
 	/* 	This function allows the object to be saved back to the database, whether it is a new object or 
 		an object being updated.
 	*/
@@ -102,11 +109,6 @@ class User {
 			throw new Exception('One or more required fields are not completed.');
 		}
 		
-		$pwCheck = preg_match("/^[a-zA-Z]\w{5,15}$/", $this->password);
-			if(!$pwCheck) {
-				throw new Exception('Password not valid.  Must be at least 6 characters long and contain a number.');
-			}
-	
 		if($this->active == null)
 			$this->active = 0;
 
@@ -114,11 +116,10 @@ class User {
 			if($this->oldPassword == $this->password) {
 				$pass = $this->password;
 			} else {
+				self::checkPassword($this->password);
 				$pass = App::secureString($this->password);
 			}
 			
-			
-	
 			$SQL = "UPDATE user SET 
 					forename = '".mysql_real_escape_string($this->forename)."' , 
 					surname = '".mysql_real_escape_string($this->surname)."', 
@@ -141,7 +142,7 @@ class User {
 			if(!$this->validUsername()) {
 				throw new Exception('Username already in use.');
 			}
-		
+			self::checkPassword($this->password);
 			$SQL = "INSERT INTO user (forename, surname, password, active, username) VALUES (
 					'".mysql_real_escape_string($this->forename)."', 
 					'".mysql_real_escape_string($this->surname)."', 

@@ -60,19 +60,24 @@
 				}
 				if(!$this->validName())
 					throw new Exception('Invalid group name.  Group already exists with this name.');
-					
+				
+					if($this->storeId != null || $this->storeId != 0) 
+						$storeId = mysql_real_escape_string($this->storeId);
+					else 
+						$storeId = "NULL";
+
 				if ($this->isLoaded === true) {
 					$SQL = "UPDATE usergroup SET 
 							name = '".mysql_real_escape_string($this->name)."' , 
 							description = '".mysql_real_escape_string($this->description)."',
-							storeId = '".mysql_real_escape_string($this->storeId)."'
+							storeId = ".$storeId."
 							WHERE groupId = '".mysql_real_escape_string($this->groupId)."'";
 					 $this->conn->execute($SQL);
 				} else {
 					$SQL = "INSERT INTO usergroup (name, description, storeId) VALUES (
 							'".mysql_real_escape_string($this->name)."', 
 							'".mysql_real_escape_string($this->description)."',
-							'".mysql_real_escape_string($this->storeId)."'
+							".$storeId."
 							)";
 					$this->isLoaded = true;
 					$this->groupId = $this->conn->execute($SQL);
@@ -89,7 +94,9 @@
 			$str .= "<br />groupId: " . $this->groupId;
 			$str .= "<br />name: " . $this->name;
 			$str .= "<br />description: " . $this->description;
+			$str .= "<br />storeId: " . $this->storeId;
 			return $str;
 		}
 	}
+	
 ?>

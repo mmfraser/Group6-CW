@@ -104,31 +104,31 @@
 		
 		$myPicture->drawText((int)$xml->title->xPos,(int)$xml->title->yPos,(string)$xml->title->name,$TextSettings);
 
-$myPicture->setShadow(FALSE);
-$myPicture->setGraphArea(50,80,675,200);
-$myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
+		$myPicture->setShadow(FALSE);
+		$myPicture->setGraphArea(50,80,675,200);
+		$myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 
-$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
-, "Mode"=>SCALE_MODE_FLOATING
-, "LabelingMethod"=>LABELING_ALL
-, "GridR"=>255, "GridG"=>255, "GridB"=>255, "GridAlpha"=>50, "TickR"=>0, "TickG"=>0, "TickB"=>0, "TickAlpha"=>50, "LabelRotation"=>0, "CycleBackground"=>1, "DrawXLines"=>1, "DrawSubTicks"=>1, "SubTickR"=>255, "SubTickG"=>0, "SubTickB"=>0, "SubTickAlpha"=>50, "DrawYLines"=>ALL);
-$myPicture->drawScale($Settings);
+		$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
+		, "Mode"=>SCALE_MODE_FLOATING
+		, "LabelingMethod"=>LABELING_ALL
+		, "GridR"=>255, "GridG"=>255, "GridB"=>255, "GridAlpha"=>50, "TickR"=>0, "TickG"=>0, "TickB"=>0, "TickAlpha"=>50, "LabelRotation"=>0, "CycleBackground"=>1, "DrawXLines"=>1, "DrawSubTicks"=>1, "SubTickR"=>255, "SubTickG"=>0, "SubTickB"=>0, "SubTickAlpha"=>50, "DrawYLines"=>ALL);
+		$myPicture->drawScale($Settings);
 
-$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
+		$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
 
-$Config = "";
+		$Config = "";
 
-$function = "draw" . (string)$xml->chartType . "Chart";
-$myPicture->$function($Config);
+		$function = "draw" . (string)$xml->chartType . "Chart";
+		$myPicture->$function($Config);
 
-//$myPicture->draw{}Chart($Config);
+		//$myPicture->draw{}Chart($Config);
 
-$Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_NOBORDER
-, "Mode"=>LEGEND_HORIZONTAL
-);
-$myPicture->drawLegend(563,16,$Config);
+		$Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_NOBORDER
+		, "Mode"=>LEGEND_HORIZONTAL
+		);
+		$myPicture->drawLegend(563,16,$Config);
 
-$myPicture->stroke();
+		$myPicture->stroke();
 		
 			
 	// Page PHP Backend Code End 

@@ -45,7 +45,6 @@
 		public function setImportName($name) {
 			$this->importName = $name;
 			$this->log->importName = $name;
-			
 			$this->log->save();
 		}
 		

@@ -26,7 +26,7 @@
 			$artistHtml .= "	<td>".$artist->surname."</td>" . PHP_EOL;
 			$artistHtml .= "	<td>".$artist->dob."</td>" . PHP_EOL;
 			$artistHtml .= "	<td>".$artist->nationality."</td>" . PHP_EOL;
-			$artistHtml .= "	<td><a href=\"".$artist->websiteUrl."\">".$artist->websiteUrl."</a></td>" . PHP_EOL;
+			$artistHtml .= "	<td><a href=\"".$artist->websiteUrl."\">Website</a></td>" . PHP_EOL;
 			$artistHtml .= '	<td class="options" style=""><a href="modifyArtist.php?artistId='.$arr['artistId'].'" title="Modify User"><span class="ui-icon ui-icon-pencil"></span><a title="Delete Product" id="deleteArtist"><span class="ui-icon ui-icon-trash"></span></a></td>';
 			$userHtml .= "</tr>" . PHP_EOL;
 		}
