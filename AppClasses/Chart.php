@@ -10,12 +10,13 @@
 	require_once('../App.php');
 
 	class Chart {
-		private $chartId;
+		public $chartId;
 		private $xmlConfig;
 		public $chartName;
 		public $chartType;
 		public $sqlColumns = array();
 		public $sqlTables = array();
+		public $sqlOrder = array();
 		public $chartSeries = array();
 		public $abscissa = array();
 		public $axes = array();
@@ -61,6 +62,10 @@
 			$this->sqlTables[] = $colTable;
 		}
 		
+		public function addSQLOrder($colName, $order) {
+			$this->sqlOrder[] = $colName . " " . $order;
+		}
+		
 		public function addChartSeries($seriesName, $dbCol, $description, $axisNo) {
 			$series = array();
 			$series['name'] = $seriesName;
@@ -99,13 +104,15 @@
 		
 		public function generateSQLQuery() {
 			$sql = "SELECT ";
-					
 			$sql .= implode(", ", $this->sqlColumns);
-			
 			$sql .= " FROM ";
-			
 			$sql .= implode(", ", array_unique($this->sqlTables));
-
+			
+			if(count($this->sqlOrder) != 0) {
+				$sql .= " ORDER BY ";
+				$sql .= implode(", ", $this->sqlOrder);
+			}
+			
 			return $sql;
 		}
 		
@@ -133,44 +140,44 @@
 
 		/*	This function gets the object with data given the chartId.
 		*/
-		public function populateId($chartId){
+		public static function getChart($chartId){
 			$sql = "SELECT * FROM chart WHERE chartId = '".mysql_real_escape_string($chartId)."'";
-			$row = $this->conn->getDataRow($sql);
-			if($row == null)
-				return false;
-			$this->getRow($row);
+			$row = App::getDB()->getDataRow($sql);
+			$chart = base64_decode($row['serialisedClass']);
+			$chart = unserialize($chart);
+			$chart->chartId = $chartId;
+			$chart->isLoaded = true;
+			
+			return $chart;
 		}
 		
 		/*	This function populates the object with data given a datarow.
 		*/
 		public function getRow($row){
-			$this->chartId = $row['chartId'];
-			$this->xmlConfig = $row['config'];
 			
-			$this->isLoaded = true;
 		}
 
 		/* 	This function allows the object to be saved back to the database, whether it is a new object or an object being updated.
 		*/
 		public function save() {
 			try{
-				if($this->name == null || $this->description == null) {
+				if($this->chartName == null || $this->chartType == null) {
 					throw new Exception('One or more required fields are not completed.');
 				}
 				
 
 				if ($this->isLoaded === true) {
-					$SQL = "UPDATE usergroup SET 
-							name = '".mysql_real_escape_string($this->name)."' , 
-							description = '".mysql_real_escape_string($this->description)."',
-							storeId = ".$storeId."
-							WHERE groupId = '".mysql_real_escape_string($this->groupId)."'";
-					 $this->conn->execute($SQL);
+					$SQL = "UPDATE chart SET 
+							chartName = '".mysql_real_escape_string($this->chartName)."' , 
+							chartType = '".mysql_real_escape_string($this->chartType)."',
+							serialisedClass = '".base64_encode(serialize($this))."'
+							WHERE chartId = '".mysql_real_escape_string($this->chartId)."'";
+					 App::getDB()->execute($SQL);
 				} else {
-					$SQL = "INSERT INTO usergroup (name, description, storeId) VALUES (
-							'".mysql_real_escape_string($this->name)."', 
-							'".mysql_real_escape_string($this->description)."',
-							".$storeId."
+					$SQL = "INSERT INTO chart (chartName, chartType, serialisedClass) VALUES (
+							'".mysql_real_escape_string($this->chartName)."', 
+							'".mysql_real_escape_string($this->chartType)."',
+							'".base64_encode(serialize($this))."'
 							)";
 					$this->isLoaded = true;
 					$this->groupId = $this->conn->execute($SQL);
@@ -186,9 +193,10 @@
 			
 		}
 	}
-/*	$test = new Chart();
-	
-	$test->chartType = "Line";
+	$test = Chart::getChart(2);
+	$test->chartName = "test";
+	$test->save();
+	/*$test->chartType = "Line";
 	
 	$test->chartName = "Sales over Time";
 	
@@ -203,8 +211,8 @@
 	
 	$test->setAbscissa("Month", "sales.month");
 	
-	print $test->generateSQLQuery();*/
-	
+	$test->save();
+	*/
 //	print_r($test->sqlColumns);
 //	print_r(array_unique($test->sqlTables));
 

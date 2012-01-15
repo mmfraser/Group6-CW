@@ -5,11 +5,11 @@
 	include("../pChart/class/pImage.class.php");
 	include("Chart.php");
 
-		$chartId = 1;
+	/*	$chartId = 1;
 		
 		$chart = new Chart();
 	
-		$chart->chartType = "Line";
+		$chart->chartType = "Bar";
 		
 		$chart->chartName = "Sales over Time";
 		
@@ -17,21 +17,18 @@
 		$chart->addSQLColumn("month", "sales");
 		$chart->addSQLColumn("noSales", "sales");
 		
+		$chart->addSQLOrder("sales.month", "DESC");
+		
 		$chart->addChartAxis("otherCol", "CDs", "AXIS_POSITION_LEFT");
 		
 		$chart->addChartSeries("Sales", "sales.otherCol", "Number Sales", 0);
 		$chart->addChartSeries("noSales", "sales.noSales", "Number Sales 1", 0);
 		
-		$chart->setAbscissa("Month", "sales.month");
+		$chart->setAbscissa("Month", "sales.month");*/
 		
-		//$chart = App::getDB()->getDataRow("SELECT * FROM chart WHERE chartId = '".$chartId."'");
-		
-		// Load in the XML configuration.
-		/*$xml = simplexml_load_string($chart['config']);
-		$sqlCols = $xml->sqlQuery->columns;
-		$noCols = count($sqlCols->column);*/
-	
-		
+		$chart = Chart::getChart(2);
+			
+		//	print $chart->generateSQLQuery();
 		// Generate select query
 		$query = $chart->generateSQLQuery();
 			
