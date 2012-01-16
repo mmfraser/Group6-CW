@@ -55,7 +55,7 @@
 	});
 		</script>
 
-			<p><a id="addChart" href="#">Create New Chart</a></p>
+			<p><a id="addChart" href="createChart1.php">Create New Chart</a></p>
 			
 			<table cellpadding="0" cellspacing="0" border="0" class="display" id="chartList">
 				<thead>
@@ -69,4 +69,6 @@
 					<?php print $chartHtml; ?>
 				</tbody>
 			</table>
-	
+<?php	
+	$page->getFooter();
+?>

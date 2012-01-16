@@ -17,6 +17,8 @@
 		public $sqlColumns = array();
 		public $sqlTables = array();
 		public $sqlOrder = array();
+		public $sqlGroupBy = array();
+		public $sqlAliases = array();
 		public $chartSeries = array();
 		public $abscissa = array();
 		public $axes = array();
@@ -57,9 +59,21 @@
 			return $array;
 		}
 		
-		public function addSQLColumn($colName, $colTable) {
-			$this->sqlColumns[] = $colTable. '.' .$colName;
+		public function addSQLColumn($colName, $colTable, $alias, $aggregation) {
+			if(in_array($alias, $this->sqlAliases)) 
+				throw new Exception("Alias " . $alias . " already exists, please choose another!");
+			$this->sqlAliases[] = $alias;
+			if($aggregation != null) {
+				$this->sqlColumns[] = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+			} else {
+				$this->sqlColumns[] = $colTable. '.' .$colName . ' as ' . $alias;
+			}
 			$this->sqlTables[] = $colTable;
+		}
+		
+		public function addSQLGroupBy($colName, $colTable) {
+			//$this->sqlGroupBy[] = $colTable. '.' .$colName;
+			$this->sqlGroupBy[] = $colName;
 		}
 		
 		public function addSQLOrder($colName, $order) {
@@ -70,7 +84,7 @@
 			$series = array();
 			$series['name'] = $seriesName;
 			
-			if(!in_array($dbCol, $this->sqlColumns))
+			if(!in_array($dbCol, $this->sqlAliases))
 				throw new Exception("Error adding chart series, no such DB column exists.");
 				
 			$series['dbCol'] = $dbCol;
@@ -94,7 +108,7 @@
 		}
 		
 		public function setAbscissa($name, $dbCol) {
-			if(!in_array($dbCol, $this->sqlColumns))
+			if(!in_array($dbCol, $this->sqlAliases))
 				throw new Exception("Error adding chart series, no such DB column exists.");
 		
 			$this->abscissa['name'] = $name;
@@ -111,6 +125,11 @@
 			if(count($this->sqlOrder) != 0) {
 				$sql .= " ORDER BY ";
 				$sql .= implode(", ", $this->sqlOrder);
+			}
+			
+			if(count($this->sqlGroupBy) != 0) {
+				$sql .= " GROUP BY ";
+				$sql .= implode(", ", $this->sqlGroupBy);
 			}
 			
 			return $sql;
@@ -192,26 +211,29 @@
 			
 		}
 	}
-	$test = Chart::getChart(2);
-	$test->chartName = "test";
+	$test = Chart::getChart(60);
+	$test->chartName = "Sales per artist";
+	$test->chartType = "Bar";
 	$test->save();
-	/*$test->chartType = "Line";
+	/*$test = new Chart();
+	$test->chartType = "Line";
 	
 	$test->chartName = "Sales over Time";
 	
-	$test->addSQLColumn("otherCol", "sales");
-	$test->addSQLColumn("month", "sales");
-	$test->addSQLColumn("noSales", "sales");
+	$test->addSQLColumn("saleId", "SALES_VIEW", "noSales", "COUNT");
+	$test->addSQLColumn("name", "SALES_VIEW", "name", null);
+	$test->addSQLGroupBy("name", "SALES_VIEW");
 	
-	$test->addChartAxis("otherCol", "CDs", "AXIS_POSITION_LEFT");
+	$test->addChartAxis("noSales", "Sales", "AXIS_POSITION_LEFT");
+	$test->addChartSeries("Sales", "noSales", "Number Sales", 0);
+
 	
-	$test->addChartSeries("Sales", "sales.otherCol", "Number Sales", 0);
-	$test->addChartSeries("noSales", "sales.noSales", "Number Sales 1", 0);
+	$test->setAbscissa("Name", "name");
 	
-	$test->setAbscissa("Month", "sales.month");
+	$test->save(); 
 	
-	$test->save();
-	*/
+	print $test->generateSQLQuery(); */
+	
 //	print_r($test->sqlColumns);
 //	print_r(array_unique($test->sqlTables));
 

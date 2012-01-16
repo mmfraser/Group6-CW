@@ -5,54 +5,32 @@
 	include("../pChart/class/pImage.class.php");
 	include("Chart.php");
 
-	/*	$chartId = 1;
+		$chart = Chart::getChart($_GET['chartId']);
 		
-		$chart = new Chart();
-	
-		$chart->chartType = "Bar";
+		//	print $chart->generateSQLQuery(); die();
 		
-		$chart->chartName = "Sales over Time";
-		
-		$chart->addSQLColumn("otherCol", "sales");
-		$chart->addSQLColumn("month", "sales");
-		$chart->addSQLColumn("noSales", "sales");
-		
-		$chart->addSQLOrder("sales.month", "DESC");
-		
-		$chart->addChartAxis("otherCol", "CDs", "AXIS_POSITION_LEFT");
-		
-		$chart->addChartSeries("Sales", "sales.otherCol", "Number Sales", 0);
-		$chart->addChartSeries("noSales", "sales.noSales", "Number Sales 1", 0);
-		
-		$chart->setAbscissa("Month", "sales.month");*/
-		
-		$chart = Chart::getChart(2);
-			
-		//	print $chart->generateSQLQuery();
 		// Generate select query
 		$query = $chart->generateSQLQuery();
 			
 		// Execute query and put in array.
 		$darr = App::getDB()->getArrayFromDB($query);
-		
-	
-		
+			
 		// Create our data arrays for reference in the series and abscissa.
 		foreach($darr as $row) {
-			foreach($chart->sqlColumns as $col){
+			foreach($chart->sqlAliases as $col){
 				// REVISIT THIS
-				$expl = explode(".", $col);
+			/*	$expl = explode(".", $col);
 				$colName = $expl[1];
-					${str_replace(".", "",$col)}[] = (string) $row[$colName];
+					${str_replace(".", "",$col)}[] = (string) $row[$colName]; */
+					${$col}[] = (string) $row[$col]; 
 				}
 		}
 			
 		$myData = new pData();
 		// Add points and series
-		$series = $xml->chartSeries->series;
+			
 		foreach($chart->chartSeries as $serie) {
-			$arr = ${str_replace(".", "",$serie['dbCol'])};
-		
+			$arr = ${$serie['dbCol']};
 			$myData->addPoints($arr, $serie['name']);
 			$myData->setSerieDescription($serie['name'], $serie['description']);
 			$myData->setSerieOnAxis($serie['name'], (int)$serie['axisNo']);	
