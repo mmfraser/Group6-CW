@@ -117,7 +117,6 @@
 		}
 		
 		function __construct($chartId = "", $chartName = "", $chartType = "") {
-			$this->conn = App::getDB();
 			$this->chartName = $name;
 			$this->chartType = $chartType;
 			$this->storeId = $storeId;
@@ -180,7 +179,7 @@
 							'".base64_encode(serialize($this))."'
 							)";
 					$this->isLoaded = true;
-					$this->groupId = $this->conn->execute($SQL);
+					$this->groupId = App::getDB()->execute($SQL);
 				}
 			} catch (Exception $e) {
 				throw $e;
