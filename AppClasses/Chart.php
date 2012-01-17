@@ -212,8 +212,8 @@
 		}
 	}
 	$test = Chart::getChart(60);
-	$test->chartName = "Sales per artist";
-	$test->chartType = "Bar";
+	$test->chartName = "Sales per artistt";
+	$test->chartType = "Line";
 	$test->save();
 	/*$test = new Chart();
 	$test->chartType = "Line";
