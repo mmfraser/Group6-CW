@@ -86,6 +86,15 @@
 		}
 		
 		public function addChartSeries($seriesName, $dbCol, $description, $axisNo) {
+			foreach($this->chartSeries as $series) {
+				if($series['name'] == $seriesName) {
+					if($series['dbCol'] == $dbCol && $series['description'] == $description)
+						return;
+					else
+						throw new Exception("Cannot have duplicate series name.");
+				} 
+			}
+		
 			$series = array();
 			$series['name'] = $seriesName;
 			
@@ -103,13 +112,34 @@
 			$this->chartSeries[] = $series;
 		}
 		
-		public function addChartAxis($axisName, $axisUnit, $axisPosition) {
+		/*public function addChartAxis($axisName, $axisUnit, $axisPosition) {
+			if($axisName == null || $axisPosition == null) {
+				throw new Exception("Axis Name or Axis Position cannot be null");
+			}
+			
+			foreach($this->axes as $axis) {
+				if($axis['name'] == $axisName && $axis['unit'] == $axisUnit) {
+					return;
+				} else if($axis['name'] == $axisName && $axis['unit'] != $axisUnit) {
+					$axis['unit'] = $axisUnit;
+				}
+			}
+		
 			$axis = array();
 			$axis['name'] = $axisName;
 			$axis['unit'] = $axisUnit;
 			$axis['position'] = $axisPosition;
 			
 			$this->axes[] = $axis;
+		}*/
+		
+		public function setYAxis($axisName, $axisUnit, $axisPosition) {
+			if($axisName == null || $axisPosition == null) {
+				throw new Exception("Y-axis Name or Y-axis Position cannot be null");
+			}
+			$this->axes[0]['name'] = $axisName;
+			$this->axes[0]['unit'] = $axisUnit;
+			$this->axes[0]['position'] = $axisPosition;
 		}
 		
 		public function setAbscissa($name, $dbCol, $dbColAlias) {
@@ -119,7 +149,6 @@
 			$this->abscissa['name'] = $name;
 			$this->abscissa['dbCol'] = $dbCol;
 			$this->abscissa['dbColAlias'] = $dbColAlias;
-		
 		}
 		
 		public function generateSQLQuery() {
@@ -216,7 +245,8 @@
 			
 		}
 	}
-	
+	//$test = Chart::getChart(63);
+	//print $test->generateSQLQuery();
 	/*$test = Chart::getChart(60);
 	$test->chartName = "Sales per artistt";
 	$test->chartType = "Line";

@@ -35,6 +35,10 @@
 				setcookie("CHARTWIZARD", serialize($chart), time()+3600);
 				header('Location: createChart2.php');
 			}
+		} else if($_GET['do'] == "cancel") {
+			setcookie("CHARTWIZARD", "", time()-3600);
+			$chart = null;
+			header('Location: chartManagement.php');
 		} else {
 			if(isset($_COOKIE['CHARTWIZARD'])) {
 				$chartName = $chart->chartName;
@@ -90,7 +94,7 @@
 				
 					
 					<div style="margin:15px 0 0 0;">
-						<a href="chartManagement.php" class="cancel-button">Cancel</a>
+						<a href="?do=cancel" class="cancel-button">Cancel</a>
 						<input type="submit" value="Next Step" class="submit-button" style="float:right;" />
 					</div>
 				</fieldset>
