@@ -37,7 +37,8 @@
 		}
 		
 		// Set abscissa
-		$myData->addPoints(${str_replace(".", "",$chart->abscissa['dbCol'])}, $chart->abscissa['name']);
+		$myData->addPoints(${str_replace(".", "",$chart->abscissa['dbColAlias'])}, $chart->abscissa['name']);
+		$myData->setAbscissaName($chart->abscissa['name']);
 		$myData->setAbscissa($chart->abscissa['name']);
 
 		// Set axis 

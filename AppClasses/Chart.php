@@ -22,6 +22,7 @@
 		public $chartSeries = array();
 		public $abscissa = array();
 		public $axes = array();
+		public $dataView;
 				
 		// Optional
 		
@@ -60,8 +61,11 @@
 		}
 		
 		public function addSQLColumn($colName, $colTable, $alias, $aggregation) {
-			if(in_array($alias, $this->sqlAliases)) 
-				throw new Exception("Alias " . $alias . " already exists, please choose another!");
+			// This function tries to give the alias passed to it, but if it cant, it'll give it a unique alias.
+			while(in_array($alias, $this->sqlAliases)) {
+				$alias .= "_1";
+			}
+			
 			$this->sqlAliases[] = $alias;
 			if($aggregation != null) {
 				$this->sqlColumns[] = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
@@ -69,6 +73,7 @@
 				$this->sqlColumns[] = $colTable. '.' .$colName . ' as ' . $alias;
 			}
 			$this->sqlTables[] = $colTable;
+			return $alias;
 		}
 		
 		public function addSQLGroupBy($colName, $colTable) {
@@ -107,12 +112,13 @@
 			$this->axes[] = $axis;
 		}
 		
-		public function setAbscissa($name, $dbCol) {
-			if(!in_array($dbCol, $this->sqlAliases))
+		public function setAbscissa($name, $dbCol, $dbColAlias) {
+			if(!in_array($dbColAlias, $this->sqlAliases))
 				throw new Exception("Error adding chart series, no such DB column exists.");
 		
 			$this->abscissa['name'] = $name;
 			$this->abscissa['dbCol'] = $dbCol;
+			$this->abscissa['dbColAlias'] = $dbColAlias;
 		
 		}
 		
@@ -182,7 +188,6 @@
 				if($this->chartName == null || $this->chartType == null) {
 					throw new Exception('One or more required fields are not completed.');
 				}
-				
 
 				if ($this->isLoaded === true) {
 					$SQL = "UPDATE chart SET 
@@ -211,10 +216,16 @@
 			
 		}
 	}
-	$test = Chart::getChart(60);
+	
+	/*$test = Chart::getChart(60);
 	$test->chartName = "Sales per artistt";
 	$test->chartType = "Line";
-	$test->save();
+	//$test->setAbscissa("Name", "name", "name");
+	$test->addSQLColumn("itemDiscount", "SALES_VIEW", "itemDiscount", null);
+	$test->addChartSeries("Disocunt", "itemDiscount", "Item Discount", 0);
+	print_r($test);
+	
+	$test->save();*/
 	/*$test = new Chart();
 	$test->chartType = "Line";
 	

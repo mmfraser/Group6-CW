@@ -1,5 +1,6 @@
 <?php
 	require_once('../App.php');
+	require_once('../AppClasses/Chart.php');
 
 	// Page PHP Backend Code Begin
 		$page = new Page();
@@ -10,7 +11,42 @@
 			// User not authenticated.
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartManagement.php">log in</a>.');
 		}
-	
+		
+		if(isset($_COOKIE['CHARTWIZARD'])) {
+			$chart = unserialize($_COOKIE['CHARTWIZARD']);
+		} else {
+			$chart = new Chart();
+		}
+		
+		if(isset($_GET['do']) && $_GET['do'] == "submit") {
+			if(empty($_POST['chartName'])) {
+				$page->error("The Chart Name field is mandatory must be completed.");
+			} else if(empty($_POST['chartType'])) {
+				$page->error("The Chart Type is mandatory must be selected.");
+			} else {
+				// Set the values
+				$chart->chartName = $_POST['chartName'];
+				$chart->chartType = $_POST['chartType'];
+				$chart->dataView = $_POST['dataView'];
+				$chartName = $chart->chartName;
+				$chartType = $chart->chartType;
+				$dataView = $chart->dataView;
+				// 3600 is one hour.
+				setcookie("CHARTWIZARD", serialize($chart), time()+3600);
+				header('Location: createChart2.php');
+			}
+		} else {
+			if(isset($_COOKIE['CHARTWIZARD'])) {
+				$chartName = $chart->chartName;
+				$chartType = $chart->chartType;
+				$dataView = $chart->dataView;
+			} else {
+				$chartName = $_POST['chartName'];
+				$chartType = $_POST['chartType'];
+				$dataView = $_POST['dataView'];
+			}
+		}
+		
 	// Page PHP Backend Code End
 
 ?>
@@ -27,13 +63,32 @@
 					<h4>Steps:</h4>
 				</div>
 			
-			<form method="POST" action="createChart2.php">
+			<form method="POST" action="createChart1.php?do=submit">
 				<fieldset>
 					<legend>Chart Detail</legend>
-					Chart Name: <input type="text" name="chartName" size="15" value="<?php if(isset($_POST['chartName'])) print $_POST['chartName']; ?>" /><br />
-					Chart Type: 
-					<input type="radio" name="chartType" value="Bar" />Bar  
-					<input type="radio" name="chartType" value="Line" />Line
+					<table>
+						<tr>
+							<td>Chart Name:</td>
+							<td><input type="text" name="chartName" size="15" value="<?php print $chartName; ?>" />*</td>
+						</tr>
+						<tr>
+							<td>Chart Type: </td>
+							<td><input type="radio" name="chartType" value="Bar" <?php if($chartType == "Bar") print "checked"; ?> />Bar  
+								<input type="radio" name="chartType" value="Line" <?php if($chartType == "Line") print "checked"; ?> />Line *
+							</td>
+						</tr>
+						<tr>
+							<td>Data View: </td>
+							<td>
+								<select name="dataView">
+									<option value="SALES_VIEW" <?php if($dataView == "SALES_VIEW") print "selected"; ?>>Sales View</option>
+									<option value="AUTHOR_VIEW" <?php if($dataView == "AUTHOR_VIEW") print "selected"; ?>>Author View</option>
+								</select>*
+							</td>
+						</tr>
+					</table>
+				
+					
 					<div style="margin:15px 0 0 0;">
 						<a href="chartManagement.php" class="cancel-button">Cancel</a>
 						<input type="submit" value="Next Step" class="submit-button" style="float:right;" />
