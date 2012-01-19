@@ -61,31 +61,77 @@
 		}
 		
 		public function addSQLColumn($colName, $colTable, $alias, $aggregation) {
-			// This function tries to give the alias passed to it, but if it cant, it'll give it a unique alias.
-			while(in_array($alias, $this->sqlAliases)) {
+			// This function tries to give the alias passed to it, but if it cant, it'll give it a unique alias
+			if(count($this->sqlColumns)==0) {
+				if($aggregation != null) {
+					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+				} else {
+					$sql = $colTable. '.' .$colName . ' as ' . $alias;
+				}
+				
+				$newCol = array();
+				$newCol['query'] = $sql;
+				$newCol['alias'] = $alias;
+				$this->sqlColumns[] = $newCol;
+				return $alias;
+			}
+	
+			foreach($this->sqlColumns as $col) {
+				if($aggregation != null) {
+					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+					// If the column already exists with the same data, return the alias for that and don't create another. Else create a new column.
+					if($col['query'] == $sql) {
+						return $col['alias'];
+					} 
+				} else {
+					$sql = $colTable. '.' .$colName . ' as ' . $alias;
+					
+					if($col['query'] == $sql) {
+						return $col['alias'];
+					} 
+				}
+			}
+			
+			while($this->checkColExists($alias)) {
 				$alias .= "_1";
 			}
 			
-			$this->sqlAliases[] = $alias;
 			if($aggregation != null) {
-				$this->sqlColumns[] = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+				$newCol = array();
+				$newCol['query'] = $sql;
+				$newCol['alias'] = $alias;
+				$this->sqlColumns[] = $newCol;
 			} else {
-				$this->sqlColumns[] = $colTable. '.' .$colName . ' as ' . $alias;
+				$newCol = array();
+				$newCol['query'] = $sql;
+				$newCol['alias'] = $alias;
+				$this->sqlColumns[] = $newCol;
 			}
 			$this->sqlTables[] = $colTable;
 			return $alias;
 		}
 		
+		private function checkColExists($colName) {
+			foreach($this->sqlColumns as $col) {
+				if($col['alias'] == $colName) {
+					return true;
+				} 			
+			} 
+			return false;
+		}
+		
 		public function addSQLGroupBy($colName, $colTable) {
-			//$this->sqlGroupBy[] = $colTable. '.' .$colName;
-			$this->sqlGroupBy[] = $colName;
+			// There is no need for more than one group by currently.
+			if(!$this->checkColExists($colName))
+				throw new Exception("Error adding group by, no such DB column exists.");
+			$this->sqlGroupBy[0] = $colName;
 		}
 		
 		public function addSQLOrder($colName, $order) {
 			$this->sqlOrder[] = $colName . " " . $order;
 		}
 		
-		public function addChartSeries($seriesName, $dbCol, $description, $axisNo) {
+		public function addChartSeries($seriesName, $dbCol, $description, $axisNo, $aggregation) {
 			foreach($this->chartSeries as $series) {
 				if($series['name'] == $seriesName) {
 					if($series['dbCol'] == $dbCol && $series['description'] == $description)
@@ -94,13 +140,15 @@
 						throw new Exception("Cannot have duplicate series name.");
 				} 
 			}
+
+			if(!$this->checkColExists($seriesName)) {
+				throw new Exception("Error adding chart series, no such DB column exists.");
+			}
+				
+			
 		
 			$series = array();
-			$series['name'] = $seriesName;
-			
-			if(!in_array($dbCol, $this->sqlAliases))
-				throw new Exception("Error adding chart series, no such DB column exists.");
-				
+			$series['name'] = $seriesName;		
 			$series['dbCol'] = $dbCol;
 			$series['description'] = $description;
 			
@@ -109,6 +157,7 @@
 				throw new Exception("Error adding chart series, no such axes exists - you need to add it first.");
 				
 			$series['axisNo'] = $axisNo;
+			$series['aggregation'] = $aggregation;
 			$this->chartSeries[] = $series;
 		}
 		
@@ -143,7 +192,7 @@
 		}
 		
 		public function setAbscissa($name, $dbCol, $dbColAlias) {
-			if(!in_array($dbColAlias, $this->sqlAliases))
+			if(!$this->checkColExists($dbColAlias))
 				throw new Exception("Error adding chart series, no such DB column exists.");
 		
 			$this->abscissa['name'] = $name;
@@ -153,7 +202,8 @@
 		
 		public function generateSQLQuery() {
 			$sql = "SELECT ";
-			$sql .= implode(", ", $this->sqlColumns);
+			$columnsArr = array_map(function($item) {return $item['query'];}, $this->sqlColumns);
+			$sql .= implode(", ", $columnsArr);
 			$sql .= " FROM ";
 			$sql .= implode(", ", array_unique($this->sqlTables));
 			
@@ -243,16 +293,27 @@
 			}
 		}
 		
+		public function delete() {
+			if($this->chartId != null) {
+				$SQL = "DELETE FROM chart WHERE chartId = " . $this->chartId;
+				$this->chartId = App::getDB()->execute($SQL);
+			}
+		}
+		
 		/* 	This function shuold be used for debugging only.  It outputs all the values of the object.
 		*/
 		public function toString() {
 			
 		}
 	}
-	/*$test = Chart::getChart(74);
+	/*$test = new Chart();
 	$test->setImageSize(380, 300);
-	$test->save();*/
-	
+	$test->chartName = "Sales per artistt";
+	$test->chartType = "Line";
+	$test->addSQLColumn("Col1", "TEST", "Col1", "");
+	$test->addSQLColumn("Col1", "TEST", "Col1", "SUM");
+	print_r($test->sqlColumns);
+	$test->setAbscissa("Col1", "Col1", "Col1");*/
 	/*$test = Chart::getChart(60);
 	$test->chartName = "Sales per artistt";
 	$test->chartType = "Line";

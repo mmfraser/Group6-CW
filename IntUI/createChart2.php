@@ -12,42 +12,7 @@
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartManagement.php">log in</a>.');
 		}
 	
-		if(isset($_COOKIE['CHARTWIZARD'])) {
-			$chart = unserialize($_COOKIE['CHARTWIZARD']);
-		} else {
-			App::fatalError($page, 'You must first select which data(view) to use in the chart.  Please go <a href="createChart1.php">back</a> and do this.');
-		}
-		
-		$viewCols = App::getDB()->getArrayFromDB("SHOW COLUMNS FROM " . $chart->dataView);
-		
-		if(isset($_GET['do']) && $_GET['do'] == "submit") {
-			$error = false;
-			if(empty($_POST['xAxisName'])) {
-				$page->error("The X-Axis name field is mandatory must be completed.");
-				$error = true;
-			} else if(empty($_POST['yAxisName'])) {
-				$page->error("The Y-Axis name field is mandatory must be completed.");
-				$error = true;
-			} 
-			
-			// Set the values
-				try {
-					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null);
-					
-					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
-					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);
-					$xAxisData = $chart->abscissa['dbCol'];
-					$xAxisName = $chart->abscissa['name'];
-					$yAxisName = $_POST['yAxisName'];
-					$yAxisUnit = $_POST['yAxisUnit'];
-					
-					// Set standard chart size
-					$chart->setImageSize(380, 300);
-					
-					$chart->setYAxis($_POST['yAxisName'], $_POST['yAxisUnit'], "AXIS_POSITION_LEFT");
-					$noSeries = count($_POST['seriesName']);
-					
-					function seriesRow($seriesNo, $seriesName, $seriesData, $seriesAggeregation, $viewCols) {
+		function seriesRow($seriesNo, $seriesName, $seriesData, $seriesAggeregation, $viewCols) {
 						if($seriesAggeregation == "SUM") {
 							$sumSel = "selected";
 						} else if($seriesAggeregation == "COUNT") {
@@ -80,46 +45,93 @@
 													<option value="COUNT" '.$countSel.'>Count</option>
 												</select>
 											</td>
+											<td id="commands">
+												<a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a>
+											</td>
 										</tr>';
 						return $seriesHtml;
 					}
+		
+		if(isset($_SESSION['CHARTWIZARD'])) {
+			$chart = unserialize($_SESSION['CHARTWIZARD']);
+		} else {
+			App::fatalError($page, 'You must first select which data(view) to use in the chart.  Please go <a href="createChart1.php">back</a> and do this.');
+		}
+		
+		$viewCols = App::getDB()->getArrayFromDB("SHOW COLUMNS FROM " . $chart->dataView);
+		
+		if(isset($_GET['do']) && $_GET['do'] == "submit") {
+			$error = false;
+			if(empty($_POST['xAxisName'])) {
+				$page->error("The X-Axis name field is mandatory must be completed.");
+				$error = true;
+			} else if(empty($_POST['yAxisName'])) {
+				$page->error("The Y-Axis name field is mandatory must be completed.");
+				$error = true;
+			} 
+			
+			// Set the values
+				try {
+					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null);
+					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
+					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);
+					$xAxisData = $chart->abscissa['dbCol'];
+					$xAxisName = $chart->abscissa['name'];
+					$yAxisName = $_POST['yAxisName'];
+					$yAxisUnit = $_POST['yAxisUnit'];
+					
+					// Set standard chart size
+					$chart->setImageSize(380, 300);
+					
+					$chart->setYAxis($_POST['yAxisName'], $_POST['yAxisUnit'], "AXIS_POSITION_LEFT");
+					$noSeries = count($_POST['seriesName']);
+					
+					
 					$seriesHtml = "";
+					$chart->chartSeries = array();
 					for($i = 0; $i < $noSeries; $i++) {
+						print "here";
 						//addChartSeries($seriesName, $dbCol, $description, $axisNo)
 						
-						if($_POST['seriesName'][$i] == null)
+						if($_POST['seriesName'][$i] != null) {
+							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i]);
+					
+							$chart->addChartSeries($seriesName, $_POST['seriesData'][$i], $seriesName, 0, $_POST['seriesAggregation'][$i]);						
+						} else {
 							$error = true;
-						else {
-							$chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i]);
-							$chart->addChartSeries($_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesName'][$i], 0);
-						}
+							$page->error("There must be at least one series defined.  Series also cannot have blank names.");
+						}	
 					
 						$seriesHtml .= seriesRow($i+1, $_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], $viewCols);
 					}
+					
 				} catch (Exception $e) {
 					$page->error($e->getMessage());
 				}
-				// 3600 is one hour.
-					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
-				if($error == true) {
-					print "fix errors";
-				} else {
-					print "saved";
+				
+				if(!$error) {
 					$chart->save();
-					// 3600 is one hour.
-					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
+					$_SESSION['CHARTWIZARD'] = serialize($chart);
 					header('Location: createChart3.php');
 				}
+				$_SESSION['CHARTWIZARD'] = serialize($chart);
 		} else {
-			if(isset($_COOKIE['CHARTWIZARD'])) {
+			if(isset($chart)) {
 				$xAxisData = $chart->abscissa['dbCol'];
 				$xAxisName = $chart->abscissa['name'];
 				$yAxisName = $chart->axes[0]['name'];
 				$yAxisUnit = $chart->axes[0]['unit'];
+				
+				$seriesHtml = "";
+				$noSeries = count($chart->chartSeries);
+				for($i = 0; $i < $noSeries; $i++) {					
+					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['name'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['aggregation'], $viewCols);
+				}
 			}
 		}
-	
+		
 	// View data columns
+	
 	
 	$xAxisColHtml = "";
 	foreach($viewCols as $col) {
@@ -152,7 +164,7 @@
 							$seriesColHtml .= '<option value="'.$col['Field'].'" '. $selected.'>'.$col['Field'].'</option>';
 						}
 		$seriesHtml = '	<tr>
-							<td>Series 1:</td>
+							<td>Series '.++$noSeries.':</td>
 							<td>
 								<input type="text" name="seriesName[]" size="15" />
 							</td>
@@ -167,6 +179,10 @@
 									<option value="COUNT">Count</option>
 								</select>
 							</td>
+							<td id="commands">
+								<a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a>
+							</td>
+							
 						</tr>';
 	}
 		
@@ -180,14 +196,27 @@
 				$("a.cancel-button").button();
 			});
 			
+			
 			$(function() {
+				$("#commands a#deleteRow").button();
+				$("#commands a#deleteRow").click(function() {
+					$(this).parent().parent().remove();
+				});
+			
 				$series = <?=$noSeries;?> + 1;
 				$("input.add-series").button();
 				
 				$("input.add-series").click(function() {
-					$("#seriesTable tr:last").after('<tr><td>Series '+ $series++ +':</td><td><input type="text" name="seriesName[]" size="15" value="" /></td><td><select name="seriesData[]"><?=$seriesColHtml ?></select></td><td><select name="seriesAggregation[]"><option value="SUM">Sum</option><option value="COUNT">Count</option></select></td></tr>');
-				
+					$("#seriesTable tr:last").after('<tr><td>Series '+ $series++ +':</td><td><input type="text" name="seriesName[]" size="15" value="" /></td><td><select name="seriesData[]"><?=$seriesColHtml ?></select></td><td><select name="seriesAggregation[]"><option value="SUM">Sum</option><option value="COUNT">Count</option></select></td><td id="commands"><a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a></td></tr>');
+					$("#commands a#deleteRow").button();
+					
+					$("#commands a#deleteRow").click(function() {
+						$(this).parent().parent().remove();
+					});
 				});
+				
+				
+				
 				
 			});
 		</script>
@@ -263,12 +292,8 @@
 				</fieldset>
 			</form>
 			
-			
-			
 			</div>
-			
-			<div class="clear"></div>
-			
+			<div class="clear"></div>	
 <?php	
 	$page->getFooter();
 ?>

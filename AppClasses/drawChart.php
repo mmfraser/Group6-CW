@@ -17,8 +17,8 @@
 			
 		// Create our data arrays for reference in the series and abscissa.
 		foreach($darr as $row) {
-			foreach($chart->sqlAliases as $col){
-				// REVISIT THIS
+			foreach(array_map(function($item) {return $item['alias'];}, $chart->sqlColumns) as $col){
+
 			/*	$expl = explode(".", $col);
 				$colName = $expl[1];
 					${str_replace(".", "",$col)}[] = (string) $row[$colName]; */

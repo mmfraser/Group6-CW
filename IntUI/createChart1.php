@@ -12,8 +12,11 @@
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartManagement.php">log in</a>.');
 		}
 		
-		if(isset($_COOKIE['CHARTWIZARD'])) {
-			$chart = unserialize($_COOKIE['CHARTWIZARD']);
+		if(isset($_GET['chartId']) && is_numeric($_GET['chartId'])) {
+			$chart = Chart::getChart($_GET['chartId']);
+			$_SESSION['CHARTWIZARD'] = serialize($chart);
+		} else if(isset($_SESSION['CHARTWIZARD'])) {
+			$chart = unserialize($_SESSION['CHARTWIZARD']);
 		} else {
 			$chart = new Chart();
 		}
@@ -32,15 +35,16 @@
 				$chartType = $chart->chartType;
 				$dataView = $chart->dataView;
 				// 3600 is one hour.
-				setcookie("CHARTWIZARD", serialize($chart), time()+3600);
+				$_SESSION['CHARTWIZARD'] = serialize($chart);
 				header('Location: createChart2.php');
 			}
 		} else if($_GET['do'] == "cancel") {
-			setcookie("CHARTWIZARD", "", time()-3600);
+			$chart->delete();
+			unset($_SESSION['CHARTWIZARD']);
 			$chart = null;
 			header('Location: chartManagement.php');
 		} else {
-			if(isset($_COOKIE['CHARTWIZARD'])) {
+			if(isset($_SESSION['CHARTWIZARD'])) {
 				$chartName = $chart->chartName;
 				$chartType = $chart->chartType;
 				$dataView = $chart->dataView;
