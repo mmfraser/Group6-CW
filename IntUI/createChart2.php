@@ -97,18 +97,22 @@
 						$seriesHtml .= seriesRow($i+1, $_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], $viewCols);
 					}
 					
-					// 3600 is one hour.
-					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
 				} catch (Exception $e) {
 					$page->error($e->getMessage());
 				}
-				
+				// 3600 is one hour.
+					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
 				if($error == true) {
 					print "fix errors";
 				} else {
 					print "saved";
 					$chart->save();
+					// 3600 is one hour.
+					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
+					header('Location: createChart3.php');
 				}
+				
+				
 				
 		} else {
 			if(isset($_COOKIE['CHARTWIZARD'])) {

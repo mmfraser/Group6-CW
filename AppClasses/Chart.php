@@ -232,7 +232,7 @@
 							'".base64_encode(serialize($this))."'
 							)";
 					$this->isLoaded = true;
-					$this->groupId = App::getDB()->execute($SQL);
+					$this->chartId = App::getDB()->execute($SQL);
 				}
 			} catch (Exception $e) {
 				throw $e;

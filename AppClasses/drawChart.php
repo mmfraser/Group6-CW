@@ -47,7 +47,7 @@
 			$myData->setAxisName((int)$key,(string)$axis['name']);
 			$myData->setAxisUnit((int)$key,(string)$axis['unit']);
 		}
-		
+		$myData->setPalette("DEFCA",array("R"=>55,"G"=>91,"B"=>127));
 		$myPicture = new pImage($chart->imgSize['X'], $chart->imgSize['Y'], $myData);
 
 		// This sets the background colour and dash of the chart.
@@ -118,7 +118,6 @@
 		, "Mode"=>LEGEND_HORIZONTAL
 		);
 		$myPicture->drawLegend($chart->legendPos['X'],$chart->legendPos['Y'],$Config);
-
 		$myPicture->stroke();
 		
 			
