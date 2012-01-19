@@ -36,15 +36,15 @@
 					
 					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
 					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);
-					print_r($chart);
 					$xAxisData = $chart->abscissa['dbCol'];
 					$xAxisName = $chart->abscissa['name'];
 					$yAxisName = $_POST['yAxisName'];
 					$yAxisUnit = $_POST['yAxisUnit'];
 					
+					// Set standard chart size
+					$chart->setImageSize(380, 300);
 					
 					$chart->setYAxis($_POST['yAxisName'], $_POST['yAxisUnit'], "AXIS_POSITION_LEFT");
-					
 					$noSeries = count($_POST['seriesName']);
 					
 					function seriesRow($seriesNo, $seriesName, $seriesData, $seriesAggeregation, $viewCols) {
@@ -96,7 +96,6 @@
 					
 						$seriesHtml .= seriesRow($i+1, $_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], $viewCols);
 					}
-					
 				} catch (Exception $e) {
 					$page->error($e->getMessage());
 				}
@@ -111,9 +110,6 @@
 					setcookie("CHARTWIZARD", serialize($chart), time()+3600);
 					header('Location: createChart3.php');
 				}
-				
-				
-				
 		} else {
 			if(isset($_COOKIE['CHARTWIZARD'])) {
 				$xAxisData = $chart->abscissa['dbCol'];

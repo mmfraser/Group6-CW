@@ -109,7 +109,7 @@
 		$x2 = 675 - (675-($chart->imgSize['X']-25)); // 25 is the margin.
 		$y2 = 200 - (200-($chart->imgSize['Y']-50));
 
-		$myPicture->setGraphArea(40,55,$x2,$y2);
+		$myPicture->setGraphArea(50,55,$x2,$y2);
 		$myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 	
 	/*	$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT

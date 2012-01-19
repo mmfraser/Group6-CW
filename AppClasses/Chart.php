@@ -249,9 +249,9 @@
 			
 		}
 	}
-	$test = Chart::getChart(74);
+	/*$test = Chart::getChart(74);
 	$test->setImageSize(380, 300);
-	$test->save();
+	$test->save();*/
 	
 	/*$test = Chart::getChart(60);
 	$test->chartName = "Sales per artistt";
