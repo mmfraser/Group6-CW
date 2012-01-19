@@ -170,6 +170,10 @@
 			return $sql;
 		}
 		
+		public function setImageSize($x, $y) {
+			$this->imgSize = self::fillCoordArray($x, $y);
+		}
+		
 		function __construct($chartId = "", $chartName = "", $chartType = "") {
 			$this->chartName = $name;
 			$this->chartType = $chartType;
@@ -245,8 +249,10 @@
 			
 		}
 	}
-	//$test = Chart::getChart(63);
-	//print $test->generateSQLQuery();
+	$test = Chart::getChart(74);
+	$test->setImageSize(380, 300);
+	$test->save();
+	
 	/*$test = Chart::getChart(60);
 	$test->chartName = "Sales per artistt";
 	$test->chartType = "Line";

@@ -49,12 +49,21 @@
 		}
 		$myData->setPalette("DEFCA",array("R"=>55,"G"=>91,"B"=>127));
 		$myPicture = new pImage($chart->imgSize['X'], $chart->imgSize['Y'], $myData);
-
+		  
 		// This sets the background colour and dash of the chart.
-		$Settings = array(
+		/*$Settings = array(
 		"R"=>$chart->bgRGB['R'],
 		"G"=>$chart->bgRGB['G'],
 		"B"=>$chart->bgRGB['B'],
+		"Dash"=>$dashBool,
+		"DashR"=>$chart->dashRGB['R'],
+		"DashG"=>$chart->dashRGB['G'],
+		"DashB"=>$chart->dashRGB['B']);*/
+		
+		$Settings = array(
+		"R"=>255,
+		"G"=>255,
+		"B"=>255,
 		"Dash"=>$dashBool,
 		"DashR"=>$chart->dashRGB['R'],
 		"DashG"=>$chart->dashRGB['G'],
@@ -75,13 +84,13 @@
 			"Alpha"=>$chart->gradTransparency
 			);
 			
-			$myPicture->drawGradientArea(0,0,$chart->imgSize['X'],$chart->imgSize['Y'],constant($chart->gradDirection),$Settings);
+			//$myPicture->drawGradientArea(0,0,$chart->imgSize['X'],$chart->imgSize['Y'],constant($chart->gradDirection),$Settings);
 
 			// This draws the black border around the chart
 			$myPicture->drawRectangle(0,0,$chart->imgSize['X']-1,(int)$chart->imgSize['Y']-1,array("R"=>0,"G"=>0,"B"=>0));
 		}
 
-//$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
+		$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
 
 		// This is the chart's title configuration
 		$myPicture->setFontProperties(array(
@@ -93,19 +102,24 @@
 		"G"=>$chart->titleRGB['G'], 
 		"B"=>$chart->titleRGB['B']);
 	
-		$myPicture->drawText($chart->titlePos['X'],$chart->titlePos['Y'],$chart->chartName,$TextSettings);
+		$titlePosX = ($chart->imgSize['X']/2);
+		$myPicture->drawText($titlePosX,$chart->titlePos['Y'],$chart->chartName,$TextSettings);
 
 		$myPicture->setShadow(FALSE);
-		$myPicture->setGraphArea(50,80,675,200);
+		$x2 = 675 - (675-($chart->imgSize['X']-25)); // 25 is the margin.
+		$y2 = 200 - (200-($chart->imgSize['Y']-50));
+
+		$myPicture->setGraphArea(40,55,$x2,$y2);
 		$myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
 	
-		$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
+	/*	$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
 		, "Mode"=>SCALE_MODE_FLOATING
 		, "LabelingMethod"=>LABELING_ALL
-		, "GridR"=>255, "GridG"=>255, "GridB"=>255, "GridAlpha"=>50, "TickR"=>0, "TickG"=>0, "TickB"=>0, "TickAlpha"=>50, "LabelRotation"=>0, "CycleBackground"=>1, "DrawXLines"=>1, "DrawSubTicks"=>1, "SubTickR"=>255, "SubTickG"=>0, "SubTickB"=>0, "SubTickAlpha"=>50, "DrawYLines"=>ALL);
+		, "GridR"=>255, "GridG"=>255, "GridB"=>255, "GridAlpha"=>50, "TickR"=>0, "TickG"=>0, "TickB"=>0, "TickAlpha"=>50, "LabelRotation"=>0, "CycleBackground"=>1, "DrawXLines"=>1, "DrawSubTicks"=>1, "SubTickR"=>255, "SubTickG"=>0, "SubTickB"=>0, "SubTickAlpha"=>50, "DrawYLines"=>ALL);*/
+		$Settings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE);
 		$myPicture->drawScale($Settings);
 
-		$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
+	//	$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
 
 		//$Config = "";
 
@@ -114,10 +128,10 @@
 
 		//$myPicture->draw{}Chart($Config);
 
-		$Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_NOBORDER
-		, "Mode"=>LEGEND_HORIZONTAL
+		$Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_BOX
+		, "Mode"=>LEGEND_HORIZONTAL, "Family"=>LEGEND_FAMILY_CIRCLE
 		);
-		$myPicture->drawLegend($chart->legendPos['X'],$chart->legendPos['Y'],$Config);
+		$myPicture->drawLegend(25,$chart->imgSize['Y']-20,$Config);
 		$myPicture->stroke();
 		
 			
