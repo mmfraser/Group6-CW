@@ -405,13 +405,13 @@
 		
 	}
 	//($filterName, $dbAlias, $operator, $value)
-	$test = new Chart();
+	/*$test = new Chart();
 	$test->addSQLColumn("Col1", "TEST", "Col1", "");
 	$test->addFilter("Fiter1", "Col1", "lt", "200", "OR");
 	$test->addFilter("Fiter1", "Col1", "lt", "200", "OR");
 	$test->setFilterValue("Fiter1", "test");
 	//print_r($test->sqlFilter);
-	print $test->generateSQLQuery();
+	print $test->generateSQLQuery();*/
 	/*$test = new Chart();
 	$test->setImageSize(380, 300);
 	$test->chartName = "Sales per artistt";
