@@ -19,6 +19,7 @@
 		public $sqlOrder = array();
 		public $sqlGroupBy = array();
 		public $sqlAliases = array();
+		public $sqlFilter = array();
 		public $chartSeries = array();
 		public $abscissa = array();
 		public $axes = array();
@@ -207,6 +208,33 @@
 			$sql .= " FROM ";
 			$sql .= implode(", ", array_unique($this->sqlTables));
 			
+			$filterNo = 0;
+			$orFilters = array();
+			if(count($this->sqlFilter) != 0) {
+				$sql .= " WHERE ";
+				foreach($this->sqlFilter as $filter) {
+					if($filter['combinator'] == "OR")
+						$orFilters[] = $filter;
+					else {
+						if($filterNo == 0) {
+							$sql .= " " . $filter['sql'];
+						} else {
+							$sql .= " " . $filter['combinator'] . " " . $filter['sql'];
+						}
+						$filterNo++;
+					}
+				}
+				
+				foreach($orFilters as $filter) {
+					if($filterNo == 0) {
+						$sql .= $filter['sql'];
+					} else {
+						$sql .= " OR " . $filter['sql'];
+					}
+					$filterNo++;
+				}
+			}
+			
 			if(count($this->sqlOrder) != 0) {
 				$sql .= " ORDER BY ";
 				$sql .= implode(", ", $this->sqlOrder);
@@ -305,7 +333,85 @@
 		public function toString() {
 			
 		}
+	
+		
+		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator) {
+			if(!$this->checkColExists($dbAlias)) 
+				throw new Exception("Error adding chart series, no such DB column exists.");
+			
+			if(empty($value))
+				throw new Exception("Filters must have a default value.");
+				
+			if(empty($filterName))
+				throw new Exception("Filters must have a unique name.");
+				
+			while(array_key_exists($filterName, $this->sqlFilter)) {
+				$filterName .= "_1";
+			}
+				
+			if(empty($value)) 
+				throw new Exception("A default value must be set for every filter.");
+				
+			if(empty($combinator)) 
+				throw new Exception("A combinator must be set for every filter.");
+						
+			if(count($value) == 1) 
+				$value = mysql_real_escape_string($value);
+					
+						
+			if($operator == "between") {
+				if(count($value) != 2)
+					throw new Exception("A between filter must have two values.");
+					
+				$sql = "(" . $dbAlias . " between " . mysql_real_escape_string($value[0]) . " AND " . mysql_real_escape_string($value[1]) . ")";
+			} else if($operator == "lt" && count($value) == 1) {
+				$sql =  "(" . $dbAlias . " < '" . $value . "')";
+			} else if($operator == "gt") {
+				$sql = "(" . $dbAlias . " > '" . $value . "')";
+			} else if($operator == "lte") {
+				$sql = "(" . $dbAlias . " <= '" . $value . "')";
+			} else if($operator == "gte") {
+				$sql = "(" . $dbAlias . " >= '" . $value . "')";
+			} else if($operator == "eq") {
+				$sql = "(" . $dbAlias . " = '" . $value . "')";
+			} else if($operator == "neq") {
+				$sql = "(" . $dbAlias . " != '" . $value . "')";
+			} else {
+				throw new Exception("Invalid filter operation");
+			}
+			
+			$filter = array();
+			$filter['dbAlias'] = $dbAlias;
+			$filter['operator'] = $operator;
+			$filter['value'] = $value;
+			$filter['combinator'] = $combinator;
+			$filter['sql'] = $sql;
+			$this->sqlFilter[$filterName] = $filter;
+			
+			// Return the actual name of the filter as this funciton can change it.
+			return $filterName;
+		}
+		
+		public function setFilterValue($filterName, $value) {
+			if(!array_key_exists($filterName, $this->sqlFilter))
+				throw new Exception("No such filter exists with the name: " . $filterName . ".");
+				
+			$filter = $this->sqlFilter[$filterName];
+			// Remove the element so we can add it again (with the new values) and not have duplicates.
+			unset($this->sqlFilter[$filterName]);
+			
+			$this->addFilter($filterName, $filter['dbAlias'], $filter['operator'], $value, $filter['combinator']);
+		}
+		
 	}
+	//($filterName, $dbAlias, $operator, $value)
+	$test = new Chart();
+	$test->addSQLColumn("Col1", "TEST", "Col1", "");
+	$test->addFilter("Fiter1", "Col1", "lt", "200", "OR");
+	$test->addFilter("Fiter1", "Col1", "lt", "200", "OR");
+	$test->setFilterValue("Fiter1", "test");
+	//print_r($test->sqlFilter);
+	print $test->generateSQLQuery();
 	/*$test = new Chart();
 	$test->setImageSize(380, 300);
 	$test->chartName = "Sales per artistt";

@@ -89,7 +89,7 @@
 							<td>Data View: </td>
 							<td>
 								<select name="dataView">
-									<option value="SALES_VIEW" <?php if($dataView == "SALES_VIEW") print "selected"; ?>>Sales View</option>
+									<option value="SALES_VIEW_V2" <?php if($dataView == "SALES_VIEW_V2") print "selected"; ?>>Sales View</option>
 									<option value="AUTHOR_VIEW" <?php if($dataView == "AUTHOR_VIEW") print "selected"; ?>>Author View</option>
 								</select>*
 							</td>

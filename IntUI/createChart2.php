@@ -125,11 +125,10 @@
 				$seriesHtml = "";
 				$noSeries = count($chart->chartSeries);
 				for($i = 0; $i < $noSeries; $i++) {					
-					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['name'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['aggregation'], $viewCols);
+					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['description'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['aggregation'], $viewCols);
 				}
 			}
 		}
-		
 	// View data columns
 	
 	
@@ -246,10 +245,10 @@
 								</select>
 							</td>
 							<td>
-								<select name="xAxisFormat">
+							<!--	<select name="xAxisFormat">
 									<option value="Month/Year" <?php if($dataView == "SALES_VIEW") print "selected"; ?>>Month/Year</option>
 									<option value="Day/Month" <?php if($dataView == "AUTHOR_VIEW") print "selected"; ?>>Day/Month</option>
-								</select>
+								</select> -->
 							</td>
 						</tr>
 						<tr>
