@@ -96,7 +96,7 @@
 						if($_POST['seriesName'][$i] != null) {
 							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i]);
 					
-							$chart->addChartSeries($seriesName, $_POST['seriesData'][$i], $seriesName, 0, $_POST['seriesAggregation'][$i]);						
+							$chart->addChartSeries($seriesName, $_POST['seriesData'][$i], $_POST['seriesName'][$i], 0, $_POST['seriesAggregation'][$i]);						
 						} else {
 							$error = true;
 							$page->error("There must be at least one series defined.  Series also cannot have blank names.");
