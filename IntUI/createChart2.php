@@ -12,13 +12,13 @@
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartManagement.php">log in</a>.');
 		}
 	
-		function seriesRow($seriesNo, $seriesName, $seriesData, $seriesAggeregation, $viewCols) {
+		function seriesRow($seriesNo, $seriesName, $seriesData, $seriesStoreFilter, $seriesAggeregation, $viewCols, $storeData) {
 						if($seriesAggeregation == "SUM") {
 							$sumSel = "selected";
 						} else if($seriesAggeregation == "COUNT") {
 							$countSel = "selected";
 						}
-						
+											
 						$seriesColHtml = "";
 						foreach($viewCols as $col) {
 							$selected = "";
@@ -27,6 +27,14 @@
 							}
 							
 							$seriesColHtml .= '<option value="'.$col['Field'].'" '. $selected.'>'.$col['Field'].'</option>';
+						}
+						
+						$seriesStoreFilterHtml = "";
+						foreach($storeData as $col) {
+							$selected = "";
+							if($seriesStoreFilter == $col['storeId'])
+								$selected = "selected";
+							$seriesStoreFilterHtml .= '<option value="'.$col['storeId'].'" '. $selected.'>'.$col['storeName'].'</option>';
 						}
 						
 						$seriesHtml = '	<tr>
@@ -40,13 +48,19 @@
 												</select>
 											</td>
 											<td>
+												<select name="seriesStoreFilter[]">
+													<option value="" '.$sumSel.'>N/A</option>
+													'.$seriesStoreFilterHtml.'
+												</select>
+											</td>
+											<td id="commands">
 												<select name="seriesAggregation[]">
 													<option value="SUM" '.$sumSel.'>Sum</option>
 													<option value="COUNT" '.$countSel.'>Count</option>
 												</select>
 											</td>
 											<td id="commands">
-												<a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a>
+												<a title="Delete Row" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a>
 											</td>
 										</tr>';
 						return $seriesHtml;
@@ -59,6 +73,7 @@
 		}
 		
 		$viewCols = App::getDB()->getArrayFromDB("SHOW COLUMNS FROM " . $chart->dataView);
+		$storeData = App::getDB()->getArrayFromDB("SELECT storeId, storeName FROM store");
 		
 		if(isset($_GET['do']) && $_GET['do'] == "submit") {
 			$error = false;
@@ -72,7 +87,9 @@
 			
 			// Set the values
 				try {
-					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null);
+					unset($chart->sqlColumns);
+					unset($chart->sqlTables);
+					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null, false);
 					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
 					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);
 					$xAxisData = $chart->abscissa['dbCol'];
@@ -90,19 +107,24 @@
 					$seriesHtml = "";
 					$chart->chartSeries = array();
 					for($i = 0; $i < $noSeries; $i++) {
-						print "here";
-						//addChartSeries($seriesName, $dbCol, $description, $axisNo)
-						
 						if($_POST['seriesName'][$i] != null) {
-							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i]);
+							if(empty($_POST['seriesStoreFilter'][$i])) {
+								$unique = false;
+							} else {
+								$unique = true;
+								print "here";
+							}
+							
+							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], true);
+							print $seriesName . "<br>";
 					
-							$chart->addChartSeries($seriesName, $_POST['seriesData'][$i], $_POST['seriesName'][$i], 0, $_POST['seriesAggregation'][$i]);						
+							$chart->addChartSeries($seriesName, $seriesName, $_POST['seriesName'][$i], 0, $_POST['seriesAggregation'][$i], $_POST['seriesStoreFilter'][$i]);						
 						} else {
 							$error = true;
 							$page->error("There must be at least one series defined.  Series also cannot have blank names.");
 						}	
 					
-						$seriesHtml .= seriesRow($i+1, $_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], $viewCols);
+						$seriesHtml .= seriesRow($i+1, $_POST['seriesName'][$i], $_POST['seriesData'][$i], $_POST['seriesStoreFilter'][$i], $_POST['seriesAggregation'][$i], $viewCols, $storeData);
 					}
 					
 				} catch (Exception $e) {
@@ -112,7 +134,7 @@
 				if(!$error) {
 					$chart->save();
 					$_SESSION['CHARTWIZARD'] = serialize($chart);
-					header('Location: createChart3.php');
+					//header('Location: createChart3.php');
 				}
 				$_SESSION['CHARTWIZARD'] = serialize($chart);
 		} else {
@@ -125,7 +147,7 @@
 				$seriesHtml = "";
 				$noSeries = count($chart->chartSeries);
 				for($i = 0; $i < $noSeries; $i++) {					
-					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['description'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['aggregation'], $viewCols);
+					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['description'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['storeFilter'], $chart->chartSeries[$i]['aggregation'], $viewCols, $storeData);
 				}
 			}
 		}
@@ -151,7 +173,12 @@
 	foreach($viewCols as $col) {
 		$seriesColHtml .= '<option value="'.$col['Field'].'" '. $selected.'>'.$col['Field'].'</option>';
 	}
-			
+		
+	$seriesStoreFilterHtml = "";
+	foreach($storeData as $col) {
+		$seriesStoreFilterHtml .= '<option value="'.$col['storeId'].'" '. $selected.'>'.$col['storeName'].'</option>';
+	}
+		
 	if($noSeries == 0) {
 				$seriesColHtml = "";
 						foreach($viewCols as $col) {
@@ -170,6 +197,12 @@
 							<td>
 								<select name="seriesData[]">
 									'.$seriesColHtml.'
+								</select>
+							</td>
+							<td>
+								<select name="seriesStoreFilter[]">
+									<option value="" '.$sumSel.'>N/A</option>
+									'.$seriesStoreFilterHtml.'
 								</select>
 							</td>
 							<td>
@@ -206,7 +239,7 @@
 				$("input.add-series").button();
 				
 				$("input.add-series").click(function() {
-					$("#seriesTable tr:last").after('<tr><td>Series '+ $series++ +':</td><td><input type="text" name="seriesName[]" size="15" value="" /></td><td><select name="seriesData[]"><?=$seriesColHtml ?></select></td><td><select name="seriesAggregation[]"><option value="SUM">Sum</option><option value="COUNT">Count</option></select></td><td id="commands"><a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a></td></tr>');
+					$("#seriesTable tr:last").after('<tr><td>Series '+ $series++ +':</td><td><input type="text" name="seriesName[]" size="15" value="" /></td><td><select name="seriesData[]"><?=$seriesColHtml ?></select></td><td><select name="seriesStoreFilter[]"><option value="">N/A</option><?=$seriesStoreFilterHtml?></select></td><td><select name="seriesAggregation[]"><option value="SUM">Sum</option><option value="COUNT">Count</option></select></td><td id="commands"><a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a></td></tr>');
 					$("#commands a#deleteRow").button();
 					
 					$("#commands a#deleteRow").click(function() {
@@ -279,6 +312,7 @@
 							<td></td>
 							<td><strong>Series Name</strong></td>
 							<td><strong>Series Data</strong></td>
+							<td><strong>Store Filter</strong></td>
 							<td><strong>Series Aggregation</strong></td>
 						</thead>
 						<?=$seriesHtml ?>

@@ -61,8 +61,9 @@
 			return $array;
 		}
 		
-		public function addSQLColumn($colName, $colTable, $alias, $aggregation) {
+		public function addSQLColumn($colName, $colTable, $alias, $aggregation, $unique) {
 			// This function tries to give the alias passed to it, but if it cant, it'll give it a unique alias
+			
 			if(count($this->sqlColumns)==0) {
 				if($aggregation != null) {
 					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
@@ -77,19 +78,21 @@
 				return $alias;
 			}
 	
-			foreach($this->sqlColumns as $col) {
-				if($aggregation != null) {
-					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
-					// If the column already exists with the same data, return the alias for that and don't create another. Else create a new column.
-					if($col['query'] == $sql) {
-						return $col['alias'];
-					} 
-				} else {
-					$sql = $colTable. '.' .$colName . ' as ' . $alias;
-					
-					if($col['query'] == $sql) {
-						return $col['alias'];
-					} 
+			if(!$unique) {
+				foreach($this->sqlColumns as $col) {
+					if($aggregation != null) {
+						$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+						// If the column already exists with the same data, return the alias for that and don't create another. Else create a new column.
+						if($col['query'] == $sql) {
+							return $col['alias'];
+						} 
+					} else {
+						$sql = $colTable. '.' .$colName . ' as ' . $alias;
+						
+						if($col['query'] == $sql) {
+							return $col['alias'];
+						} 
+					}
 				}
 			}
 			
@@ -99,11 +102,13 @@
 			
 			if($aggregation != null) {
 				$newCol = array();
+				$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
 				$this->sqlColumns[] = $newCol;
 			} else {
 				$newCol = array();
+				$sql = $colTable. '.' .$colName . ' as ' . $alias;
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
 				$this->sqlColumns[] = $newCol;
@@ -132,7 +137,7 @@
 			$this->sqlOrder[] = $colName . " " . $order;
 		}
 		
-		public function addChartSeries($seriesName, $dbCol, $description, $axisNo, $aggregation) {
+		public function addChartSeries($seriesName, $dbCol, $description, $axisNo, $aggregation, $storeFilter) {
 			foreach($this->chartSeries as $series) {
 				if($series['name'] == $seriesName) {
 					if($series['dbCol'] == $dbCol && $series['description'] == $description)
@@ -145,20 +150,23 @@
 			if(!$this->checkColExists($seriesName)) {
 				throw new Exception("Error adding chart series, no such DB column exists.");
 			}
-				
-			
-		
+	
 			$series = array();
 			$series['name'] = $seriesName;		
 			$series['dbCol'] = $dbCol;
 			$series['description'] = $description;
-			
-		
+					
 			if(!array_key_exists($axisNo, $this->axes))
 				throw new Exception("Error adding chart series, no such axes exists - you need to add it first.");
 				
 			$series['axisNo'] = $axisNo;
 			$series['aggregation'] = $aggregation;
+			$series['storeFilter'] = $storeFilter;
+			
+			if(!empty($storeFilter)) {
+				$this->addSQLColumn("STORE_ID", $this->dataView, "STORE_ID", null, false);
+			}
+			
 			$this->chartSeries[] = $series;
 		}
 		
@@ -204,10 +212,11 @@
 		public function generateSQLQuery() {
 			$sql = "SELECT ";
 			$columnsArr = array_map(function($item) {return $item['query'];}, $this->sqlColumns);
+			
 			$sql .= implode(", ", $columnsArr);
 			$sql .= " FROM ";
 			$sql .= implode(", ", array_unique($this->sqlTables));
-			
+
 			$filterNo = 0;
 			$orFilters = array();
 			if(count($this->sqlFilter) != 0) {
@@ -333,7 +342,6 @@
 		public function toString() {
 			
 		}
-	
 		
 		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator) {
 			if(!$this->checkColExists($dbAlias)) 

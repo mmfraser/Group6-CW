@@ -7,7 +7,7 @@
 
 		$chart = Chart::getChart($_GET['chartId']);
 		
-		//	print $chart->generateSQLQuery(); die();
+		//print_r($chart->chartSeries);
 		
 		// Generate select query
 		$query = $chart->generateSQLQuery();
@@ -15,22 +15,35 @@
 		// Execute query and put in array.
 		$darr = App::getDB()->getArrayFromDB($query);
 			
+		$chartSeriesStoreFilter = array();	
+		// Get the series array 	
+		foreach($chart->chartSeries as $series) {
+			$chartSeriesStoreFilter[$series['dbCol']] = $series['storeFilter'];//$series['storeFilter']
+		}
+		
 		// Create our data arrays for reference in the series and abscissa.
 		foreach($darr as $row) {
 			foreach(array_map(function($item) {return $item['alias'];}, $chart->sqlColumns) as $col){
-
-			/*	$expl = explode(".", $col);
-				$colName = $expl[1];
-					${str_replace(".", "",$col)}[] = (string) $row[$colName]; */
-					${$col}[] = (string) $row[$col]; 
+					if(array_key_exists($col, $chartSeriesStoreFilter) && !empty($chartSeriesStoreFilter[$col])) {
+						if($row['STORE_ID'] == $chartSeriesStoreFilter[$col]) {
+							${$col}[] = (string) $row[$col]; 
+						} else {	
+							${$col}[] = 0;
+						}
+					} else {
+						${$col}[] = (string) $row[$col]; 
+						
+					}
 				}
+				
 		}
-			
+		
 		$myData = new pData();
 		// Add points and series
 			
 		foreach($chart->chartSeries as $serie) {
 			$arr = ${$serie['dbCol']};
+
 			$myData->addPoints($arr, $serie['name']);
 			$myData->setSerieDescription($serie['name'], $serie['description']);
 			$myData->setSerieOnAxis($serie['name'], (int)$serie['axisNo']);	
@@ -133,6 +146,7 @@
 		);
 		$myPicture->drawLegend(25,$chart->imgSize['Y']-20,$Config);
 		$myPicture->stroke();
+		
 		
 			
 	// Page PHP Backend Code End 
