@@ -4,9 +4,8 @@ body {
 	width:100%;
 	height:100%;
 /*	background: url(../Images/IntUIGrad.png) repeat;*/
-	/*background: #88D1CA;*/
+	background: #88D1CA;
 	font: normal 80% Verdana;
-	background:#000 url(record.jpg) no-repeat top left;
 }
 
 div.ui-state-info, div.ui-state-error {
@@ -15,49 +14,32 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
-	width: 1010px;
+	width: 80%;
 	min-width: 900px;
 	margin:0 auto;
 	min-height:200px;
 }
-/* Navigation vertical side block
 
-Removed to change navigation to vertical.
-
- */
-/*div#navigation {
+div#navigation {
 	float:left;
 	width:23.5%;
 	min-height:200px;
 	background:#fff;
-}*/
-
-div#navigation{
-	margin-left:auto;
-	margin-right:auto;
-	width:100%;
-	text-align:center;
-	padding:3px;
-	border-radius:0;
 }
 
 div#mainContent {
-	float:left;
-	/*width:74.3%;*/
-	width:1000px;
+	float:right;
+	width:74.3%;
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
-	border-radius:10px;
 }
 
 div#header {
 	width:100%;
 	min-height:100px;
-	/*background:#fff;*/
-	/*border-bottom: 5px solid #000;*/
-	background:url(../Images/header.gif) no-repeat top left;
-	
+	background:#fff;
+	border-bottom: 5px solid #000;
 }
 
 .clear {

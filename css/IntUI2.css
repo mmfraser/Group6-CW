@@ -6,7 +6,7 @@ body {
 /*	background: url(../Images/IntUIGrad.png) repeat;*/
 	/*background: #88D1CA;*/
 	font: normal 80% Verdana;
-	background:#000 url(record.jpg) no-repeat top left;
+	background:#000 url(../Images/piano.png) repeat-y top left;
 }
 
 div.ui-state-info, div.ui-state-error {
@@ -20,11 +20,7 @@ div#wrapper {
 	margin:0 auto;
 	min-height:200px;
 }
-/* Navigation vertical side block
 
-Removed to change navigation to vertical.
-
- */
 /*div#navigation {
 	float:left;
 	width:23.5%;
@@ -44,11 +40,23 @@ div#navigation{
 div#mainContent {
 	float:left;
 	/*width:74.3%;*/
-	width:1000px;
+	width:700px;
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
-	border-radius:10px;
+}
+
+div#sideBar{
+	/*
+	TO GO TO THE RIGHT OF THE MAIN CONTENT WINDOW
+	*/	
+	float:right;
+	width:290px;
+	min-height:inherit;
+	padding-left:3px;
+	background:#fff;
+	height:100%;
+	position:inherit;
 }
 
 div#header {
@@ -56,7 +64,7 @@ div#header {
 	min-height:100px;
 	/*background:#fff;*/
 	/*border-bottom: 5px solid #000;*/
-	background:url(../Images/header.gif) no-repeat top left;
+	background:url(../Images/header.png) no-repeat top left;
 	
 }
 
