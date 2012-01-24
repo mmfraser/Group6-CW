@@ -112,7 +112,6 @@
 								$unique = false;
 							} else {
 								$unique = true;
-								print "here";
 							}
 							
 							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], true);
@@ -134,7 +133,7 @@
 				if(!$error) {
 					$chart->save();
 					$_SESSION['CHARTWIZARD'] = serialize($chart);
-					//header('Location: createChart3.php');
+					header('Location: createChart3.php');
 				}
 				$_SESSION['CHARTWIZARD'] = serialize($chart);
 		} else {

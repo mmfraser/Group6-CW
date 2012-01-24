@@ -24,10 +24,7 @@
 		foreach($viewCols as $col) {
 			$filterColHtml .= '<option value="'.$col['Field'].'" '. $selected.'>'.$col['Field'].'</option>';
 		}
-	
-	
-	print_r($chart);
-		
+			
 	// Page PHP Backend Code End
 
 ?>
