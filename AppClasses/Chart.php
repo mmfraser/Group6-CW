@@ -344,8 +344,8 @@
 		}
 		
 		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator) {
-			if(!$this->checkColExists($dbAlias)) 
-				throw new Exception("Error adding chart series, no such DB column exists.");
+		/*	if(!$this->checkColExists($dbAlias)) 
+				throw new Exception("Error adding chart series, no such DB column exists.");*/
 			
 			if(empty($value))
 				throw new Exception("Filters must have a default value.");

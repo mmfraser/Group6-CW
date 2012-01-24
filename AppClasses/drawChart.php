@@ -135,9 +135,10 @@
 	//	$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
 
 		//$Config = "";
+		
 
 		$function = "draw" . $chart->chartType . "Chart";
-		$myPicture->$function($Config);
+		$myPicture->$function(array("DisplayValues"=>TRUE,"DisplayColor"=>DISPLAY_AUTO));
 
 		//$myPicture->draw{}Chart($Config);
 
