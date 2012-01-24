@@ -93,7 +93,7 @@
 				$output = '		<div id="navigation">' .PHP_EOL;
 				$output .= '		<ul>'.PHP_EOL;
 				$output .= '			<li><a href="">Dashboard</a></li>' .PHP_EOL;
-				$output .= '			<li><a href="">Chart Management</a></li>' .PHP_EOL;
+				$output .= '			<li><a href="chartManagement.php">Chart Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="userManagement.php">User Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="storeManagement.php">Store Management</a></li>' .PHP_EOL;
 				$output .= '			<li><a href="genreManagement.php">Genre Management</a></li>' .PHP_EOL;
