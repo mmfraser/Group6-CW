@@ -15,7 +15,7 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
-	width: 1010px;
+	width: 1200px;
 	min-width: 900px;
 	margin:0 auto;
 	min-height:200px;
@@ -38,13 +38,13 @@ div#navigation{
 	width:100%;
 	text-align:center;
 	padding:3px;
-	border-radius:0;
 }
 
 div#mainContent {
 	float:left;
 	/*width:74.3%;*/
-	width:1000px;
+	width:100%;
+	/*width:1000px;*/
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
@@ -69,6 +69,8 @@ div#footer {
 	background:#fff;
 	border-top:5px solid #000;
 	min-height:60px;
+	padding:4px 8px 4px 8px;
+	border-radius:10px;
 }
 
 div#tabs {
@@ -96,5 +98,20 @@ button.ui-datepicker-trigger {
 	background: url(../Images/calendar.gif) no-repeat;
 	width:16px;
 	height:15px;
+}
+
+
+ul#dashboardTabs li {
+	display: inline;
+	list-style:none;
+	padding:10px 10px 3px 10px;
+	border-top: 1px solid #000;
+	border-right: 1px solid #000;
+	border-left: 1px solid #000;
+}
+
+table#dashboardTable {
+	border: 1px solid #000;
+	margin:0 auto;
 }
 

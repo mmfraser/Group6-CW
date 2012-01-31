@@ -50,7 +50,7 @@
 					$output = '<div style="margin-left:auto; margin-right:auto; width:100%;">' .PHP_EOL;
 					$output .= '<div class="menu" id="navigation">' .PHP_EOL;
 					$output .= '<ul>' .PHP_EOL;
-					$output .= '<li><a href="#">Dashboard<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
+					$output .= '<li><a href="dashboard.php">Dashboard<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
 					$output .= '<li><a href="chartManagement.php">Chart Management<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
 					$output .= '<li><a href="#">Management<!--[if gte IE 7]><!--></a><!--<![endif]-->' .PHP_EOL;
 					$output .= '<!--[if lte IE 6]><table><tr><td><![endif]-->' .PHP_EOL;
