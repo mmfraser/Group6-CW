@@ -5,6 +5,7 @@
 	require_once('../AppClasses/Artist.php');
 	require_once('../AppClasses/Product.php');
 	require_once('../AppClasses/Genre.php');
+	require_once('../AppClasses/DashboardTab.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -93,6 +94,11 @@
 			$genre->genreName = $_POST['genreName'];
 			$genre->save();
 			die("Genre successfully added.");
+		} else if($do == "selectChart") {
+			$tab = new DashboardTab();
+			$tab->populateId($_POST['tabId']);
+			$tab->changeLayout($_POST['chartId'], $_POST['chartPos']);
+			die('Layout successfully changed');
 		} else 
 			die("Error: Invalid request.");
 		

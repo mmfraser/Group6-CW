@@ -113,5 +113,13 @@ ul#dashboardTabs li {
 table#dashboardTable {
 	border: 1px solid #000;
 	margin:0 auto;
+	width:100%;
+}
+
+table#dashboardTable td, th {
+	border: 1px solid #000;
+	border-collapse:collapse;
+	vertical-align:text-top;
+	
 }
 

@@ -100,7 +100,7 @@
 			//$myPicture->drawGradientArea(0,0,$chart->imgSize['X'],$chart->imgSize['Y'],constant($chart->gradDirection),$Settings);
 
 			// This draws the black border around the chart
-			$myPicture->drawRectangle(0,0,$chart->imgSize['X']-1,(int)$chart->imgSize['Y']-1,array("R"=>0,"G"=>0,"B"=>0));
+			//$myPicture->drawRectangle(0,0,$chart->imgSize['X']-1,(int)$chart->imgSize['Y']-1,array("R"=>0,"G"=>0,"B"=>0));
 		}
 
 		$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>20));
