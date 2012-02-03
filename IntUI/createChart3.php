@@ -92,7 +92,7 @@
 			$filterHtml = "";
 			for($i = 0; $i < $noFilters; $i++) {
 				try {
-					$chart->addFilter("Filter", $_POST['filterCol'][$i], $_POST['filterOperator'][$i], $_POST['value'][$i],  $_POST['filterCombinator'][$i]);
+					$chart->addFilter("Filter", $_POST['filterCol'][$i], $_POST['filterOperator'][$i], $_POST['value'][$i],  $_POST['filterCombinator'][$i], false);
 				} catch(Exception $e) {
 					$page->error($e->getMessage());
 				}

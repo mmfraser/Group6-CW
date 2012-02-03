@@ -123,3 +123,7 @@ table#dashboardTable td, th {
 	
 }
 
+img.chart {
+	margin:0 0 0 5px;
+}
+

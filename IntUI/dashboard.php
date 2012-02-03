@@ -43,11 +43,13 @@
 					
 					$dashboardHtml .= '		<td width="'.$colWidth.'%" id="'.$chartPos.'">'. PHP_EOL;
 					$dashboardHtml .= '		<a title="Modify Chart" class="changeChart">Change Chart</a>';
+					
 					if($chartId == -1)
 						$dashboardHtml .= '			No chart selected';
-					else 
+					else {
+						$dashboardHtml .= '		<a title="Change Filter" class="changeFilter">Change Filter</a>';
 						$dashboardHtml .= '			<img src="../AppClasses/drawChart.php?chartId='.$chartId.'" class="chart" alt="'.$chartId.'" />';
-					
+					}
 					
 
 					$dashboardHtml .= "		</td>". PHP_EOL;
@@ -97,7 +99,6 @@
 		</div>
 	</div>
 		
-		</div>
 			<script type="text/javascript">
 			 function readCookie(name) 
 			{
@@ -115,6 +116,8 @@
 			$(function() {
 				chartId = 0;
 				chartPos = 0;
+				
+				$(".changeFilter").button();
 				
 				$(".changeChart").button().click(function() {
 					chartPos = $(this).parent().attr("id");

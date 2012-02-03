@@ -343,7 +343,10 @@
 			
 		}
 		
-		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator) {
+		/* This adds a filter to the chart.
+		*/
+		
+		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator, $override) {
 		/*	if(!$this->checkColExists($dbAlias)) 
 				throw new Exception("Error adding chart series, no such DB column exists.");*/
 			
@@ -353,7 +356,7 @@
 			if(empty($filterName))
 				throw new Exception("Filters must have a unique name.");
 				
-			while(array_key_exists($filterName, $this->sqlFilter)) {
+			while($override == false && array_key_exists($filterName, $this->sqlFilter)) {
 				$filterName .= "_1";
 			}
 				
