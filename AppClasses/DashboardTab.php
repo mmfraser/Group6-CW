@@ -14,6 +14,7 @@ class DashboardTab {
 	public $tabDescription;
 	public $userId;
 	private $chartPosArr;
+	private $customFilters;
 
 	function __construct($tabId = "", $tabName = "", $tabDescription = "", $userId = "") {
 		$this->conn = App::getDB();
@@ -40,16 +41,18 @@ class DashboardTab {
 		$this->getRow($row);
 		
 		// Also get the chart layout for this tab.
-		$chartPosSQL = "SELECT chartPos, chartId FROM dashboardLayout WHERE tabId = '".mysql_real_escape_string($id)."'";
+		$chartPosSQL = "SELECT chartPos, chartId, customFilter FROM dashboardLayout WHERE tabId = '".mysql_real_escape_string($id)."'";
 		$chartPos = $this->conn->getArrayFromDB($chartPosSQL);
 		$this->populateChartPos($chartPos);
+		
 	}
 	
 	/*	This function populates the chart position array with the layout in the database.
 	*/
 	private function populateChartPos($posArr) {
 		foreach($posArr as $pos) {
-			$this->chartPosArr[$pos['chartPos']] = $pos['chartId'];
+			$this->chartPosArr[$pos['chartPos']]['chartId'] = $pos['chartId'];
+			$this->chartPosArr[$pos['chartPos']]['customFilter'] = unserialize($pos['customFilter']);
 		}
 	}
 	
@@ -96,6 +99,59 @@ class DashboardTab {
 			$this->isLoaded = true;
 			$this->tabId = $this->conn->execute($SQL);
 		}		
+	}
+	
+	
+	public function getTabLayoutHtml() {
+		$chartPos = 1;
+			$dashboardHtml = '<table id="dashboardTable">';
+			for($i = 1; $i <= App::$noRows; $i++) {
+				$dashboardHtml .= "<tr>" . PHP_EOL;
+	
+				for($j = 1; $j <= App::$noCols; $j++) {
+					// Get chart
+					$chartId = -1;
+					$customFilter = null;
+					$colWidth = 100/App::$noCols;
+					
+					foreach($this->chartPosArr as $pos => $chart) {
+						if($pos == $chartPos) {
+							$chartId = $chart['chartId'];
+							$customFilter = $chart['customFilter'];
+						}
+					}
+					
+					$dashboardHtml .= '		<td width="'.$colWidth.'%" id="'.$chartPos.'">'. PHP_EOL;
+					$dashboardHtml .= '		<a title="Modify Chart" class="changeChart">Change Chart</a>';
+					
+					if($chartId == -1)
+						$dashboardHtml .= '			No chart selected';
+					else {
+						// Check if custom filter is set and if so include it in the url string.
+					
+						$url = "../AppClasses/drawChart.php?chartId=".$chartId;
+						
+						// Build url if filters are set.
+						if($customFilter != null) {
+							foreach($customFilter as $key => $value) {
+								$url .= "&amp;" . $key . "=" . $value;
+							}
+						}
+			
+						$dashboardHtml .= '		<a title="Change Filter" class="changeFilter">Change Filter</a>';
+						$dashboardHtml .= '			<img src="'.$url.'" class="chart" alt="'.$chartId.'" />';
+					}
+					
+
+					$dashboardHtml .= "		</td>". PHP_EOL;
+					$chartPos++;
+				}
+				
+				$dashboardHtml .= "</tr>" . PHP_EOL;
+			}
+			
+			$dashboardHtml .= "</table>";
+			return $dashboardHtml;
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.

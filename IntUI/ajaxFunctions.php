@@ -99,6 +99,25 @@
 			$tab->populateId($_POST['tabId']);
 			$tab->changeLayout($_POST['chartId'], $_POST['chartPos']);
 			die('Layout successfully changed');
+		} else if($do == "changeFilter") {
+			// Insert the filter query string into the database, but first convert it to a PHP array.
+			
+			$overriddenFilters = array();
+			
+			$filterPieces = explode(";", $_POST['filterQuery']);
+			foreach($filterPieces as $filterPiece) {
+				$filter = explode("=>", $filterPiece);
+				// 0th element is the filter name, 1st element is the new value of the filter.
+				if($filter[0] != null)
+					$overriddenFilters[$filter[0]] = $filter[1];
+			}
+		
+			// Serialize array and put in database
+			App::getDB()->execute("UPDATE dashboardlayout SET customFilter = '".serialize($overriddenFilters)."' WHERE dashboardLayoutId = '".$_POST['layoutId']."'");
+			
+			die("Filter(s) successfully updated.");
+			
+		
 		} else 
 			die("Error: Invalid request.");
 		

@@ -6,21 +6,21 @@
 	include("Chart.php");
 
 		$chart = Chart::getChart($_GET['chartId']);
-		
-		//print_r($chart->chartSeries);
-		
+
 		// Check if the filters are overridden.
 		foreach(array_keys($chart->sqlFilter) as $key) {
-			if($_GET[$key] != null) {
-				// Override filter's value. 
-				$oldFilter = $chart->sqlFilter[$key];
-				$chart->addFilter($key, $oldFilter['dbAlias'], $oldFilter['operator'], mysql_real_escape_string($_GET[$key]), $oldFilter['combinator'], true);		
+			if(isset($_GET[$key])) {
+				if($_GET[$key] != null) {
+					// Override filter's value. 
+					$oldFilter = $chart->sqlFilter[$key];
+					$chart->addFilter($key, $oldFilter['dbAlias'], $oldFilter['operator'], mysql_real_escape_string($_GET[$key]), $oldFilter['combinator'], true);		
+				} else {
+					// If key is null then delete the filter
+					$chart->deleteFilter($key);
+				}
 			}
 		}
-		
-		print $chart->generateSQLQuery();
-		
-		
+			
 		// Generate select query
 		$query = $chart->generateSQLQuery();
 			
@@ -158,7 +158,7 @@
 		, "Mode"=>LEGEND_HORIZONTAL, "Family"=>LEGEND_FAMILY_CIRCLE
 		);
 		$myPicture->drawLegend(25,$chart->imgSize['Y']-20,$Config);
-		//$myPicture->stroke();
+		$myPicture->stroke();
 		
 		
 			

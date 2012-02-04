@@ -69,7 +69,7 @@
 				$result = mysql_query($sql) or die(mysql_error());
 				return mysql_fetch_array($result);
 			}catch (Exeception $e){
-				
+				throw $e;
 			}
 		}
 		

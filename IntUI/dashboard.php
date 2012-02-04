@@ -1,5 +1,6 @@
 <?php
 	require_once('../App.php');
+	require_once('../AppClasses/DashboardTab.php');
 
 	// Page PHP Backend Code Begin
 		$page = new Page();
@@ -14,55 +15,25 @@
 		$dashboardTabs = App::getDB()->getArrayFromDB("SELECT tabId, tabName, tabDescription FROM dashboardtab WHERE userId = '".App::getAuthUser()->getUserId()."'");
 	
 		$tabsHtml = "";
-		
 		foreach($dashboardTabs as $tab) {
 			$tabsHtml .= '<li><a href="?tabId='.$tab['tabId'].'" title="'.$tab['tabDescription'].'">'.$tab['tabName'].'</a></li>';
 		}
 		
-		$dashboardHtml = "";
-		if(isset($_GET['tabId']) && is_numeric($_GET['tabId'])) {
+		if((isset($_GET['tabId']) && is_numeric($_GET['tabId']))) {
 			// Set a cookie and get the charts for that tab.
 			setcookie("tabId", $_GET['tabId'], time()+2592000);
-			// Get the charts
-			$dashboardTabs = App::getDB()->getArrayFromDB("SELECT chartPos, tabId, chartId FROM dashboardLayout WHERE tabId = '".mysql_real_escape_string($_GET['tabId'])."'");
-			// Build dashboard table rows/columns
-			$chartPos = 1;
 			
-			for($i = 1; $i <= App::$noRows; $i++) {
-				$dashboardHtml .= "<tr>" . PHP_EOL;
-				
-				for($j = 1; $j <= App::$noCols; $j++) {
-					// Get chart
-					$chartId = -1;
-					$colWidth = 100/App::$noCols;
-					
-					foreach($dashboardTabs as $chart) {
-						if($chart['chartPos'] == $chartPos)
-							$chartId = $chart['chartId'];
-					}
-					
-					$dashboardHtml .= '		<td width="'.$colWidth.'%" id="'.$chartPos.'">'. PHP_EOL;
-					$dashboardHtml .= '		<a title="Modify Chart" class="changeChart">Change Chart</a>';
-					
-					if($chartId == -1)
-						$dashboardHtml .= '			No chart selected';
-					else {
-						$dashboardHtml .= '		<a title="Change Filter" class="changeFilter">Change Filter</a>';
-						$dashboardHtml .= '			<img src="../AppClasses/drawChart.php?chartId='.$chartId.'" class="chart" alt="'.$chartId.'" />';
-					}
-					
-
-					$dashboardHtml .= "		</td>". PHP_EOL;
-					$chartPos++;
-				}
-				
-				$dashboardHtml .= "</tr>" . PHP_EOL;
-			}
+			// Get the tab	
+			$tab = new DashboardTab();
+			$tab->populateId($_GET['tabId']);
+		} else if(isset($_COOKIE['tabId']) && is_numeric($_COOKIE['tabId'])) {
+			$tab = new DashboardTab();
+			$tab->populateId($_COOKIE['tabId']);
 		}
 		
+		// Generate a dropdown for use if a user wishes to change a chart.
 		$chartDDHtml = "";
 		$allCharts = App::getDB()->getArrayFromDB("SELECT chartId, chartName FROM chart");
-		
 		foreach($allCharts as $chart) {
 			$chartDDHtml .= '<option value="'.$chart['chartId'].'">'.$chart['chartName'].'</option>';
 		}
@@ -76,28 +47,32 @@
 			<?=$tabsHtml?>
 			<li><a href="#">Create Tab</a></li>
 		</ul>
-		<div id="">
-		<table id="dashboardTable">
-			<?=$dashboardHtml?>
-		</table>
 		
-		<div id="select-chart" title="Select Chart">
-			<form method="POST" id="selectChart" action="">
-			<table>
-				<tr>
-					<td><label for="chartName">Chart Name</label><td>
-					<td>
-						<select name="chartName">
-							<?=$chartDDHtml;?>
-						</select>
-					</td>
-				</tr>
-			</table>
-		</form>
-		<p class="result"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-			<span class="result"></span></p>
+		<div id="">
+			
+			<?php print $tab->getTabLayoutHtml(); ?>
+			
+			<div id="select-chart" title="Select Chart">
+				<form method="POST" id="selectChart" action="">
+				<table>
+					<tr>
+						<td><label for="chartName">Chart Name</label><td>
+						<td>
+							<select name="chartName">
+								<?=$chartDDHtml;?>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<p class="result"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+				<span class="result"></span></p>
+			</div>
+			
+			<div id="filter-chart" title="Filter Chart">
+				
+			</div>
 		</div>
-	</div>
 		
 			<script type="text/javascript">
 			 function readCookie(name) 
@@ -112,17 +87,69 @@
 				}
 				return null;
 			}
-
+			
 			$(function() {
 				chartId = 0;
 				chartPos = 0;
+			
+				$('#filter-chart').dialog({
+				autoOpen: false,
+				height: 250,
+				width: 500,
+				modal: true,
+				buttons: {
+					"Change Fiter": function() {
+						//alert($(this).parent().html());
+					
+						$("img.spinningWheel").show();
+						var $form = $( this );
+						
+						
+						/*$form.find( 'input[name^=value]' ).each(function() {
+							alert($(this).val());
+						});*/
+						
+						dashLayoutId = $form.find( 'input[name="dashLayoutId"]' ).val();
+						filterNameArr = $form.find( 'input[name^=filterName]' );
+						valueArr = $form.find( 'input[name^=value]' );
+						queryString = "";
+
+						for(var i = 0; i < filterNameArr.length; i++) {
+							queryString += filterNameArr[i].value + "=>" + valueArr[i].value +";";
+						}
+
+						/* Send the data using post and put the results in a div */
+						$.post( "ajaxFunctions.php?do=changeFilter", { filterQuery: queryString, layoutId: dashLayoutId},
+						  function( data ) {
+							$("p.resultcf").show();
+							$("span.resultcf").empty().append(data);
+						  }
+						);
+					},
+					Cancel: function() {
+						location.reload();
+						$( this ).dialog( "close" );
+					}
+				},
+				close: function() {
+					location.reload();
+					allFields.val( "" ).removeClass( "ui-state-error" );
+				}
 				
-				$(".changeFilter").button();
+				})
+
+				$(".changeFilter").button().click(function() {
+					chartPos = $(this).parent().attr("id");
+					chartId = $(this).find('img').html();
+				//	alert(chartId);
+				
+					$('#filter-chart').load('chartFilterPopUp.php?tabId=' +  readCookie('tabId') + "&chartPos=" + chartPos);
+					$( "#filter-chart" ).dialog( "open" );
+				});
 				
 				$(".changeChart").button().click(function() {
 					chartPos = $(this).parent().attr("id");
 					chartId = $(this).find('img').html();
-				//	alert(chartId);
 					$( "#select-chart" ).dialog( "open" );
 				});
 				
@@ -138,7 +165,6 @@
 						$("img.spinningWheel").show();
 						var $form = $( this ),
 						newChartId = $form.find( 'select[name="chartName"]' ).val();
-						//alert($form.find( 'select[name="chartName"]' ).val());
 
 						/* Send the data using post and put the results in a div */
 						$.post( "ajaxFunctions.php?do=selectChart", { chartId: newChartId, tabId: readCookie('tabId'), chartPos: chartPos},

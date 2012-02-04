@@ -414,6 +414,10 @@
 			$this->addFilter($filterName, $filter['dbAlias'], $filter['operator'], $value, $filter['combinator']);
 		}
 		
+		public function deleteFilter($filterName) {
+			unset($this->sqlFilter[$filterName]);
+		}
+		
 	}
 	//($filterName, $dbAlias, $operator, $value)
 	/*$test = new Chart();

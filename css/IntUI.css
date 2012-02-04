@@ -65,12 +65,15 @@ div#header {
 }
 
 div#footer {
-	width:100%;
+	/*width:100%;
 	background:#fff;
 	border-top:5px solid #000;
 	min-height:60px;
 	padding:4px 8px 4px 8px;
-	border-radius:10px;
+	border-radius:10px;*/
+	margin:10px auto;
+	text-align:center;
+	color:#fff;
 }
 
 div#tabs {
@@ -125,5 +128,9 @@ table#dashboardTable td, th {
 
 img.chart {
 	margin:0 0 0 5px;
+}
+
+thead td{
+	font-weight:bold;
 }
 

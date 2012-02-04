@@ -82,7 +82,7 @@
 					$output .='</div>' .PHP_EOL;
 					$output .='</div>' .PHP_EOL;
 			} else {
-				// User is not logged in therefore no need to see the navigation.
+				// User is not logged in therefore has no need to see the navigation.
 				$output = "";
 			}
 			return $output;
@@ -126,7 +126,8 @@
 		private function footerContent() {
 			$output = '		<div class="clear"></div>'.PHP_EOL;
 			$output .= '	<div id="footer">'.PHP_EOL;
-			$output .= '		test'.PHP_EOL;
+			$output .= '		<p>Created for Quicksilver Music</p>'.PHP_EOL;
+			$output .= '		<p>&copy; Riccartion IT Solutions 2011-2012</p>'.PHP_EOL;
 			$output .= '	</div>'.PHP_EOL;
 			return $output;
 		}
