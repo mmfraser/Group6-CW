@@ -99,8 +99,7 @@
 				
 				$filterHtml .= filterRow($_POST['filterCol'][$i], $_POST['filterOperator'][$i], $_POST['value'][$i], $_POST['filterCombinator'][$i], $viewCols);
 			}
-			
-			print $chart->generateSQLQuery();
+	
 			$chart->save();
 			$_SESSION['CHARTWIZARD'] = serialize($chart);
 		} else {
@@ -111,16 +110,6 @@
 				}	
 			}
 		}
-		
-		/*
-		$filter['dbAlias'] = $dbAlias; $filterCol, $filterOperator, $value, $filterCombinator, $viewCols
-			$filter['operator'] = $operator;
-			$filter['value'] = $value;
-			$filter['combinator'] = $combinator;
-			$filter['sql'] = $sql;
-			$this->sqlFilter[$filterName] = $filter;*/
-		
-		//addFilter($filterName, $dbAlias, $operator, $value, $combinator)
 					
 	// Page PHP Backend Code End
 

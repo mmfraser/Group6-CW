@@ -89,6 +89,7 @@
 				try {
 					unset($chart->sqlColumns);
 					unset($chart->sqlTables);
+				
 					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null, false);
 					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
 					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);

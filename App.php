@@ -71,6 +71,12 @@
 			$page->getFooter();
 			die();
 		}
+		
+		public static function validateEmail($email) {
+			if(preg_match("/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/", $email)) 
+				return true;
+			return false;
+		}
 	}
 
 ?>

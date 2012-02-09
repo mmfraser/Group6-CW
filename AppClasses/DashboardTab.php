@@ -62,7 +62,10 @@ class DashboardTab {
 		if($this->chartPosArr[$chartPos] == null) {
 			$SQL = "INSERT INTO dashboardLayout (chartPos, tabId, chartId) VALUES ('".mysql_real_escape_string($chartPos)."', '".mysql_real_escape_string($this->tabId)."', '".mysql_real_escape_string($chartId)."')";
 		} else {
-			$SQL = "UPDATE dashboardLayout SET chartId = '".mysql_real_escape_string($chartId)."' WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
+			if($chartId == -1) {
+				$SQL = "DELETE FROM dashboardLayout WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
+			} else 
+				$SQL = "UPDATE dashboardLayout SET chartId = '".mysql_real_escape_string($chartId)."' WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
 		}
 
 		$this->conn->execute($SQL);

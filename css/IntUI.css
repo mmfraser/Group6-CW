@@ -103,20 +103,37 @@ button.ui-datepicker-trigger {
 	height:15px;
 }
 
-
 ul#dashboardTabs li {
-	display: inline;
+	display:inline;
 	list-style:none;
-	padding:10px 10px 3px 10px;
+	margin: 0 5px 10px 0;
+	padding:5px 10px 0px 10px;
 	border-top: 1px solid #000;
 	border-right: 1px solid #000;
 	border-left: 1px solid #000;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	height:20px;
+	background-color:#dadada;
+	float:left;
+}
+
+ul#dashboardTabs {
+	margin:0 0 10px 0;
+	padding:0;
+}
+
+ul#dashboardTabs li a {
+	text-decoration:underline;
+	color:#000;
+	cursor:pointer;
 }
 
 table#dashboardTable {
 	border: 1px solid #000;
 	margin:0 auto;
 	width:100%;
+	margin:10px 0 0 0;
 }
 
 table#dashboardTable td, th {

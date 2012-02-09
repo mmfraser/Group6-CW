@@ -44,6 +44,16 @@ class Customer {
 			return false;
 		$this->getRow($row);
 	}
+	
+	/*	This function gets the object with data given the customer's ID.
+	*/
+	public function populateId($id){
+		$sql = "SELECT * FROM customer WHERE customerId = '".mysql_real_escape_string($id)."'";
+		$row = $this->conn->getDataRow($sql);
+		if($row == null)
+			return false;
+		$this->getRow($row);
+	}
 			
 	/*	This function populates the object with data given a datarow.
 	*/
@@ -110,6 +120,15 @@ class Customer {
 			$this->isLoaded = true;
 			$this->customerId = $this->conn->execute($SQL);
 		}		
+	}
+	
+	public function delete() {
+		if($this->isLoaded === true) {
+			$SQL = "DELETE FROM customer WHERE emailAddress = '".$this->emailAddress."'";
+			$this->conn->execute($SQL);
+			$this->isLoaded = false;
+			$this->customerId = null;
+		}
 	}
 	
 	/* 	This function shuold be used for debugging only.  It outputs all the values of the object.

@@ -6,6 +6,7 @@
 	require_once('../AppClasses/Product.php');
 	require_once('../AppClasses/Genre.php');
 	require_once('../AppClasses/DashboardTab.php');
+	require_once('../AppClasses/Customer.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -117,7 +118,39 @@
 			
 			die("Filter(s) successfully updated.");
 			
-		
+		} else if($do == "createTab") {
+			$tab = new DashboardTab();
+			$tab->userId = App::getAuthUser()->getUserId();
+			$tab->tabName = $_POST['tabName'];
+			$tab->tabDescription = $_POST['tabDescription'];
+			
+			$tab->save();
+			die("Tab successfully added.");
+		} else if($do == "addCustomer") {
+			// Check email address
+			if(App::validateEmail($_POST['emailAddress'])) 
+				die('Invalid email address.');
+				
+			if($_POST['emailAddress'] == null || $_POST['forename'] == null || $_POST['surname'] == null || $_POST['telephoneNumber'] == null) 
+				die('One or more required fields are not completed.');
+				
+			$customer = new Customer();
+			$customer->emailAddress = $_POST['emailAddress'];
+			$customer->forename = $_POST['forename'];
+			$customer->surname = $_POST['surname'];
+			$customer->addressLine1 = $_POST['addressLine1'];
+			$customer->addressLine2 = $_POST['addressLine2'];
+			$customer->town = $_POST['town'];
+			$customer->city = $_POST['city'];
+			$customer->postcode = $_POST['postcode'];
+			
+			$customer->save();
+			
+			die('Customer successfully added.');
+		} else if($do == "deleteCustomer") {
+			$customer = new Customer();
+			$customer->populate($_POST['emailAddress']);
+			$customer->delete();
 		} else 
 			die("Error: Invalid request.");
 		

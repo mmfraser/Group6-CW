@@ -39,7 +39,6 @@
 				header('Location: createChart2.php');
 			}
 		} else if($_GET['do'] == "cancel") {
-			$chart->delete();
 			unset($_SESSION['CHARTWIZARD']);
 			$chart = null;
 			header('Location: chartManagement.php');

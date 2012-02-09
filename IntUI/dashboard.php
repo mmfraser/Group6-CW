@@ -16,7 +16,7 @@
 	
 		$tabsHtml = "";
 		foreach($dashboardTabs as $tab) {
-			$tabsHtml .= '<li><a href="?tabId='.$tab['tabId'].'" title="'.$tab['tabDescription'].'">'.$tab['tabName'].'</a></li>';
+			$tabsHtml .= '<li><a href="?tabId='.$tab['tabId'].'" title="'.$tab['tabDescription'].'">'.$tab['tabName'].'</a> <span class="ui-icon-close ui-icon"></span></li>';
 		}
 		
 		if((isset($_GET['tabId']) && is_numeric($_GET['tabId']))) {
@@ -41,15 +41,12 @@
 	// Page PHP Backend Code End
 
 ?>
-	
-
 		<ul id="dashboardTabs">
 			<?=$tabsHtml?>
-			<li><a href="#">Create Tab</a></li>
+			<li><a id="create-tab-button">Create Tab</a></li>
 		</ul>
 		
-		<div id="">
-			
+	
 			<?php print $tab->getTabLayoutHtml(); ?>
 			
 			<div id="select-chart" title="Select Chart">
@@ -59,6 +56,7 @@
 						<td><label for="chartName">Chart Name</label><td>
 						<td>
 							<select name="chartName">
+								<option value="-1"></option>
 								<?=$chartDDHtml;?>
 							</select>
 						</td>
@@ -69,14 +67,32 @@
 				<span class="result"></span></p>
 			</div>
 			
-			<div id="filter-chart" title="Filter Chart">
-				
+				<div id="create-tab" title="Create Tab">
+				<form method="POST" id="createTab" action="">
+				<table>
+					<tr>
+						<td><label for="tabName">Tab Name:</label><td>
+						<td>
+							<input type="text" name="tabName" />
+						</td>
+					</tr>
+					<tr>
+						<td><label for="tabDesc">Tab Description:</label><td>
+						<td>
+							<textarea type="text" name="tabDesc"></textarea>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<p class="resultct"><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
+				<span class="resultct"></span></p>
 			</div>
-		</div>
+			
+			<div id="filter-chart" title="Filter Chart"></div>
+
 		
 			<script type="text/javascript">
-			 function readCookie(name) 
-			{
+			 function readCookie(name) {
 				var nameEQ = name + "=";
 				var ca = document.cookie.split( ';');
 				for( var i=0;i < ca.length;i++) 
@@ -92,22 +108,51 @@
 				chartId = 0;
 				chartPos = 0;
 			
+				$('#create-tab-button').click(function() {
+					$('#create-tab').dialog('open');
+					$("p.resultct").hide();
+				});
+				
+				$('#create-tab').dialog({
+				autoOpen: false,
+				height: 200,
+				width: 300,
+				modal: true,
+				buttons: {
+						"Create Tab": function() {
+							var $form = $( this );
+							tabName = $form.find( 'input[name="tabName"]' ).val();
+							tabDesc = $form.find( 'textarea[name="tabDesc"]' ).val();
+							
+							/* Send the data using post and put the results in a div */
+							$.post( "ajaxFunctions.php?do=createTab", { tabName: tabName, tabDescription: tabDesc},
+							  function( data ) {
+								$("p.resultct").show();
+								$("span.resultct").empty().append(data);
+							  }
+							);
+						},
+						Close: function() {
+							location.reload();
+							$( this ).dialog( "close" );
+						}
+					},
+					close: function() {
+						location.reload();
+						allFields.val( "" ).removeClass( "ui-state-error" );
+					}
+				});
+				
+				
 				$('#filter-chart').dialog({
 				autoOpen: false,
 				height: 250,
 				width: 500,
 				modal: true,
 				buttons: {
-					"Change Fiter": function() {
-						//alert($(this).parent().html());
-					
+					"Change Filter": function() {
 						$("img.spinningWheel").show();
 						var $form = $( this );
-						
-						
-						/*$form.find( 'input[name^=value]' ).each(function() {
-							alert($(this).val());
-						});*/
 						
 						dashLayoutId = $form.find( 'input[name="dashLayoutId"]' ).val();
 						filterNameArr = $form.find( 'input[name^=filterName]' );
@@ -126,7 +171,7 @@
 						  }
 						);
 					},
-					Cancel: function() {
+					Close: function() {
 						location.reload();
 						$( this ).dialog( "close" );
 					}
@@ -136,12 +181,11 @@
 					allFields.val( "" ).removeClass( "ui-state-error" );
 				}
 				
-				})
+				});
 
 				$(".changeFilter").button().click(function() {
 					chartPos = $(this).parent().attr("id");
 					chartId = $(this).find('img').html();
-				//	alert(chartId);
 				
 					$('#filter-chart').load('chartFilterPopUp.php?tabId=' +  readCookie('tabId') + "&chartPos=" + chartPos);
 					$( "#filter-chart" ).dialog( "open" );
@@ -174,7 +218,7 @@
 						  }
 						);
 					},
-					Cancel: function() {
+					Close: function() {
 						location.reload();
 						$( this ).dialog( "close" );
 					}
