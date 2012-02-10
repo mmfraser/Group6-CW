@@ -53,6 +53,7 @@
 					$( "#dialog-confirm-delete" ).dialog( "open" );
 				});
 			
+			
 				$( "#dialog-confirm-delete" ).dialog({
 					autoOpen: false,
 					resizable: false,

@@ -126,6 +126,12 @@
 			
 			$tab->save();
 			die("Tab successfully added.");
+		} else if($do == "deleteTab") {
+			$tab = new DashboardTab();
+			$tab->populateId($_POST['tabId']);
+			$tab->delete();
+
+			die("Tab successfully deleted.");
 		} else if($do == "addCustomer") {
 			// Check email address
 			if(App::validateEmail($_POST['emailAddress'])) 

@@ -104,7 +104,15 @@ class DashboardTab {
 		}		
 	}
 	
-	
+	public function delete() {
+		if($this->isLoaded) {
+			$sql = "DELETE FROM dashboardtab WHERE tabId = '".$this->tabId."'";
+			$this->conn->execute($sql);
+			$this->isLoaded = false;
+			$this->tabId = null;
+		}
+	}
+		
 	public function getTabLayoutHtml() {
 		$chartPos = 1;
 			$dashboardHtml = '<table id="dashboardTable">';

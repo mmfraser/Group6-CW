@@ -16,7 +16,7 @@
 	
 		$tabsHtml = "";
 		foreach($dashboardTabs as $tab) {
-			$tabsHtml .= '<li><a href="?tabId='.$tab['tabId'].'" title="'.$tab['tabDescription'].'">'.$tab['tabName'].'</a> <span class="ui-icon-close ui-icon"></span></li>';
+			$tabsHtml .= '<li id="'.$tab['tabId'].'"><a href="?tabId='.$tab['tabId'].'" title="Open tab: '.$tab['tabDescription'].'" style="float:left;">'.$tab['tabName'].'</a>&nbsp;<a title="Delete Tab" class="delete-tab"><span class="ui-icon-close ui-icon" style="float:right;"></span></a></li>';
 		}
 		
 		if((isset($_GET['tabId']) && is_numeric($_GET['tabId']))) {
@@ -90,7 +90,10 @@
 			
 			<div id="filter-chart" title="Filter Chart"></div>
 
-		
+		<div id="dialog-delete-tab" title="Delete tab?">
+			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Are you sure you wish to delete this tab?</p>
+		</div>
+
 			<script type="text/javascript">
 			 function readCookie(name) {
 				var nameEQ = name + "=";
@@ -107,6 +110,29 @@
 			$(function() {
 				chartId = 0;
 				chartPos = 0;
+				tabId = 0;
+				
+			
+				$('a.delete-tab').click(function() {
+					tabId = $(this).parent().attr("id");
+					$('#dialog-delete-tab').dialog('open');
+				});
+			
+				$( "#dialog-delete-tab" ).dialog({
+					autoOpen: false,
+					resizable: false,
+					height:170,
+					modal: true,
+					buttons: {
+						"Delete tab": function() {
+							$.post( "ajaxFunctions.php?do=deleteTab", { tabId: tabId});
+							location.reload();
+						},
+						Cancel: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
 			
 				$('#create-tab-button').click(function() {
 					$('#create-tab').dialog('open');
