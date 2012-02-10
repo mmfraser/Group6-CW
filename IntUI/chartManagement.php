@@ -20,7 +20,7 @@
 			$chartHtml .= "<tr>" . PHP_EOL;
 			$chartHtml .= "	<td>".$arr['chartName']."</td>" . PHP_EOL;
 			$chartHtml .= "	<td>".$arr['chartType']."</td>" . PHP_EOL;
-			$chartHtml .= '	<td class="options" style="width:20px;"><a href="createChart1.php?chartId='.$arr['chartId'].'" title="Modify Chart"><span class="ui-icon ui-icon-pencil"></span></a></td>';
+			$chartHtml .= '	<td class="options" style="width:40px;"><a href="createChart1.php?chartId='.$arr['chartId'].'" title="Modify Chart"><span class="ui-icon ui-icon-pencil"></span></a><a href="chartPermission.php?chartId='.$arr['chartId'].'" title="Modify Chart Permissions"><span class="ui-icon ui-icon-locked"></span></a><a href="createChart1.php?chartId='.$arr['chartId'].'&amp;do=cancel" title="Delete Chart"><span class="ui-icon ui-icon-trash"></span></a></td>';
 			$chartHtml .= "</tr>" . PHP_EOL;
 		}
 		

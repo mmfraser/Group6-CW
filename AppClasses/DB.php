@@ -100,6 +100,19 @@
 			}
 		}
 		
+		public function beginTransaction() {
+			mysql_query("SET AUTOCOMMIT=0");
+			mysql_query("START TRANSACTION");
+		}
+		
+		public function commitTransaction() {
+			mysql_query("COMMIT");
+		}
+		
+		public function rollbackTransaction() {
+			mysql_query("ROLLBACK");
+		}
+		
 		public function getNumResults($sql) {
 			if(strpos($sql, "SELECT") === false) 
 				throw new Exception('getNumResults() : Can only be used for SELECT statements.');

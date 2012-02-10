@@ -174,7 +174,7 @@
 				
 				<a href="createChart2.php" class="back-button" style="margin-top:15px;">Back</a>
 				<a href="createChart1.php?do=cancel" class="cancel-button" style="margin-top:15px;">Delete Chart</a>
-
+				<a href="chartPermission.php?chartId=<?=$chart->chartId?>" class="cancel-button" style="margin-top:15px;">Chart Permissions</a>
 				
 			</div>
 			
