@@ -15,20 +15,7 @@
 		// Get the artist list and populate table.
 		$allCustomers = App::getDB()->getArrayFromDB("SELECT emailAddress, customerId FROM customer");
 		$customerHtml = "";
-		
-		/* 
-		
-		$this->customerId = $emailAddress;
-		$this->emailAddress = $emailAddress;
-		$this->forename = $forename;
-		$this->surname = $surname;
-		$this->addressLine1 = $addressLine1;
-		$this->addressLine2 = $addressLine2;
-		$this->town = $town;
-		$this->city = $city;
-		$this->postcode = $postcode;
-		$this->telephoneNumber = $telephoneNumber;*/
-		
+				
 		foreach($allCustomers as $arr) {
 			$customer = new Customer();
 			$customer->populate($arr['emailAddress']);
@@ -219,6 +206,7 @@
 	
 	<div id="dialog-confirm-delete" title="Delete customer?">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This artist, as well as all things tied to this user (sales, etc.) will be deleted.  Are you sure?</p>
+	</div>
 
 	
 <?php	
