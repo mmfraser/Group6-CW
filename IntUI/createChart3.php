@@ -102,7 +102,10 @@
 	
 			$chart->save();
 			$_SESSION['CHARTWIZARD'] = serialize($chart);
-		} else {
+		} else if(isset($_GET['do']) && $_GET['do'] == "saveChart") {
+			unset($_SESSION['CHARTWIZARD']);
+			header('Location: chartManagement.php');
+		}else {
 			if(isset($chart)) {	
 				$filterHtml = "";
 				foreach($chart->sqlFilter as $filter) {
@@ -128,35 +131,7 @@
 						<table id="filterTable">
 							<thead>
 								<td><strong>Column</strong></td><td><strong>Operator</strong></td><td><strong>Value</strong></td><td><strong>Combinator</strong></td><td></td>
-							</thead>
-							<!-- <tr>
-								<td>
-									<select name="filterCol[]">
-										<?=$filterColHtml;?>
-									</select>
-								</td>
-								<td>
-									<select name="filterOperator[]" class="operator">
-										<option value="eq" <?php if($operator == "eq") print "selected"; ?>>equals</option>
-										<option value="neq" <?php if($operator == "neq") print "selected"; ?>>not equal</option>
-										<option value="lte" <?php if($operator == "lte") print "selected"; ?>>less than or equal to</option>
-										<option value="lt" <?php if($operator == "lt") print "selected"; ?>>less than</option>
-										<option value="gte" <?php if($operator == "gte") print "selected"; ?>>greater than or equal to</option>
-										<option value="gt" <?php if($operator == "gt") print "selected"; ?>>greater than</option>
-									</select>
-								</td>
-								<td class="value">
-									<input type="text" name="value[]" size="15" /> <span class="between" style="display:none;">&amp; <input type="text" name="value1[]" size="15" /></span>
-								</td>
-								<td>
-									<select name="filterCombinator[]">
-										<option value="AND" <?php if($operator == "AND") print "selected"; ?>>AND</option>
-										<option value="OR" <?php if($operator == "OR") print "selected"; ?>>OR</option>
-									</select>
-								</td>
-								<td id="commands"><a title="Delete Product" id="deleteRow"><span class="ui-icon ui-icon-trash"></span></a></td>
-							</tr> -->
-							
+							</thead>						
 							<?=$filterHtml;?>
 						</table>
 						<input type="button" value="Add Filter" class="add-filter" />
@@ -174,6 +149,7 @@
 				
 				<a href="createChart2.php" class="back-button" style="margin-top:15px;">Back</a>
 				<a href="createChart1.php?do=cancel" class="cancel-button" style="margin-top:15px;">Delete Chart</a>
+				<a href="?do=saveChart" class="cancel-button" style="margin-top:15px;">Save Chart</a>
 				<a href="chartPermission.php?chartId=<?=$chart->chartId?>" class="cancel-button" style="margin-top:15px;">Chart Permissions</a>
 				
 			</div>
