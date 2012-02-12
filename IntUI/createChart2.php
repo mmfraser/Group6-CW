@@ -116,7 +116,6 @@
 							}
 							
 							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], true);
-							print $seriesName . "<br>";
 					
 							$chart->addChartSeries($seriesName, $seriesName, $_POST['seriesName'][$i], 0, $_POST['seriesAggregation'][$i], $_POST['seriesStoreFilter'][$i]);						
 						} else {

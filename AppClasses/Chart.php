@@ -293,7 +293,9 @@
 			$chart = unserialize($chart);
 			$chart->chartId = $chartId;
 			$chart->isLoaded = true;
-			
+			$chart->getChartUserPermissions();
+			$chart->getChartGroupPermissions();
+	
 			return $chart;
 		}
 
@@ -304,7 +306,6 @@
 				
 				foreach($rows as $row) 
 					$this->userPermissions[] = $row['userId'];
-				
 			} 
 			return $this->userPermissions;
 		}
