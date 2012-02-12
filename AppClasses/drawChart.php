@@ -9,7 +9,7 @@
 		$chart = Chart::getChart($_GET['chartId']);
 	
 		
-		if(in_array($user->getUserId(), $chart->userPermissions) || count(array_intersect($user->groupMembership, $chart->groupPermissions)) != 0) {
+		if(in_array($user->getUserId(), $chart->userPermissions) || count(array_intersect($user->groupMembership, $chart->groupPermissions)) != 0 || $_GET['preview'] == true) {
 			// Check if the filters are overridden.
 			foreach(array_keys($chart->sqlFilter) as $key) {
 				if(isset($_GET[$key])) {

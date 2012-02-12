@@ -144,7 +144,7 @@
 				<fieldset>
 					<legend>Chart Preview</legend>
 					<h3>Chart Preview:</h3>
-					<img src="../AppClasses/drawChart.php?chartId=<?=$chart->chartId?>" style="clear:both;" />
+					<img src="../AppClasses/drawChart.php?chartId=<?=$chart->chartId?>&amp;preview=true" style="clear:both;" />
 				</fieldset>
 				
 				<a href="createChart2.php" class="back-button" style="margin-top:15px;">Back</a>
