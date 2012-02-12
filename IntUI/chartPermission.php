@@ -24,18 +24,22 @@
 		} else {
 			App::fatalError($page, 'You must select a chart in which to set permissions.  Please go back to the <a href="chartManagement.php">Chart Management</a> page.');
 		}
-		
-
-		if(isset($_POST['userPermissions']))
-			$userPermissions = $_POST['userPermissions'];
-		else
+	
+		if(isset($_POST)) {		
+			if(!isset($_POST['groupPermissions']))
+				$groupPermissions = array();
+			else 
+				$groupPermissions = $_POST['groupPermissions'];
+				
+			if(!isset($_POST['userPermissions']))
+				$userPermissions = array();
+			else 
+				$userPermissions = $_POST['userPermissions'];
+			
+		} else {
 			$userPermissions = $chart->getChartUserPermissions();
-			
-		if(isset($_POST['groupPermissions']))
-			$groupPermissions = $_POST['groupPermissions'];
-		else
 			$groupPermissions = $chart->getChartGroupPermissions();
-			
+		}
 		
 		if(isset($_GET['do']) && $_GET['do'] == "update" && isset($_GET['chartId'])) {
 			try {

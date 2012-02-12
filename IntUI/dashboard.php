@@ -33,7 +33,8 @@
 		
 		// Generate a dropdown for use if a user wishes to change a chart.
 		$chartDDHtml = "";
-		$allCharts = App::getDB()->getArrayFromDB("SELECT chartId, chartName FROM chart");
+			
+		$allCharts = App::getDB()->getArrayFromDB("SELECT DISTINCT c.chartId, c.chartName FROM chartpermission cp LEFT JOIN chart c ON c.chartId = cp.chartId WHERE userID = ".App::getAuthUser()->getUserId()." OR  userGroupId IN(".implode(",", App::getAuthUser()->groupMembership).")");
 		foreach($allCharts as $chart) {
 			$chartDDHtml .= '<option value="'.$chart['chartId'].'">'.$chart['chartName'].'</option>';
 		}
@@ -47,7 +48,13 @@
 		</ul>
 		
 	
-			<?php print $tab->getTabLayoutHtml(); ?>
+			<?php 
+				if($tab->userId == App::getAuthUser()->getUserId())
+					print $tab->getTabLayoutHtml(); 
+				else
+					print "<h3 style='clear:both;'>You do not have permission to access this tab.  Please select another tab.</h3>";
+					
+			?>
 			
 			<div id="select-chart" title="Select Chart">
 				<form method="POST" id="selectChart" action="">
