@@ -15,7 +15,11 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
+<<<<<<< HEAD
+	width: 1000px;
+=======
 	width: 1200px;
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 	min-width: 900px;
 	margin:0 auto;
 	min-height:200px;
@@ -44,7 +48,10 @@ div#mainContent {
 	float:left;
 	/*width:74.3%;*/
 	width:100%;
+<<<<<<< HEAD
+=======
 	/*width:1000px;*/
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
@@ -69,11 +76,15 @@ div#footer {
 	background:#fff;
 	border-top:5px solid #000;
 	min-height:60px;
+<<<<<<< HEAD
+	border-radius:10px;
+=======
 	padding:4px 8px 4px 8px;
 	border-radius:10px;*/
 	margin:10px auto;
 	text-align:center;
 	color:#fff;
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 }
 
 div#tabs {
