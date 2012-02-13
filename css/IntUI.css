@@ -15,7 +15,7 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
-	width: 1010px;
+	width: 1000px;
 	min-width: 900px;
 	margin:0 auto;
 	min-height:200px;
@@ -44,7 +44,7 @@ div#navigation{
 div#mainContent {
 	float:left;
 	/*width:74.3%;*/
-	width:1000px;
+	width:100%;
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
@@ -69,6 +69,7 @@ div#footer {
 	background:#fff;
 	border-top:5px solid #000;
 	min-height:60px;
+	border-radius:10px;
 }
 
 div#tabs {

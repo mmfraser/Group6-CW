@@ -40,7 +40,7 @@
 		private function header() { 
 			$output = '<div id="header">'. PHP_EOL;
 			//$output .= '	Quicksilver Music'. PHP_EOL;
-			$output .= '<img src="../Images/logo4.png" alt="Quicksilver Music" />';
+			$output .= '<img src="../Images/logo.png" alt="Quicksilver Music" />';
 			$output .='</div>'. PHP_EOL;
 			return $output;
 		}
