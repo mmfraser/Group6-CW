@@ -14,7 +14,7 @@
 					if(isset($_GET['page']))
 						header('Location: ' . $_GET['page']);
 					else 
-						header('Location: userManagement.php');
+						header('Location: dashboard.php');
 				} else 
 					$errorMsg = "Username and/or password incorrect.";
 			}

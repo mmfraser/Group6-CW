@@ -24,22 +24,34 @@
 		if(isset($_GET['do']) && $_GET['do'] == "submit") {
 			if(empty($_POST['chartName'])) {
 				$page->error("The Chart Name field is mandatory must be completed.");
+				$chart->chartType = $_POST['chartType'];
+				$chart->dataView = $_POST['dataView'];
 			} else if(empty($_POST['chartType'])) {
 				$page->error("The Chart Type is mandatory must be selected.");
+				$chart->chartName = $_POST['chartName'];
+				$chart->dataView = $_POST['dataView'];
 			} else {
 				// Set the values
 				$chart->chartName = $_POST['chartName'];
 				$chart->chartType = $_POST['chartType'];
 				$chart->dataView = $_POST['dataView'];
-				$chartName = $chart->chartName;
-				$chartType = $chart->chartType;
-				$dataView = $chart->dataView;
+				
 				// 3600 is one hour.
 				$_SESSION['CHARTWIZARD'] = serialize($chart);
 				header('Location: createChart2.php');
 			}
+			
+			$chartName = $chart->chartName;
+			$chartType = $chart->chartType;
+			$dataView = $chart->dataView;
+			
+		} else if($_GET['do'] == "close-wizard") {
+			unset($_SESSION['CHARTWIZARD']);
+			$chart = null;
+			header('Location: chartManagement.php');
 		} else if($_GET['do'] == "cancel") {
-			$chart->delete();
+			if($chart->isLoaded)
+				$chart->delete();
 			unset($_SESSION['CHARTWIZARD']);
 			$chart = null;
 			header('Location: chartManagement.php');
@@ -98,7 +110,7 @@
 				
 					
 					<div style="margin:15px 0 0 0;">
-						<a href="?do=cancel" class="cancel-button">Cancel</a>
+						<a href="?do=close-wizard" class="cancel-button">Cancel</a>
 						<input type="submit" value="Next Step" class="submit-button" style="float:right;" />
 					</div>
 				</fieldset>

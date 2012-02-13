@@ -24,6 +24,8 @@
 		public $abscissa = array();
 		public $axes = array();
 		public $dataView;
+		public $userPermissions = array();
+		public $groupPermissions = array();
 				
 		// Optional
 		
@@ -291,16 +293,79 @@
 			$chart = unserialize($chart);
 			$chart->chartId = $chartId;
 			$chart->isLoaded = true;
-			
+			$chart->getChartUserPermissions();
+			$chart->getChartGroupPermissions();
+	
 			return $chart;
 		}
-		
-		/*	This function populates the object with data given a datarow.
-		*/
-		public function getRow($row){
-			
-		}
 
+		public function getChartUserPermissions() {
+			if($this->isLoaded) {
+				$sql = "SELECT userId FROM chartpermission WHERE userGroupId IS NULL AND chartId = '".mysql_real_escape_string($this->chartId)."'";
+				$rows = App::getDB()->getArrayFromDB($sql);
+				
+				foreach($rows as $row) 
+					$this->userPermissions[] = $row['userId'];
+			} 
+			return $this->userPermissions;
+		}
+		
+		public function updateUserPermissions($arr) {
+			if(is_array($arr) && $this->isLoaded) {
+				App::getDB()->beginTransaction();
+				try {
+					$sql = "DELETE FROM chartpermission WHERE userGroupId IS NULL AND chartId = '".mysql_real_escape_string($this->chartId)."';";
+					App::getDB()->execute($sql);
+					foreach($arr as $user) {
+						if(is_numeric($user)) {
+							$sql = "INSERT INTO chartpermission (userId, chartId) VALUES ('".$user."', '".mysql_real_escape_string($this->chartId)."');";
+							App::getDB()->execute($sql);
+						}
+					}
+					App::getDB()->commitTransaction();
+					$this->userPermissions = $arr;
+				} catch(Exception $e) {
+					App::getDB()->rollbackTransaction();
+					throw new Exception('Error when executing one or more queries: ' . $e->getMessage());
+				}
+			} else 
+				throw new Exception('This function expects an array of integer UserIDs.  It can also only be called on objects already saved to the database.');
+		}
+		
+		public function updateGroupPermissions($arr) {
+			if(is_array($arr) && $this->isLoaded) {
+				App::getDB()->beginTransaction();
+				try {
+					$sql = "DELETE FROM chartpermission WHERE userId IS NULL AND chartId = '".mysql_real_escape_string($this->chartId)."';";
+					App::getDB()->execute($sql);
+					foreach($arr as $group) {
+						if(is_numeric($group)) {
+							$sql = "INSERT INTO chartpermission (userGroupId, chartId) VALUES ('".$group."', '".mysql_real_escape_string($this->chartId)."');";
+							App::getDB()->execute($sql);
+						}
+					}
+					App::getDB()->commitTransaction();
+					$this->groupPermissions = $arr;
+				} catch(Exception $e) {
+					App::getDB()->rollbackTransaction();
+					throw new Exception('Error when executing one or more queries: ' . $e->getMessage());
+				}
+			} else 
+				throw new Exception('This function expects an array of integer GroupIDs.  It can also only be called on objects already saved to the database.');
+		}
+		
+		public function getChartGroupPermissions() {
+			if($this->isLoaded) {
+				$sql = "SELECT userGroupId FROM chartpermission WHERE userId IS NULL AND chartId = '".mysql_real_escape_string($this->chartId)."'";
+				$rows = App::getDB()->getArrayFromDB($sql);
+				
+				foreach($rows as $row) 
+					$this->groupPermissions[] = $row['userGroupId'];
+				
+			} 
+			return $this->groupPermissions;
+		}
+		
 		/* 	This function allows the object to be saved back to the database, whether it is a new object or an object being updated.
 		*/
 		public function save() {
@@ -343,9 +408,12 @@
 			
 		}
 		
-		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator) {
-			if(!$this->checkColExists($dbAlias)) 
-				throw new Exception("Error adding chart series, no such DB column exists.");
+		/* This adds a filter to the chart.
+		*/
+		
+		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator, $override) {
+		/*	if(!$this->checkColExists($dbAlias)) 
+				throw new Exception("Error adding chart series, no such DB column exists.");*/
 			
 			if(empty($value))
 				throw new Exception("Filters must have a default value.");
@@ -353,7 +421,7 @@
 			if(empty($filterName))
 				throw new Exception("Filters must have a unique name.");
 				
-			while(array_key_exists($filterName, $this->sqlFilter)) {
+			while($override == false && array_key_exists($filterName, $this->sqlFilter)) {
 				$filterName .= "_1";
 			}
 				
@@ -411,6 +479,10 @@
 			$this->addFilter($filterName, $filter['dbAlias'], $filter['operator'], $value, $filter['combinator']);
 		}
 		
+		public function deleteFilter($filterName) {
+			unset($this->sqlFilter[$filterName]);
+		}
+		
 	}
 	//($filterName, $dbAlias, $operator, $value)
 	/*$test = new Chart();
@@ -458,5 +530,7 @@
 	
 //	print_r($test->sqlColumns);
 //	print_r(array_unique($test->sqlTables));
+
+//$test = Chart::getChart(102);
 
 ?>

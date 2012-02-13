@@ -50,8 +50,8 @@
 					$output = '<div style="margin-left:auto; margin-right:auto; width:100%;">' .PHP_EOL;
 					$output .= '<div class="menu" id="navigation">' .PHP_EOL;
 					$output .= '<ul>' .PHP_EOL;
-					$output .= '<li><a href="#">Dashboard<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
-					$output .= '<li><a href="#">Chart Management<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
+					$output .= '<li><a href="dashboard.php">Dashboard<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
+					$output .= '<li><a href="chartManagement.php">Chart Management<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
 					$output .= '<li><a href="#">Management<!--[if gte IE 7]><!--></a><!--<![endif]-->' .PHP_EOL;
 					$output .= '<!--[if lte IE 6]><table><tr><td><![endif]-->' .PHP_EOL;
 					$output .= '	<ul>' .PHP_EOL;
@@ -78,11 +78,17 @@
 					$output .= '        <li><a href="productManagement.php">Product Management</a></li>' .PHP_EOL;
 					$output .= '        <li><a href="salesManagement.php">Sales Management</a></li>' .PHP_EOL;
 					$output .= '</ul>' .PHP_EOL;
-					$output .= '<li><a href="login.php?do=logout">Logout<!--[if gte IE 7]><!--></a><!--<![endif]--></li>' .PHP_EOL;
+					$output .= '<li><a href="#">Customers<!--[if gte IE 7]><!--></a><!--<![endif]-->' .PHP_EOL;
+					$output .= '<!--[if lte IE 6]><table><tr><td><![endif]-->' .PHP_EOL;
+					$output .= '	<ul>' .PHP_EOL;
+					$output .= '		<li><a href="customerManagement.php">Customer Management</a></li>' .PHP_EOL;
+					$output .= '        <li><a href="customerSearch.php">Customer Search</a></li>' .PHP_EOL;
+					$output .= '	</ul>' .PHP_EOL;
+					$output .= '<li><a href="login.php?do=logout">Logout<!--[if gte IE 7]><!--></a><!--<![endif]--></li></ul>' .PHP_EOL;
 					$output .='</div>' .PHP_EOL;
 					$output .='</div>' .PHP_EOL;
 			} else {
-				// User is not logged in therefore no need to see the navigation.
+				// User is not logged in therefore has no need to see the navigation.
 				$output = "";
 			}
 			return $output;
@@ -126,7 +132,8 @@
 		private function footerContent() {
 			$output = '		<div class="clear"></div>'.PHP_EOL;
 			$output .= '	<div id="footer">'.PHP_EOL;
-			$output .= '		test'.PHP_EOL;
+			$output .= '		<p>Created for Quicksilver Music</p>'.PHP_EOL;
+			$output .= '		<p>&copy; Riccartion IT Solutions 2011-2012</p>'.PHP_EOL;
 			$output .= '	</div>'.PHP_EOL;
 			return $output;
 		}

@@ -69,7 +69,7 @@
 				$result = mysql_query($sql) or die(mysql_error());
 				return mysql_fetch_array($result);
 			}catch (Exeception $e){
-				
+				throw $e;
 			}
 		}
 		
@@ -98,6 +98,19 @@
 			} catch (Exception $e) {
 				throw $e;
 			}
+		}
+		
+		public function beginTransaction() {
+			mysql_query("SET AUTOCOMMIT=0");
+			mysql_query("START TRANSACTION");
+		}
+		
+		public function commitTransaction() {
+			mysql_query("COMMIT");
+		}
+		
+		public function rollbackTransaction() {
+			mysql_query("ROLLBACK");
 		}
 		
 		public function getNumResults($sql) {

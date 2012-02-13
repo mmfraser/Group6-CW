@@ -17,10 +17,10 @@
 		
 		
 		foreach($allCharts as $arr) {
-			$chartHtml .= "<tr>" . PHP_EOL;
+			$chartHtml .= '<tr id="'.$arr['chartId'].'">' . PHP_EOL;
 			$chartHtml .= "	<td>".$arr['chartName']."</td>" . PHP_EOL;
 			$chartHtml .= "	<td>".$arr['chartType']."</td>" . PHP_EOL;
-			$chartHtml .= '	<td class="options" style="width:20px;"><a href="createChart1.php?chartId='.$arr['chartId'].'" title="Modify Chart"><span class="ui-icon ui-icon-pencil"></span></a></td>';
+			$chartHtml .= '	<td class="options" style="width:40px;"><a href="createChart1.php?chartId='.$arr['chartId'].'" title="Modify Chart"><span class="ui-icon ui-icon-pencil"></span></a><a href="chartPermission.php?chartId='.$arr['chartId'].'" title="Modify Chart Permissions"><span class="ui-icon ui-icon-locked"></span></a><a title="Delete Chart" id="delete-chart"><span class="ui-icon ui-icon-trash"></span></a></td>';
 			$chartHtml .= "</tr>" . PHP_EOL;
 		}
 		
@@ -31,6 +31,7 @@
 ?>
 		<script type="text/javascript">
 			$(function() {
+				chartId = 0;
 				$("p.result").hide();
 				$("img.spinningWheel").hide();
 				$("a#addChart").button();
@@ -47,8 +48,27 @@
 					"sPaginationType": "full_numbers"
 				});
 			
+				$("a#delete-chart").button().click(function() {
+					chartId = $(this).parent().parent().attr("id")
+					$( "#dialog-confirm-delete" ).dialog( "open" );
+				});
 			
 			
+				$( "#dialog-confirm-delete" ).dialog({
+					autoOpen: false,
+					resizable: false,
+					height:170,
+					modal: true,
+					buttons: {
+						"Delete chart": function() {
+							$.post( "createChart1.php?chartId="+chartId+"&do=cancel");
+						location.reload();
+						},
+						Cancel: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
 			
 			
 			
@@ -69,6 +89,11 @@
 					<?php print $chartHtml; ?>
 				</tbody>
 			</table>
+			
+	<div id="dialog-confirm-delete" title="Delete chart?">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This chart will be deleted for ALL users.  Are you sure this is what you wish to do?</p>
+	</div>
+
 <?php	
 	$page->getFooter();
 ?>

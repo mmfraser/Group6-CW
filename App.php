@@ -15,7 +15,9 @@
 	require_once('AppClasses/page.php');
 	
 	class App {
-		public static $auth = false; // Set to false if not authenticated
+		public static $auth = false; 	// Set to false if not authenticated
+		public static $noRows = 2;		// Number of rows on the dashboard
+		public static $noCols = 3; 		// Number of columns on the dashboard
 		
 		public static function getDB() {
 			return DB::getInstance();
@@ -68,6 +70,12 @@
 			print '<div class="ui-state-error ui-corner-all"><span class="ui-icon ui-icon-alert" style="float:left;margin:2px 5px 0 0;"></span><span>'.$err.'</span></div>';
 			$page->getFooter();
 			die();
+		}
+		
+		public static function validateEmail($email) {
+			if(preg_match("/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/", $email)) 
+				return true;
+			return false;
 		}
 	}
 

@@ -5,6 +5,8 @@
 	require_once('../AppClasses/Artist.php');
 	require_once('../AppClasses/Product.php');
 	require_once('../AppClasses/Genre.php');
+	require_once('../AppClasses/DashboardTab.php');
+	require_once('../AppClasses/Customer.php');
 	
 	if(!App::checkAuth()) {
 			// User not authenticated.
@@ -93,6 +95,68 @@
 			$genre->genreName = $_POST['genreName'];
 			$genre->save();
 			die("Genre successfully added.");
+		} else if($do == "selectChart") {
+			$tab = new DashboardTab();
+			$tab->populateId($_POST['tabId']);
+			$tab->changeLayout($_POST['chartId'], $_POST['chartPos']);
+			die('Layout successfully changed');
+		} else if($do == "changeFilter") {
+			// Insert the filter query string into the database, but first convert it to a PHP array.
+			
+			$overriddenFilters = array();
+			
+			$filterPieces = explode(";", $_POST['filterQuery']);
+			foreach($filterPieces as $filterPiece) {
+				$filter = explode("=>", $filterPiece);
+				// 0th element is the filter name, 1st element is the new value of the filter.
+				if($filter[0] != null)
+					$overriddenFilters[$filter[0]] = $filter[1];
+			}
+		
+			// Serialize array and put in database
+			App::getDB()->execute("UPDATE dashboardlayout SET customFilter = '".serialize($overriddenFilters)."' WHERE dashboardLayoutId = '".$_POST['layoutId']."'");
+			
+			die("Filter(s) successfully updated.");
+			
+		} else if($do == "createTab") {
+			$tab = new DashboardTab();
+			$tab->userId = App::getAuthUser()->getUserId();
+			$tab->tabName = $_POST['tabName'];
+			$tab->tabDescription = $_POST['tabDescription'];
+			
+			$tab->save();
+			die("Tab successfully added.");
+		} else if($do == "deleteTab") {
+			$tab = new DashboardTab();
+			$tab->populateId($_POST['tabId']);
+			$tab->delete();
+
+			die("Tab successfully deleted.");
+		} else if($do == "addCustomer") {
+			// Check email address
+			if(App::validateEmail($_POST['emailAddress'])) 
+				die('Invalid email address.');
+				
+			if($_POST['emailAddress'] == null || $_POST['forename'] == null || $_POST['surname'] == null || $_POST['telephoneNumber'] == null) 
+				die('One or more required fields are not completed.');
+				
+			$customer = new Customer();
+			$customer->emailAddress = $_POST['emailAddress'];
+			$customer->forename = $_POST['forename'];
+			$customer->surname = $_POST['surname'];
+			$customer->addressLine1 = $_POST['addressLine1'];
+			$customer->addressLine2 = $_POST['addressLine2'];
+			$customer->town = $_POST['town'];
+			$customer->city = $_POST['city'];
+			$customer->postcode = $_POST['postcode'];
+			
+			$customer->save();
+			
+			die('Customer successfully added.');
+		} else if($do == "deleteCustomer") {
+			$customer = new Customer();
+			$customer->populate($_POST['emailAddress']);
+			$customer->delete();
 		} else 
 			die("Error: Invalid request.");
 		

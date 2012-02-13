@@ -15,7 +15,11 @@ div.ui-state-info, div.ui-state-error {
 }
 
 div#wrapper {
+<<<<<<< HEAD
 	width: 1000px;
+=======
+	width: 1200px;
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 	min-width: 900px;
 	margin:0 auto;
 	min-height:200px;
@@ -38,13 +42,16 @@ div#navigation{
 	width:100%;
 	text-align:center;
 	padding:3px;
-	border-radius:0;
 }
 
 div#mainContent {
 	float:left;
 	/*width:74.3%;*/
 	width:100%;
+<<<<<<< HEAD
+=======
+	/*width:1000px;*/
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 	min-height:200px;
 	background:#fff;
 	padding:0 8px 8px 8px;
@@ -65,11 +72,19 @@ div#header {
 }
 
 div#footer {
-	width:100%;
+	/*width:100%;
 	background:#fff;
 	border-top:5px solid #000;
 	min-height:60px;
+<<<<<<< HEAD
 	border-radius:10px;
+=======
+	padding:4px 8px 4px 8px;
+	border-radius:10px;*/
+	margin:10px auto;
+	text-align:center;
+	color:#fff;
+>>>>>>> 53ccdde566eae5f66e6a6a0cf0bb826234457f8d
 }
 
 div#tabs {
@@ -97,5 +112,53 @@ button.ui-datepicker-trigger {
 	background: url(../Images/calendar.gif) no-repeat;
 	width:16px;
 	height:15px;
+}
+
+ul#dashboardTabs li {
+	display:inline;
+	list-style:none;
+	margin: 0 5px 10px 0;
+	padding:5px 10px 0px 10px;
+	border-top: 1px solid #000;
+	border-right: 1px solid #000;
+	border-left: 1px solid #000;
+	border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	height:20px;
+	background-color:#dadada;
+	float:left;
+}
+
+ul#dashboardTabs {
+	margin:0 0 10px 0;
+	padding:0;
+}
+
+ul#dashboardTabs li a {
+	text-decoration:underline;
+	color:#000;
+	cursor:pointer;
+}
+
+table#dashboardTable {
+	border: 1px solid #000;
+	margin:0 auto;
+	width:100%;
+	margin:10px 0 0 0;
+}
+
+table#dashboardTable td, th {
+	border: 1px solid #000;
+	border-collapse:collapse;
+	vertical-align:text-top;
+	
+}
+
+img.chart {
+	margin:0 0 0 5px;
+}
+
+thead td{
+	font-weight:bold;
 }
 
