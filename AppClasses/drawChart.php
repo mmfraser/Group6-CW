@@ -38,7 +38,11 @@
 			
 			// Create our data arrays for reference in the series and abscissa.
 			foreach($darr as $row) {
-				foreach(array_map(function($item) {return $item['alias'];}, $chart->sqlColumns) as $col){
+				$aliases = array();
+				foreach($chart->sqlColumns as $col) {
+					$aliases[] = $col['alias'];
+				}
+				foreach($aliases as $col){
 						if(array_key_exists($col, $chartSeriesStoreFilter) && !empty($chartSeriesStoreFilter[$col])) {
 							if($row['STORE_ID'] == $chartSeriesStoreFilter[$col]) {
 								${$col}[] = (string) $row[$col]; 

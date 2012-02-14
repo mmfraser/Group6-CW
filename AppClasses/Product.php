@@ -93,6 +93,7 @@ class Product {
 		
 		if ($this->isLoaded === true) {
 			$SQL = "UPDATE product SET 
+					artistId = '".mysql_real_escape_string($this->artistId)."',
 					productId = '".mysql_real_escape_string($this->productId)."' , 
 					genreId = '".mysql_real_escape_string($this->genreId)."', 
 					name = '".mysql_real_escape_string($this->name)."', 

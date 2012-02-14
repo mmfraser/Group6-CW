@@ -41,7 +41,7 @@ class DashboardTab {
 		$this->getRow($row);
 		
 		// Also get the chart layout for this tab.
-		$chartPosSQL = "SELECT chartPos, chartId, customFilter FROM dashboardLayout WHERE tabId = '".mysql_real_escape_string($id)."'";
+		$chartPosSQL = "SELECT chartPos, chartId, customFilter FROM dashboardlayout WHERE tabId = '".mysql_real_escape_string($id)."'";
 		$chartPos = $this->conn->getArrayFromDB($chartPosSQL);
 		$this->populateChartPos($chartPos);
 		
@@ -60,12 +60,12 @@ class DashboardTab {
 	*/
 	public function changeLayout($chartId, $chartPos) {
 		if($this->chartPosArr[$chartPos] == null) {
-			$SQL = "INSERT INTO dashboardLayout (chartPos, tabId, chartId) VALUES ('".mysql_real_escape_string($chartPos)."', '".mysql_real_escape_string($this->tabId)."', '".mysql_real_escape_string($chartId)."')";
+			$SQL = "INSERT INTO dashboardlayout (chartPos, tabId, chartId) VALUES ('".mysql_real_escape_string($chartPos)."', '".mysql_real_escape_string($this->tabId)."', '".mysql_real_escape_string($chartId)."')";
 		} else {
 			if($chartId == -1) {
-				$SQL = "DELETE FROM dashboardLayout WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
+				$SQL = "DELETE FROM dashboardlayout WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
 			} else 
-				$SQL = "UPDATE dashboardLayout SET chartId = '".mysql_real_escape_string($chartId)."' WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
+				$SQL = "UPDATE dashboardlayout SET chartId = '".mysql_real_escape_string($chartId)."' WHERE chartPos = '".mysql_real_escape_string($chartPos)."' AND tabId = '".mysql_real_escape_string($this->tabId)."'";
 		}
 
 		$this->conn->execute($SQL);

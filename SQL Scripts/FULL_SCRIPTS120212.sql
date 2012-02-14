@@ -19,9 +19,6 @@
 -- Current Database: `sales`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `sales` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `sales`;
 
 --
 -- Table structure for table `artist`
@@ -585,7 +582,6 @@ UNLOCK TABLES;
 -- Current Database: `sales`
 --
 
-USE `sales`;
 
 --
 -- Final view structure for view `sales_view`

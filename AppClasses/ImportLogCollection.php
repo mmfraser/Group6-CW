@@ -19,7 +19,7 @@ class ImportLogCollection {
 	/*	This function gets the object with data given the import name.
 	*/
 	public function populateImportName($impName){
-		$sql = "SELECT * FROM importLog WHERE importName = '".mysql_real_escape_string($impName)."'";
+		$sql = "SELECT * FROM importlog WHERE importName = '".mysql_real_escape_string($impName)."'";
 		$rows = $this->conn->getArrayFromDB($sql);
 		
 		foreach($rows as $row) {

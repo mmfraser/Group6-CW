@@ -1,0 +1,11 @@
+[04-Nov-2011 07:31:57] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:32:12] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:32:15] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:32:38] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:38:02] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:38:07] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[04-Nov-2011 07:38:10] PHP Fatal error:  Class 'Store' not found in /home/marcfras/public_html/Marc/GrpProject/IntUI/modifyStore.php on line 17
+[15-Nov-2011 17:02:15] PHP Warning:  mysql_connect() [<a href='function.mysql-connect'>function.mysql-connect</a>]: Access denied for user 'root'@'localhost' (using password: NO) in /home/marcfras/public_html/Marc/GrpProject/AppClasses/DB.php on line 24
+[17-Nov-2011 04:44:18] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 524403 bytes) in /home/marcfras/public_html/Marc/GrpProject/AppClasses/ImportLog.php on line 114
+[17-Nov-2011 04:46:44] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 4 bytes) in /home/marcfras/public_html/Marc/GrpProject/AppClasses/PHPExcel/Cell.php on line 144
+[13-Feb-2012 07:31:09] PHP Warning:  mysql_connect() [<a href='function.mysql-connect'>function.mysql-connect</a>]: Access denied for user 'root'@'localhost' (using password: NO) in /home/marcfras/public_html/Marc/GrpProject/AppClasses/DB.php on line 24

@@ -104,7 +104,10 @@
 			
 			if($aggregation != null) {
 				$newCol = array();
-				$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
+				if($aggregation == "SUM")
+					$sql = 'ROUND(' .$aggregation . '(' . $colTable. '.' .$colName . '),2)' . ' as ' . $alias;
+				else
+					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
 				$this->sqlColumns[] = $newCol;
@@ -213,8 +216,12 @@
 		
 		public function generateSQLQuery() {
 			$sql = "SELECT ";
-			$columnsArr = array_map(function($item) {return $item['query'];}, $this->sqlColumns);
 			
+			$columnsArr = array();
+			foreach($this->sqlColumns as $col) {
+				$columnsArr[] = $col['query'];
+			}
+		
 			$sql .= implode(", ", $columnsArr);
 			$sql .= " FROM ";
 			$sql .= implode(", ", array_unique($this->sqlTables));
@@ -287,6 +294,7 @@
 		/*	This function gets the object with data given the chartId.
 		*/
 		public static function getChart($chartId){
+			App::getDb();
 			$sql = "SELECT * FROM chart WHERE chartId = '".mysql_real_escape_string($chartId)."'";
 			$row = App::getDB()->getDataRow($sql);
 			$chart = base64_decode($row['serialisedClass']);
