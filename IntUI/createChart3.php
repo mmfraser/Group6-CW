@@ -119,10 +119,6 @@
 ?>
 	
 			<div>
-				<div style="border:1px solid #000; float:right; width: 200px;min-height:100px;">
-					<h4>Steps:</h4>
-				</div>
-				
 				<fieldset>
 					<legend>Chart Filter</legend>
 					<h3>Chart Filter:</h3>

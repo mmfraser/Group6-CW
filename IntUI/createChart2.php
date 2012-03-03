@@ -87,12 +87,12 @@
 			
 			// Set the values
 				try {
-					unset($chart->sqlColumns);
-					unset($chart->sqlTables);
-				
+					$chart->unsetVars();
 					$xAxisAlias = $chart->addSQLColumn($_POST['xAxisData'], $chart->dataView, $_POST['xAxisData'], null, false);
 					$chart->setAbscissa($_POST['xAxisName'], $_POST['xAxisData'], $xAxisAlias);
+					
 					$chart->addSQLGroupBy($xAxisAlias, $chart->dataView);
+			
 					$xAxisData = $chart->abscissa['dbCol'];
 					$xAxisName = $chart->abscissa['name'];
 					$yAxisName = $_POST['yAxisName'];
@@ -151,7 +151,6 @@
 			}
 		}
 	// View data columns
-	
 	
 	$xAxisColHtml = "";
 	foreach($viewCols as $col) {
@@ -252,11 +251,7 @@
 			});
 		</script>
 			<div>
-				<div style="border:1px solid #000; float:right; width: 200px;min-height:100px;">
-					<h4>Steps:</h4>
-					
-				</div>
-			
+		
 			<form method="POST" action="?do=submit">
 				<fieldset>
 					<legend>Chart Data</legend>

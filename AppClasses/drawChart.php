@@ -7,7 +7,6 @@
 
 		$user = App::getAuthUser();
 		$chart = Chart::getChart($_GET['chartId']);
-	
 		
 		if(in_array($user->getUserId(), $chart->userPermissions) || count(array_intersect($user->groupMembership, $chart->groupPermissions)) != 0 || $_GET['preview'] == true) {
 			// Check if the filters are overridden.
@@ -26,43 +25,50 @@
 				
 			// Generate select query
 			$query = $chart->generateSQLQuery();
-				
+			//print $chart->generateSQLQuery();
 			// Execute query and put in array.
 			$darr = App::getDB()->getArrayFromDB($query);
 				
 			$chartSeriesStoreFilter = array();	
+			$chartFilterSeriesNames = array();
 			// Get the series array 	
 			foreach($chart->chartSeries as $series) {
 				$chartSeriesStoreFilter[$series['dbCol']] = $series['storeFilter'];//$series['storeFilter']
+				if($series['storeFilter'] != null) 
+					$chartFilterSeriesNames[] = $series['dbCol'];
 			}
-			
-			// Create our data arrays for reference in the series and abscissa.
-			foreach($darr as $row) {
-				$aliases = array();
-				foreach($chart->sqlColumns as $col) {
-					$aliases[] = $col['alias'];
-				}
-				foreach($aliases as $col){
-						if(array_key_exists($col, $chartSeriesStoreFilter) && !empty($chartSeriesStoreFilter[$col])) {
-							if($row['STORE_ID'] == $chartSeriesStoreFilter[$col]) {
-								${$col}[] = (string) $row[$col]; 
-							} else {	
-								${$col}[] = 0;
-							}
-						} else {
-							${$col}[] = (string) $row[$col]; 
-							
-						}
+						
+				foreach($darr as $row) {
+					$aliases = array();
+					foreach($chart->sqlColumns as $col) {
+						$aliases[] = $col['alias'];
 					}
-					
-			}
+	
+					foreach($aliases as $col){
+							if($col == $chart->abscissa['dbColAlias']) {
+								if(!in_array($row[$col], (array) ${$col})) {
+									${$col}[] = (string) $row[$col]; 
+								}
+							} else if(array_key_exists($col, $chartSeriesStoreFilter) && count($chartSeriesStoreFilter[$col])>0) {
+								if($row['STORE_ID'] == $chartSeriesStoreFilter[$col]) {
+									${$col}[] = (string) $row[$col]; 
+								} else if($row['STORE_ID'] == null) {
+								//	${$col}[] = (string) $row[$col]; 
+								}
+								
+							} else {
+								${$col}[] = (string) $row[$col]; 
+							}
+					}
+				}
+		//	}
 			
 			$myData = new pData();
 			// Add points and series
 				
 			foreach($chart->chartSeries as $serie) {
 				$arr = ${$serie['dbCol']};
-
+								
 				$myData->addPoints($arr, $serie['name']);
 				$myData->setSerieDescription($serie['name'], $serie['description']);
 				$myData->setSerieOnAxis($serie['name'], (int)$serie['axisNo']);	
@@ -152,10 +158,7 @@
 			$myPicture->drawScale($Settings);
 
 		//	$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
-
-			//$Config = "";
-			
-
+	
 			$function = "draw" . $chart->chartType . "Chart";
 			$myPicture->$function(array("DisplayValues"=>TRUE,"DisplayColor"=>DISPLAY_AUTO));
 
@@ -173,9 +176,6 @@
 			imagepng($im);
 			imagedestroy($im);	
 		}
-		
-		
-		
-			
+
 	// Page PHP Backend Code End 
 ?>

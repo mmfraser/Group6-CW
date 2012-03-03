@@ -26,6 +26,8 @@
 		public $dataView;
 		public $userPermissions = array();
 		public $groupPermissions = array();
+		private $storeFilterSet = false;
+		private $blankStoreFilter = false;
 				
 		// Optional
 		
@@ -47,7 +49,16 @@
 		public $titleRGB = array(); // RGB array
 		public $imgSize = array(); // XY Coord. array
 		public $legendPos = array(); // XY Coord. array
-				
+		
+		public function unsetVars() {
+			unset($this->sqlColumns);
+			unset($this->sqlTables);
+			$this->sqlGroupBy = array();
+			$this->storeFilterSet = false;
+			$this->blankStoreFilter = false;
+
+		}
+		
 		private static function fillRGBArray($r, $g, $b) {
 			$array = array();
 			$array['R'] = $r;
@@ -135,7 +146,10 @@
 			// There is no need for more than one group by currently.
 			if(!$this->checkColExists($colName))
 				throw new Exception("Error adding group by, no such DB column exists.");
-			$this->sqlGroupBy[0] = $colName;
+				
+			if(!in_array($colName, $this->sqlGroupBy)) {
+				$this->sqlGroupBy[] = $colName;
+			}
 		}
 		
 		public function addSQLOrder($colName, $order) {
@@ -170,7 +184,10 @@
 			
 			if(!empty($storeFilter)) {
 				$this->addSQLColumn("STORE_ID", $this->dataView, "STORE_ID", null, false);
-			}
+				$this->addSQLGroupBy("STORE_ID", null);
+				$this->storeFilterSet = true;
+			} else
+				$this->blankStoreFilter = true;
 			
 			$this->chartSeries[] = $series;
 		}
@@ -214,12 +231,21 @@
 			$this->abscissa['dbColAlias'] = $dbColAlias;
 		}
 		
-		public function generateSQLQuery() {
-			$sql = "SELECT ";
+		private function getSQL($omitStoreGrpBy) {
+			sort($this->sqlColumns); // Sort the columns so that the columns in the union match
 			
+			$sql = "SELECT ";
 			$columnsArr = array();
+
 			foreach($this->sqlColumns as $col) {
-				$columnsArr[] = $col['query'];
+				if(!$omitStoreGrpBy)
+					$columnsArr[] = $col['query'];
+				else {
+					if($col['alias'] == "STORE_ID") {
+						$columnsArr[] = "STORE_ID = null";
+					} else
+						$columnsArr[] = $col['query'];
+				}
 			}
 		
 			$sql .= implode(", ", $columnsArr);
@@ -258,9 +284,36 @@
 				$sql .= implode(", ", $this->sqlOrder);
 			}
 			
-			if(count($this->sqlGroupBy) != 0) {
-				$sql .= " GROUP BY ";
-				$sql .= implode(", ", $this->sqlGroupBy);
+			if(!$omitStoreGrpBy) {
+				if(count($this->sqlGroupBy) != 0) {
+					$sql .= " GROUP BY ";
+					$sql .= implode(", ", $this->sqlGroupBy);
+				}
+			} else {
+				if(count($this->sqlGroupBy) != 0) {
+					$sql .= " GROUP BY ";
+					$grpBy = $this->sqlGroupBy;
+					
+					for($i = 0; $i < count($grpBy); $i++) {
+						if($grpBy[$i] == "STORE_ID") {
+							unset($grpBy[$i]);
+							break;
+						} 
+					} 
+					$sql .= implode(", ", $grpBy);
+				}
+			}
+			
+			return $sql;
+		}
+		
+		public function generateSQLQuery() {
+			$sql = $this->getSQL(false);
+			
+			// We also need to union the next query as it may be the case that one series has no filter set.	
+			if($this->storeFilterSet && $this->blankStoreFilter) {
+				$sql .= " UNION ";
+				$sql .= $this->getSQL(true);
 			}
 			
 			return $sql;
@@ -418,7 +471,6 @@
 		
 		/* This adds a filter to the chart.
 		*/
-		
 		public function addFilter($filterName, $dbAlias, $operator, $value, $combinator, $override) {
 		/*	if(!$this->checkColExists($dbAlias)) 
 				throw new Exception("Error adding chart series, no such DB column exists.");*/
