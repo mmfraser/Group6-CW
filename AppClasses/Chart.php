@@ -53,6 +53,7 @@
 		public function unsetVars() {
 			unset($this->sqlColumns);
 			unset($this->sqlTables);
+			$this->chartSeries = array();
 			$this->sqlGroupBy = array();
 			$this->storeFilterSet = false;
 			$this->blankStoreFilter = false;
@@ -76,7 +77,6 @@
 		
 		public function addSQLColumn($colName, $colTable, $alias, $aggregation, $unique) {
 			// This function tries to give the alias passed to it, but if it cant, it'll give it a unique alias
-			
 			if(count($this->sqlColumns)==0) {
 				if($aggregation != null) {
 					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
@@ -87,6 +87,7 @@
 				$newCol = array();
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
+				$newCol['underlaying'] = $colName;
 				$this->sqlColumns[] = $newCol;
 				return $alias;
 			}
@@ -121,12 +122,14 @@
 					$sql = $aggregation . '(' . $colTable. '.' .$colName . ') as ' . $alias;
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
+				$newCol['underlaying'] = $colName;
 				$this->sqlColumns[] = $newCol;
 			} else {
 				$newCol = array();
 				$sql = $colTable. '.' .$colName . ' as ' . $alias;
 				$newCol['query'] = $sql;
 				$newCol['alias'] = $alias;
+				$newCol['underlaying'] = $colName;
 				$this->sqlColumns[] = $newCol;
 			}
 			$this->sqlTables[] = $colTable;
@@ -173,6 +176,7 @@
 			$series = array();
 			$series['name'] = $seriesName;		
 			$series['dbCol'] = $dbCol;
+			
 			$series['description'] = $description;
 					
 			if(!array_key_exists($axisNo, $this->axes))

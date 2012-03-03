@@ -20,6 +20,7 @@
 						}
 											
 						$seriesColHtml = "";
+						
 						foreach($viewCols as $col) {
 							$selected = "";
 							if($seriesData == $col['Field']) {
@@ -104,17 +105,11 @@
 					$chart->setYAxis($_POST['yAxisName'], $_POST['yAxisUnit'], "AXIS_POSITION_LEFT");
 					$noSeries = count($_POST['seriesName']);
 					
-					
 					$seriesHtml = "";
-					$chart->chartSeries = array();
 					for($i = 0; $i < $noSeries; $i++) {
-						if($_POST['seriesName'][$i] != null) {
-							if(empty($_POST['seriesStoreFilter'][$i])) {
-								$unique = false;
-							} else {
-								$unique = true;
-							}
-							
+						//Check that the series name isn't null
+						if($_POST['seriesName'][$i] != null) {			
+							// Add the series, first by adding the nesecary SQL column
 							$seriesName = $chart->addSQLColumn($_POST['seriesData'][$i], $chart->dataView, $_POST['seriesData'][$i], $_POST['seriesAggregation'][$i], true);
 					
 							$chart->addChartSeries($seriesName, $seriesName, $_POST['seriesName'][$i], 0, $_POST['seriesAggregation'][$i], $_POST['seriesStoreFilter'][$i]);						
@@ -146,12 +141,20 @@
 				$seriesHtml = "";
 				$noSeries = count($chart->chartSeries);
 				for($i = 0; $i < $noSeries; $i++) {					
-					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['description'], $chart->chartSeries[$i]['dbCol'], $chart->chartSeries[$i]['storeFilter'], $chart->chartSeries[$i]['aggregation'], $viewCols, $storeData);
+					// Look up SQL columns for the underlying column name for the Series Data drop down.
+					$underlayingCol = "";
+					foreach($chart->sqlColumns as $col) {
+						if($col['alias'] == $chart->chartSeries[$i]['dbCol']) {
+							$underlayingCol = $col['underlaying'];
+							break;
+						} 
+					}
+					
+					$seriesHtml .= seriesRow($i+1, $chart->chartSeries[$i]['description'], $underlayingCol, $chart->chartSeries[$i]['storeFilter'], $chart->chartSeries[$i]['aggregation'], $viewCols, $storeData);
 				}
 			}
 		}
 	// View data columns
-	
 	$xAxisColHtml = "";
 	foreach($viewCols as $col) {
 		if($col['Field'] == $xAxisData) 
