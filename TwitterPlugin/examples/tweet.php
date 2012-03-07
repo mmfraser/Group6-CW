@@ -23,10 +23,10 @@
 require '../tmhOAuth.php';
 require '../tmhUtilities.php';
 $tmhOAuth = new tmhOAuth(array(
-  'consumer_key'    => 'YOUR_CONSUMER_KEY',
-  'consumer_secret' => 'YOUR_CONSUMER_SECRET',
-  'user_token'      => 'A_USER_TOKEN',
-  'user_secret'     => 'A_USER_SECRET',
+  'consumer_key'    => 'oxS4WMbiCfBDFnfmLPVOQ',
+  'consumer_secret' => 'nW1wydCLftCZILhFDoiWFSOAwCKpm4BLEmz3IrxU1Y',
+  'user_token'      => '517930195-vwSDCEY5hjWArb2AgZ1I7EiSKa18onShTVMy1lIP',
+  'user_secret'     => 'ubSUiY9J7mXhSZYvf11OgAobbxHtbvj39VOQtnkrag',
 ));
 
 $code = $tmhOAuth->request('POST', $tmhOAuth->url('1/statuses/update'), array(

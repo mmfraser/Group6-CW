@@ -143,7 +143,7 @@ class tmhUtilities {
       return $url;
   }
 
-  function is_cli() {
+  static function is_cli() {
     return (PHP_SAPI == 'cli' && empty($_SERVER['REMOTE_ADDR']));
   }
 
@@ -152,7 +152,7 @@ class tmhUtilities {
    *
    * @param mixes $obj
    */
-  function pr($obj) {
+  static function pr($obj) {
 
     if (!self::is_cli())
       echo '<pre style="word-wrap: break-word">';
