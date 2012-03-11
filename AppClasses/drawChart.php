@@ -28,48 +28,68 @@
 			//print $chart->generateSQLQuery();
 			// Execute query and put in array.
 			$darr = App::getDB()->getArrayFromDB($query);
-				
+			
 			$chartSeriesStoreFilter = array();	
 			$chartFilterSeriesNames = array();
+			$chartSeries = array();
+			$aliases = array();
+			
+			foreach($chart->sqlColumns as $col) {
+				$aliases[] = $col['alias'];
+			}
+
 			// Get the series array 	
 			foreach($chart->chartSeries as $series) {
-				$chartSeriesStoreFilter[$series['dbCol']] = $series['storeFilter'];//$series['storeFilter']
-				if($series['storeFilter'] != null) 
+				if($series['storeFilter'] != null) {
+					$chartSeriesStoreFilter[$series['dbCol']] = $series['storeFilter'];//$series['storeFilter']
 					$chartFilterSeriesNames[] = $series['dbCol'];
+				}
+				$chartSeries[] = $series['dbCol'];
+				
+			//	if($series['storeFilter'] != null) 
+					
 			}
-						
+		//	print_r($darr);
+		//	print_r($chartSeries);
+		//  print_r($chartSeriesStoreFilter);
+		//	print_r($aliases);
 				foreach($darr as $row) {
-					$aliases = array();
-					foreach($chart->sqlColumns as $col) {
-						$aliases[] = $col['alias'];
-					}
-	
 					foreach($aliases as $col){
-							if($col == $chart->abscissa['dbColAlias']) {
-								if(!in_array($row[$col], (array) ${$col})) {
-									${$col}[] = (string) $row[$col]; 
-								}
-							} else if(array_key_exists($col, $chartSeriesStoreFilter) && count($chartSeriesStoreFilter[$col])>0) {
-								if($row['STORE_ID'] == $chartSeriesStoreFilter[$col]) {
-									${$col}[] = (string) $row[$col]; 
-								} else if($row['STORE_ID'] == null) {
-								//	${$col}[] = (string) $row[$col]; 
-								}
-								
-							} else {
+						if($col == $chart->abscissa['dbColAlias']) {
+							if(!in_array($row[$col], (array) ${$col})) 
 								${$col}[] = (string) $row[$col]; 
+						} else if($row['STORE_ID'] != null) {
+							if(array_key_exists($col, $chartSeriesStoreFilter) && $chartSeriesStoreFilter[$col] == $row['STORE_ID']) {
+								${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
 							}
+						} else if (!array_key_exists($col, $chartSeriesStoreFilter)){
+						//	print $col . "\n";
+						${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
+						}
 					}
 				}
 		//	}
-			
+		
+	//	print_r($PRODUCT_PRICE);
 			$myData = new pData();
 			// Add points and series
-				
 			foreach($chart->chartSeries as $serie) {
+				$serieArray = array();
 				$arr = ${$serie['dbCol']};
+				foreach(${str_replace(".", "",$chart->abscissa['dbColAlias'])} as $abs) {
+					if(array_key_exists($abs, $arr)) {
+						$serieArray[] = $arr[$abs];
+					} else {
+						$serieArray[] = null;
+					}
+				}
+				
+			//	print_r($serieArray);
+			
+			//print $serie['dbCol'] . "\n";
+				
 								
-				$myData->addPoints($arr, $serie['name']);
+				$myData->addPoints($serieArray, $serie['name']);
 				$myData->setSerieDescription($serie['name'], $serie['description']);
 				$myData->setSerieOnAxis($serie['name'], (int)$serie['axisNo']);	
 			}
@@ -88,16 +108,6 @@
 			$myData->setPalette("DEFCA",array("R"=>55,"G"=>91,"B"=>127));
 			$myPicture = new pImage($chart->imgSize['X'], $chart->imgSize['Y'], $myData);
 			  
-			// This sets the background colour and dash of the chart.
-			/*$Settings = array(
-			"R"=>$chart->bgRGB['R'],
-			"G"=>$chart->bgRGB['G'],
-			"B"=>$chart->bgRGB['B'],
-			"Dash"=>$dashBool,
-			"DashR"=>$chart->dashRGB['R'],
-			"DashG"=>$chart->dashRGB['G'],
-			"DashB"=>$chart->dashRGB['B']);*/
-			
 			$Settings = array(
 			"R"=>255,
 			"G"=>255,
@@ -149,20 +159,13 @@
 
 			$myPicture->setGraphArea(50,55,$x2,$y2);
 			$myPicture->setFontProperties(array("R"=>0,"G"=>0,"B"=>0,"FontName"=>"../pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
-		
-		/*	$Settings = array("Pos"=>SCALE_POS_LEFTRIGHT
-			, "Mode"=>SCALE_MODE_FLOATING
-			, "LabelingMethod"=>LABELING_ALL
-			, "GridR"=>255, "GridG"=>255, "GridB"=>255, "GridAlpha"=>50, "TickR"=>0, "TickG"=>0, "TickB"=>0, "TickAlpha"=>50, "LabelRotation"=>0, "CycleBackground"=>1, "DrawXLines"=>1, "DrawSubTicks"=>1, "SubTickR"=>255, "SubTickG"=>0, "SubTickB"=>0, "SubTickAlpha"=>50, "DrawYLines"=>ALL);*/
+	
 			$Settings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE);
 			$myPicture->drawScale($Settings);
 
-		//	$myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>50,"G"=>50,"B"=>50,"Alpha"=>10));
 	
 			$function = "draw" . $chart->chartType . "Chart";
 			$myPicture->$function(array("DisplayValues"=>TRUE,"DisplayColor"=>DISPLAY_AUTO));
-
-			//$myPicture->draw{}Chart($Config);
 
 			$Config = array("FontR"=>0, "FontG"=>0, "FontB"=>0, "FontName"=>"../pChart/fonts/pf_arma_five.ttf", "FontSize"=>6, "Margin"=>6, "Alpha"=>30, "BoxSize"=>5, "Style"=>LEGEND_BOX
 			, "Mode"=>LEGEND_HORIZONTAL, "Family"=>LEGEND_FAMILY_CIRCLE
