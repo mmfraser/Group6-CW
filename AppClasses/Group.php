@@ -7,7 +7,7 @@
 			30/10/11 (MF) - Creation.
 			
 	*/
-	require_once('../App.php');
+	require_once(dirname(__FILE__).'/../App.php');
 
 	class Group {
 		private $groupId;

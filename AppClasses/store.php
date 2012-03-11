@@ -7,7 +7,7 @@
 		Update log:
 			01/11/11 (DT) - Creation.
 	*/
-require_once('../App.php');
+require_once(dirname(__FILE__).'/../App.php');
 
 class Store {
 	

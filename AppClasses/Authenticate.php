@@ -7,7 +7,7 @@
 			23/10/11 (MF) - Creation.
 	*/
 
-	require_once('../App.php');
+	require_once(dirname(__FILE__).'/../App.php');
 	require_once('User.php');
 	require_once('Group.php');
 	require_once('store.php');

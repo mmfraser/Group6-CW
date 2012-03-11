@@ -8,7 +8,7 @@
 			30/10/11 (MF) - Adding group membership functionality.
 			13/11/11 (MF) - Adding delete() functionality.
 	*/
-require_once('../App.php');
+require_once(dirname(__FILE__).'/../App.php');
 
 class User {
 	private $userId;

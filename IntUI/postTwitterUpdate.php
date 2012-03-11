@@ -1,19 +1,7 @@
 <?php
-	require_once('../App.php');
-	require_once('../AppClasses/Chart.php');
-	require ('../TwitterPlugin/tmhOAuth.php');
-	require ('../TwitterPlugin/tmhUtilities.php');
-
-	// Page PHP Backend Code Begin
-		$page = new Page();
-		$page->title = "Twitter Update";
-		$page->getHeader();
-
-		if(!App::checkAuth()) 
-			// User not authenticated.
-			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartPermission.php">log in</a>.');
-		
-
+	require_once(dirname(__FILE__).'/../App.php');
+	require (dirname(__FILE__).'/../TwitterPlugin/tmhOAuth.php');
+	require (dirname(__FILE__).'/../TwitterPlugin/tmhUtilities.php');
 		$tmhOAuth = new tmhOAuth(array(
 		  'consumer_key'    => 'oxS4WMbiCfBDFnfmLPVOQ',
 		  'consumer_secret' => 'nW1wydCLftCZILhFDoiWFSOAwCKpm4BLEmz3IrxU1Y',
@@ -21,7 +9,7 @@
 		  'user_secret'     => 'ubSUiY9J7mXhSZYvf11OgAobbxHtbvj39VOQtnkrag',
 		));
 
-		if($_GET['do'] == "WEEKLY_UPDATE") {
+		if($argv[1] == "WEEKLY_UPDATE") {
 			$todaysDate = date("Y-m-d");
 			$startDate = strtotime('-1 week', strtotime($todaysDate));
 			$startDate = date("Y-m-d", $startDate);
@@ -63,8 +51,4 @@
 
 	// Page PHP Backend Code End
 
-?>
-	
-<?php	
-	$page->getFooter();
 ?>
