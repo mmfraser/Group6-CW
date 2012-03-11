@@ -25,7 +25,7 @@
 				
 			// Generate select query
 			$query = $chart->generateSQLQuery();
-			//print $chart->generateSQLQuery();
+
 			// Execute query and put in array.
 			$darr = App::getDB()->getArrayFromDB($query);
 			
@@ -45,32 +45,25 @@
 					$chartFilterSeriesNames[] = $series['dbCol'];
 				}
 				$chartSeries[] = $series['dbCol'];
-				
-			//	if($series['storeFilter'] != null) 
-					
 			}
-		//	print_r($darr);
-		//	print_r($chartSeries);
-		//  print_r($chartSeriesStoreFilter);
-		//	print_r($aliases);
-				foreach($darr as $row) {
-					foreach($aliases as $col){
-						if($col == $chart->abscissa['dbColAlias']) {
-							if(!in_array($row[$col], (array) ${$col})) 
-								${$col}[] = (string) $row[$col]; 
-						} else if($row['STORE_ID'] != null) {
-							if(array_key_exists($col, $chartSeriesStoreFilter) && $chartSeriesStoreFilter[$col] == $row['STORE_ID']) {
-								${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
-							}
-						} else if (!array_key_exists($col, $chartSeriesStoreFilter)){
-						//	print $col . "\n";
-						${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
+
+			// Fill the data arrays
+			foreach($darr as $row) {
+				foreach($aliases as $col){
+					if($col == $chart->abscissa['dbColAlias']) {
+						if(!in_array($row[$col], (array) ${$col})) 
+							${$col}[] = (string) $row[$col]; 
+					} else if($row['STORE_ID'] != null) {
+						if(array_key_exists($col, $chartSeriesStoreFilter) && $chartSeriesStoreFilter[$col] == $row['STORE_ID']) {
+							${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
 						}
+					} else if (!array_key_exists($col, $chartSeriesStoreFilter)){
+					//	print $col . "\n";
+					${$col}[$row[$chart->abscissa['dbColAlias']]] = (string) $row[$col]; 
 					}
 				}
-		//	}
-		
-	//	print_r($PRODUCT_PRICE);
+			}
+
 			$myData = new pData();
 			// Add points and series
 			foreach($chart->chartSeries as $serie) {
@@ -83,11 +76,6 @@
 						$serieArray[] = null;
 					}
 				}
-				
-			//	print_r($serieArray);
-			
-			//print $serie['dbCol'] . "\n";
-				
 								
 				$myData->addPoints($serieArray, $serie['name']);
 				$myData->setSerieDescription($serie['name'], $serie['description']);

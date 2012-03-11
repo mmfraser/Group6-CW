@@ -12,7 +12,7 @@
 		}
 	
 		// Get the chart list and populate table.
-		$allCharts = App::getDB()->getArrayFromDB("SELECT chartId, chartName, chartType FROM chart");
+		$allCharts = App::getDB()->getArrayFromDB("SELECT chartId, chartName, chartType FROM chart WHERE isEditable = 1");
 		$chartHtml = "";
 		
 		
