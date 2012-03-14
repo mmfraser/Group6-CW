@@ -84,7 +84,7 @@
 					$customerHtml .= "	<td>".$customer->city."</td>" . PHP_EOL;
 					$customerHtml .= "	<td>".$customer->postcode."</td>" . PHP_EOL;
 					$customerHtml .= "	<td>".$customer->telephoneNumber."</td>" . PHP_EOL;
-					$customerHtml .= '	<td class="options" style=""><a href="modifyCustomer.php?customerId='.$arr['customerId'].'" title="Modify Customer"><span class="ui-icon ui-icon-pencil"></span><a title="Delete Customer" id="deleteCustomer"><span class="ui-icon ui-icon-trash"></span></a></td>';
+					$customerHtml .= '	<td class="options" style="width:130px;"><a href="customerDetail.php?customerId='.$arr['customerId'].'" title="View Customer Details"><span class="ui-icon ui-icon-contact"></span></a><a href="modifyCustomer.php?customerId='.$arr['customerId'].'" title="Modify Customer"><span class="ui-icon ui-icon-pencil"></span></a><a title="Delete Customer" id="deleteCustomer"><span class="ui-icon ui-icon-trash"></span></a></td>';
 					$customerHtml .= "</tr>" . PHP_EOL;
 				}
 			
