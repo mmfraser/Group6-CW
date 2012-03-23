@@ -13,7 +13,7 @@
 			// User not authenticated.
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartPermission.php">log in</a>.');
 		
-		
+		// Fetch the chart's details.
 		if((isset($_GET['chartId']) && is_numeric($_GET['chartId'])) || isset($_POST['chartId'])) { 
 			$chart = new Chart();
 			if(!isset($_GET['chartId'])) {
@@ -25,14 +25,15 @@
 			App::fatalError($page, 'You must select a chart in which to set permissions.  Please go back to the <a href="chartManagement.php">Chart Management</a> page.');
 		}
 	
+		// Populate the permissions arrays.
 		if(isset($_POST)) {		
 			if(!isset($_POST['groupPermissions']))
-				$groupPermissions = array();
+				$groupPermissions = $chart->getChartGroupPermissions();
 			else 
 				$groupPermissions = $_POST['groupPermissions'];
 				
 			if(!isset($_POST['userPermissions']))
-				$userPermissions = array();
+				$userPermissions = $chart->getChartUserPermissions();
 			else 
 				$userPermissions = $_POST['userPermissions'];
 			
