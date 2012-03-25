@@ -56,9 +56,10 @@
 		$groupSql = "SELECT * FROM usergroup";
 		$allGroups = App::getDB()->getArrayFromDB($groupSql);
 		$groupsHtml = "";
-		
+		$updateVisible = true;
 		if($allGroups == null) {
-			$updateVisible = false;
+			if(!$updateVisible)
+				$updateVisible = false;
 			$groupsHtml = '<p>There are no groups in which to set chart permissions on.  Please add these on the <a href="userManagement.php">Group Management</a> tab.</p>';
 		}
 		
@@ -75,7 +76,8 @@
 		$usersHtml = "";
 		
 		if($allUsers == null) {
-			$updateVisible = false;
+			if(!$updateVisible)
+				$updateVisible = false;
 			$usersHtml = '<p>There are no users in which to grant chart permissions on.  Please add these on the <a href="userManagement.php">User Management</a> tab.</p>';
 		}
 		

@@ -55,10 +55,12 @@ class User {
 	*/
 	public function getGroupMembership($userId) {
 		$sql = "SELECT groupId FROM groupmembership WHERE userId = '".mysql_real_escape_string($userId)."'";
-		$memberships = $this->conn->getArrayFromDB($sql);
+		$memberships = App::getDB()->getArrayFromDB($sql);
+
 		foreach($memberships as $arr) {
 			$this->groupMembership[] = $arr['groupId'];
 		}
+		return $this->groupMembership;
 	}
 		
 	/*	This function populates the object with data given a datarow.

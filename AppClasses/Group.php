@@ -43,6 +43,14 @@
 			$this->isLoaded = true;
 		}
 		
+		public function delete($boolean) {
+		// Boolean is a secondary "confirmation" check and we can't delete an object from the DB if we don't have it in the DB in the first place!
+		if($this->isLoaded && $boolean) 
+			$q = $this->conn->execute("DELETE FROM usergroup WHERE groupId = ". $this->groupId);
+			if($q == 1) return true; else return false;
+	}
+	
+		
 		/*	This function checks to see if the group being created/modified will have a valid name.
 		*/
 		private function validName() {

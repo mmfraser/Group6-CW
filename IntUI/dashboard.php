@@ -11,7 +11,7 @@
 			// User not authenticated.
 			App::fatalError($page, 'You are not authorised to view this page.  If you have a username and password for this application please <a href="login.php?page=chartManagement.php">log in</a>.');
 		}
-	
+		
 		$dashboardTabs = App::getDB()->getArrayFromDB("SELECT tabId, tabName, tabDescription FROM dashboardtab WHERE userId = '".App::getAuthUser()->getUserId()."'");
 	
 		$tabsHtml = "";
@@ -33,8 +33,12 @@
 		
 		// Generate a dropdown for use if a user wishes to change a chart.
 		$chartDDHtml = "";
+		if(count(App::getAuthUser()->getGroupMembership(App::getAuthUser()->getUserId())) != 0) {
+			$inGrp = " OR  userGroupId IN(".implode(",", App::getAuthUser()->groupMembership).")";
+		}
 			
-		$allCharts = App::getDB()->getArrayFromDB("SELECT DISTINCT c.chartId, c.chartName FROM chartpermission cp LEFT JOIN chart c ON c.chartId = cp.chartId WHERE userID = ".App::getAuthUser()->getUserId()." OR  userGroupId IN(".implode(",", App::getAuthUser()->groupMembership).")");
+		$allCharts = App::getDB()->getArrayFromDB("SELECT DISTINCT c.chartId, c.chartName FROM chartpermission cp LEFT JOIN chart c ON c.chartId = cp.chartId WHERE userID = ".App::getAuthUser()->getUserId() . $inGrp);
+		
 		foreach($allCharts as $chart) {
 			$chartDDHtml .= '<option value="'.$chart['chartId'].'">'.$chart['chartName'].'</option>';
 		}

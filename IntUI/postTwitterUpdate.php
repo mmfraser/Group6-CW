@@ -8,8 +8,8 @@
 		  'user_token'      => '517930195-vwSDCEY5hjWArb2AgZ1I7EiSKa18onShTVMy1lIP',
 		  'user_secret'     => 'ubSUiY9J7mXhSZYvf11OgAobbxHtbvj39VOQtnkrag',
 		));
-
 		if($argv[1] == "WEEKLY_UPDATE") {
+			
 			$todaysDate = date("Y-m-d");
 			$startDate = strtotime('-1 week', strtotime($todaysDate));
 			$startDate = date("Y-m-d", $startDate);
@@ -18,8 +18,10 @@
 			
 			$thisWeek = App::getDB()->getDataRow("SELECT COUNT(*) as noSales, PRODUCT_NAME, PRODUCT_RELEASE_DATE, PRODUCT_PRICE FROM sales_view_v2 WHERE SALE_DATE between '".$startDate."' and '".$todaysDate."' GROUP BY PRODUCT_NAME ORDER BY noSales DESC LIMIT 1");
 			
-			if($thisWeek == null)
+			if($thisWeek == null) {
+				print "no data to process";
 				die();
+			}
 			
 			if($lastWeek['PRODUCT_NAME'] == $thisWeek['PRODUCT_NAME']) {
 				// Check previous weeks.
@@ -43,10 +45,10 @@
 		  'status' => $message
 		));  
 		if ($code == 200) {
-		  tmhUtilities::pr(json_decode($tmhOAuth->response['response']));
+		  print tmhUtilities::pr(json_decode($tmhOAuth->response['response']));
 		} else {
 			// error
-		  tmhUtilities::pr($tmhOAuth->response['response']);
+		 print tmhUtilities::pr($tmhOAuth->response['response']);
 		}
 
 	// Page PHP Backend Code End

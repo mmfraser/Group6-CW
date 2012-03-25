@@ -43,10 +43,10 @@
 		$groupHtml = "";
 		
 		foreach($allGroups as $arr) {
-			$groupHtml .= "<tr>" . PHP_EOL;
+			$groupHtml .= "<tr id=\"".$arr['groupId']."\">" . PHP_EOL;
 			$groupHtml .= "		<td>" . $arr['name'] . "</td>" . PHP_EOL;
 			$groupHtml .= "		<td>" . $arr['description'] . "</td>" . PHP_EOL;
-			$groupHtml .= '		<td class="options" style="width:20px;"><a href="modifyGroup.php?groupId='.$arr['groupId'].'" title="Modify Group"><span class="ui-icon ui-icon-pencil"></span></a></td>' . PHP_EOL;
+			$groupHtml .= '		<td class="options" style="width:20px;"><a href="modifyGroup.php?groupId='.$arr['groupId'].'" title="Modify Group"><span class="ui-icon ui-icon-pencil"></span></a><a title="Delete Group" id="deleteGroup"><span class="ui-icon ui-icon-trash"></span></a></td>' . PHP_EOL;
 			$groupHtml .= "</tr>". PHP_EOL;
 		}
 	
@@ -75,6 +75,11 @@
 					$( "#dialog-confirm-delete" ).dialog( "open" );
 				});
 				
+				$("a#deleteGroup").button().click(function() {
+					groupId = $(this).parent().parent().attr("id")
+					$( "#dialog-confirm-delete-group" ).dialog( "open" );
+				});
+				
 				$('#userlist').dataTable({
 					"bJQueryUI": true,
 					"sPaginationType": "full_numbers"
@@ -94,6 +99,22 @@
 					buttons: {
 						"Delete user": function() {
 							$.post( "ajaxFunctions.php?do=deleteUser", { userId: userId});
+							location.reload();
+						},
+						Cancel: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+				
+				$( "#dialog-confirm-delete-group" ).dialog({
+					autoOpen: false,
+					resizable: false,
+					height:170,
+					modal: true,
+					buttons: {
+						"Delete Group": function() {
+							$.post( "ajaxFunctions.php?do=deleteGroup", { groupId: groupId});
 							location.reload();
 						},
 						Cancel: function() {
@@ -292,6 +313,10 @@
 		
 		<div id="dialog-confirm-delete" title="Delete user?">
 			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This user, as well as all things tied to this user (group membership, etc.) will be deleted.  Are you sure?</p>
+		</div>
+		
+		<div id="dialog-confirm-delete-group" title="Delete User Group?">
+			<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This user group will be deleted.  Are you sure?</p>
 		</div>
 	</div>
 <?php	

@@ -59,6 +59,10 @@
 			$usr = new User();
 			$usr->populateId($_POST['userId']);
 			$usr->delete(true);
+		} else if($do == "deleteGroup") {
+			$grp = new Group();
+			$grp->populateId($_POST['groupId']);
+			$grp->delete(true);
 		}  else if($do == "addArtist") {
 			$artist = new Artist();
 			$artist->forename = $_POST['forename'];
