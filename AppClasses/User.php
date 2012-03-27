@@ -113,6 +113,8 @@ class User {
 		
 		if($this->active == null)
 			$this->active = 0;
+		else 
+			$this->active = 1;
 
 		if ($this->isLoaded === true) {
 			if($this->oldPassword == $this->password) {

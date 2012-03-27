@@ -10,10 +10,10 @@
 	class DB {
 		private $conn;
 		private static $obj;
-		public $DB_NAME = 'sales_test1';
+		public $DB_NAME = 'sales';
 		public $DB_HOST = 'localhost';
-		public $DB_PASS = 'test';
-		public $DB_USER = 'test'; 
+		public $DB_PASS = '';
+		public $DB_USER = 'root'; 
 		
 		/*public $DB_NAME = 'marcfras_sales';
 		public $DB_HOST = 'localhost';

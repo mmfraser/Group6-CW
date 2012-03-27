@@ -138,7 +138,7 @@
 			die("Tab successfully deleted.");
 		} else if($do == "addCustomer") {
 			// Check email address
-			if(App::validateEmail($_POST['emailAddress'])) 
+			if(!App::validateEmail($_POST['emailAddress'])) 
 				die('Invalid email address.');
 				
 			if($_POST['emailAddress'] == null || $_POST['forename'] == null || $_POST['surname'] == null || $_POST['telephoneNumber'] == null) 
