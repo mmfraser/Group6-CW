@@ -2,6 +2,7 @@
 	
 	$last_sun = date("Y-m-d", strtotime("last Sunday"));
 	$second_last_sun = date("Y-m-d", strtotime("last Sunday-1 week")); 
+	$date2 = date();
 	$top10output = '' . PHP_EOL;
 	$top10output .= '<div id="sidebar">' . PHP_EOL;;
 	$top10output .= '	<div class="top-10-content">' . PHP_EOL;;
