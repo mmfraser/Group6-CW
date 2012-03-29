@@ -1,8 +1,8 @@
 <?php
 
 		// Page PHP Backend Code Begin
+		include("../App.php");
 		include("page.php");
-		include("AppClasses/db_conn.php");
 		$page = new Page();
 		$page->title = "Quicksilver Music | Contact Us";
 		$page->getHeader();
