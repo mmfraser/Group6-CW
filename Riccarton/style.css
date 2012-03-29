@@ -1,0 +1,179 @@
+.bg
+{
+	position : fixed ;
+	top: 0 ;
+	left: 0 ;
+	width: 100% ;
+	height: 100% ;
+}
+
+.content
+{
+	position : relative ;
+	z-index : 1 ;
+}
+.mainheader
+{
+	border : 1px solid black ;
+	border-radius : 10px ;
+	margin-bottom : 10px ;
+	background-color : white ;
+	opacity : 0.9 ;
+}
+
+.maintitle
+{
+	display : inline-block ;
+	vertical-align : top ;
+	text-align : center ;
+}
+
+.maintitle
+{
+	display : inline-block ;
+	vertical-align : top ;
+	margin : 10px ;
+}
+
+.mainnav
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 15% ;
+	border : 1px solid black ;
+	border-radius : 10px 10px 10px 10px ;
+	background-color : white ;
+	opacity : 0.9 ;
+}
+
+.navul
+{
+	list-style-type : none ;
+}
+
+.navli
+{
+	border : 1px solid black ;
+	border-radius : 0px 10px 10px 0px ;
+}
+
+.navlitag
+{
+	margin : 2px ;
+	float : right ;
+}
+
+
+.mainsection
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 84% ;
+}
+
+
+.projectssection
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 84% ;
+	background-color : white ;
+	border : 1px solid black ;
+	border-radius : 10px 10px 10px 10px ;
+}
+
+.mainfooter
+{
+	border : 1px solid black ;
+	border-radius : 10px ;
+	margin-top : 10px ;
+	background-color : white ;
+	opacity : 0.9 ;
+}
+
+.indexdiv
+{
+	width : 99% ;
+	border : 1px solid black ;
+	margin-bottom : 5px ;
+	margin-left : 5px ;
+	background-color : white ;
+	opacity : 1.0 ;
+}
+
+.indexarticle
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 78% ;
+	margin : 5px ;
+	background-color : white ;
+}
+
+.indexaside
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 18% ;
+	border : 1px solid black ;
+	box-shadow: 6px 6px 6px black ;
+	margin : 7px ;
+	background-color : white ;
+}
+
+.staffsection
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 84% ;
+	border : 1px solid black ;
+	background-color : white ;
+}
+
+.stafful
+{
+	list-style-type : none ;
+}
+
+.staffdiv
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 68% ;
+	background-color : white ;
+}
+
+.staffaside
+{
+	display : inline-block ;
+	vertical-align : top ;
+	width : 30% ;
+	border : 1px solid black ;
+	box-shadow: 6px 6px 6px black ;
+	margin : 7px ;
+	background-color : white ;
+}
+
+.staffphoto
+{
+	display : block ;
+	margin-left : auto ;
+	margin-right : auto ;
+	width : 8em ;
+}
+
+.centertext
+{
+	text-align : center ;
+}
+
+.justifytext
+{
+	text-align : justify ;
+}
+
+.fittedimage
+{
+	width : 90% ;
+}
+²

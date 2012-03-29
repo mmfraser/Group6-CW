@@ -11,8 +11,12 @@
 	ob_start();
 	session_start();
 	require_once('AppClasses/DB.php');
-	require_once('AppClasses/Authenticate.php');
-	require_once('AppClasses/page.php');
+	$referer = explode("/", $_SERVER['HTTP_REFERER']);
+	if (in_array("IntUI", $referer)){
+		require_once('AppClasses/Authenticate.php');
+		require_once('AppClasses/page.php');
+	
+	}
 	
 	class App {
 		public static $auth = false; 	// Set to false if not authenticated

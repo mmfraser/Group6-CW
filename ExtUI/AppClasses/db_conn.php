@@ -1,8 +1,8 @@
 <?php
 
 function dbConnect($username, $password) {
-//	$dbConn = @mysql_pconnect ("localhost", $username, $password) ;
-	$dbConn = @mysql_pconnect ("localhost", "0", "00");
+	$dbConn = @mysql_pconnect ("localhost", $username, $password) ;
+//	$dbConn = @mysql_pconnect ("localhost", "root", "root");
 	if (!$dbConn )
 	{
 		echo $dbcon;

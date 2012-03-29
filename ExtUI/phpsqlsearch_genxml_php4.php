@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/xml");
-require("phpsqlsearch_dbinfo.php");
+//require("phpsqlsearch_dbinfo.php");
 
 function parseToXML($htmlStr) 
 { 
@@ -18,7 +18,7 @@ $center_lng = $_GET["lng"];
 $radius = $_GET["radius"];
 
 // Opens a connection to a MySQL server
-$connection=mysql_pconnect ("localhost", "0", "00");
+$connection=mysql_pconnect ("localhost", "root", "root");
 if (!$connection) {
   die('Not connected : ' . mysql_error());
 }

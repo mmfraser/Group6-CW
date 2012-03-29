@@ -14,7 +14,7 @@ $node = $dom->createElement("markers");
 $parnode = $dom->appendChild($node);
 
 // Opens a connection to a mySQL server
-$connection=mysql_connect ("localhost", "0", "00");
+$connection=mysql_connect ("localhost", "root", "root");
 if (!$connection) {
   die("Not connected : " . mysql_error());
 }

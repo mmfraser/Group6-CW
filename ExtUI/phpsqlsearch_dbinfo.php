@@ -1,5 +1,5 @@
 <?
 $username="root";
-$password="27293584";
+$password="root";
 $database="sales";
 ?>

@@ -8,6 +8,8 @@
 	*/
 require_once('../App.php');
 
+// artistId, forename, surname, websiteUrl, dob, nationality, bandName
+
 class Artist {
 	private $artistId;
   	public $forename;

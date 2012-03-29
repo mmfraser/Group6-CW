@@ -12,8 +12,8 @@
 		private static $obj;
 		public $DB_NAME = 'sales';
 		public $DB_HOST = 'localhost';
-		public $DB_PASS = '0';
-		public $DB_USER = '00'; 
+		public $DB_PASS = 'root';
+		public $DB_USER = 'root'; 
 		
 		public function __construct() {
 			$this->conn = mysql_connect($this->DB_HOST, $this->DB_USER, $this->DB_PASS) or die(mysql_error());
@@ -64,7 +64,7 @@
 				$result = mysql_query($sql) or die(mysql_error());
 				return mysql_fetch_array($result);
 			}catch (Exeception $e){
-				
+				throw $e;
 			}
 		}
 		
@@ -93,6 +93,19 @@
 			} catch (Exception $e) {
 				throw $e;
 			}
+		}
+		
+		public function beginTransaction() {
+			mysql_query("SET AUTOCOMMIT=0");
+			mysql_query("START TRANSACTION");
+		}
+		
+		public function commitTransaction() {
+			mysql_query("COMMIT");
+		}
+		
+		public function rollbackTransaction() {
+			mysql_query("ROLLBACK");
 		}
 		
 		public function getNumResults($sql) {
