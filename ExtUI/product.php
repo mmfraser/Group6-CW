@@ -1,6 +1,6 @@
 <?php
-	$productId = $_REQUEST['id'];
-	$q = $_REQUEST['q'];
+	$productId = @$_GET['id'];
+	$q = @$_GET['q'];
 	require_once("../App.php");
 	// Fetch the product and its artist details from the database.
 	
@@ -29,7 +29,7 @@
 		$productHtml .= '		<td>' . PHP_EOL;
 		$productHtml .= '			<h3>'.$product['name'].'</h3>' . PHP_EOL;
 		$productHtml .= '			<div><span class="productLabel">Artist:</span> <a href="artist.php?id='.$product['artistId'].'">'.$product['bandName'].'</a></div>' . PHP_EOL;
-		$productHtml .= '			<div><span class="productLabel">Price:</span> '.money_format("%n", $product['price']).'</div>' . PHP_EOL;
+		$productHtml .= '			<div><span class="productLabel">Price:</span> &pound;'.$product['price'].'</div>' . PHP_EOL;
 		$productHtml .= '			<div><span class="productLabel">Quicksilver Item Number:</span> '.$productId.'</div>' . PHP_EOL;
 		$productHtml .= '		</td>' . PHP_EOL;
 		$productHtml .= '	</tr>' . PHP_EOL;

@@ -10,11 +10,9 @@
 		$errorMsg = null;
 		$infoMsg = null;
 		
-		setlocale(LC_MONETARY, 'en_GB');
-		
-		$id = $_REQUEST['id']; // If an artist Id has been specified. 
-		$az = $_REQUEST['az']; // If the user is searching by letter.
-		$q = $_REQUEST['q']; // If the user has used the search facility.
+		$id = @$_GET['id']; // If an artist Id has been specified. 
+		$az = @$_GET['az']; // If the user is searching by letter.
+		$q = @$_GET['q']; // If the user has used the search facility.
 		
 		// Initilise the output strings.
 		$out = '';
@@ -66,7 +64,7 @@
 				} else {
 					$imgSrc = "../Images/Artists/placeholder.gif";
 				}
-				$albumHtml .= '<tr class="productRow"><td class="productRowImg" style="width:100px;"><a href="product.php?id='.$productId.'"><img src="'.$imgSrc.'" style="max-width:100px; max-height:100px;" alt="" /></a></td><td><a href="product.php?id='.$productId.'">'.$productName.'</a><div>Available in store now for '.money_format("%n", $price).'</div></td></tr>';
+				$albumHtml .= '<tr class="productRow"><td class="productRowImg" style="width:100px;"><a href="product.php?id='.$productId.'"><img src="'.$imgSrc.'" style="max-width:100px; max-height:100px;" alt="" /></a></td><td><a href="product.php?id='.$productId.'">'.$productName.'</a><div>Available in store now for &pound;'.$price.'</div></td></tr>';
 			}
 			
 			$albumHtml .= '</table>' . PHP_EOL;

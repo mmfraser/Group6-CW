@@ -1,5 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `sales` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `sales`;
+
 -- MySQL dump 10.13  Distrib 5.1.34, for apple-darwin9.5.0 (i386)
 --
 -- Host: 127.0.0.1    Database: sales

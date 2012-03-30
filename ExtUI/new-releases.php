@@ -18,7 +18,7 @@
 		$newReleases .= '          <div class="albumBox">' . PHP_EOL;
 		$newReleases .= '              <a href="product.php?id='.$arr['productId'].'"><div class="albumTitle">'.$arr['name'].'</div></a>' . PHP_EOL;
 		$newReleases .= '              <a href="artist.php?id='.$arr['artistId'].'"><div class="artistName">'.$arr['bandName'].'</a></div>' . PHP_EOL;
-		$newReleases .= '              <div class="albumBoxPrice">'.money_format("%n", $arr['price']).'</div>' . PHP_EOL;
+		$newReleases .= '              <div class="albumBoxPrice">&pound;'.$arr['price'].'</div>' . PHP_EOL;
 		$newReleases .= '          </div>' . PHP_EOL;
 		$newReleases .= '		</td>' . PHP_EOL;
 	}

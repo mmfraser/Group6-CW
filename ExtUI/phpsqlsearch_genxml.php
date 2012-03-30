@@ -1,5 +1,6 @@
 <?php  
 error_reporting(E_ALL);
+require_once('../App.php');
 
 //require("phpsqlsearch_dbinfo.php");
 
@@ -12,18 +13,6 @@ $radius = $_GET["radius"];
 $dom = new DOMDocument("1.0");
 $node = $dom->createElement("markers");
 $parnode = $dom->appendChild($node);
-
-// Opens a connection to a mySQL server
-$connection=mysql_connect ("localhost", "root", "root");
-if (!$connection) {
-  die("Not connected : " . mysql_error());
-}
-
-// Set the active mySQL database
-$db_selected = mysql_select_db("sales", $connection);
-if (!$db_selected) {
-  die ("Can\'t use db : " . mysql_error());
-}
 
 // Search the rows in the markers table
 $query2 = sprintf("SELECT address, name, lat, lng, ( 3959 * acos( cos( radians('%s') ) * cos( radians( lat ) ) * cos( radians( lng ) - radians('%s') ) + sin( radians('%s') ) * sin( radians( lat ) ) ) ) AS distance FROM markers HAVING distance < '%s' ORDER BY distance LIMIT 0 , 20",
@@ -44,16 +33,16 @@ $query2 = sprintf("SELECT address, name, lat, lng, ( 3959 * acos( cos( radians('
   mysql_real_escape_string($fri),
   mysql_real_escape_string($sat),
   mysql_real_escape_string($sun));
-$result = mysql_query($query);
+$result = App::getDB()->getArrayFromDB($query);
 
-if (!$result) {
+/*if (!$result) {
   die("Invalid query: " . mysql_error());
-}
+}*/
 
 header("Content-type: text/xml");
 
 // Iterate through the rows, adding XML nodes for each
-while ($row = @mysql_fetch_assoc($result)){
+foreach ($result as $row){
   $node = $dom->createElement("marker");
   $newnode = $parnode->appendChild($node);
   $newnode->setAttribute("name", $row['name']);

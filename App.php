@@ -11,11 +11,11 @@
 	ob_start();
 	session_start();
 	require_once('AppClasses/DB.php');
-	$referer = explode("/", $_SERVER['HTTP_REFERER']);
-	if (in_array("IntUI", $referer)){
-		require_once('AppClasses/Authenticate.php');
-		require_once('AppClasses/page.php');
+	require_once('AppClasses/Authenticate.php');
 	
+	$referer = explode("/", $_SERVER['REQUEST_URI']);
+	if (in_array("IntUI", $referer)){
+		require_once('AppClasses/page.php');
 	}
 	
 	class App {

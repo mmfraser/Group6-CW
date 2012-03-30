@@ -92,13 +92,16 @@
 				$filters[] = "(customerEmail = '" . $customer . "')";
 			if($storeId != null) 
 				$filters[] = "(storeId = '" . $storeId . "')";
-			if($artistId != null) {
-				$filters[] = "(artistId = '" . $artistId . "')";
+			if($artistId != null || $genreId != null) {
+				if($artistId != null)
+					$filters[] = "(artistId = '" . $artistId . "')";
+				if($genreId != null)
+					$filters[] = "(genreId = '" . $genreId . "')";
 				$joins[] = "LEFT JOIN product ON itemId = productId";
 			}
-			if($genreId != null) 
+			/*if($genreId != null) 
 				$filters[] = "(genreId = '" . $genreId . "')";
-
+*/
 			$query = "SELECT saleId FROM salesdata ";
 			$filterString = " WHERE ";
 			for($i = 0; $i < count($filters); $i++) {

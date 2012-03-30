@@ -15,9 +15,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `sales_test`
---
 
 -- --------------------------------------------------------
 
@@ -611,6 +608,108 @@ INSERT INTO `usergroup` (`groupId`, `name`, `description`, `storeId`) VALUES
 
 -- --------------------------------------------------------
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `markers`
+--
+
+DROP TABLE IF EXISTS `markers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `markers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `address` varchar(80) NOT NULL,
+  `lat` float(10,6) NOT NULL,
+  `lng` float(10,6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1362 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `markers`
+--
+
+LOCK TABLES `markers` WRITE;
+/*!40000 ALTER TABLE `markers` DISABLE KEYS */;
+INSERT INTO `markers` VALUES (1,'Edinburgh Princes Street','100 Princes Street<br />Edinburgh<br />EH1 1AB',55.951241,-3.200839),(2,'Edinburgh Ocean Terminal','98/3 Ocean Terminal\nLeith<br />Edinburgh<br />EH6 6JJ',55.980061,-3.179668),(3,'Glasgow Argyle Street','Argyle Street<br />Glasgow<br />G2 8AD',55.858147,-4.256742),(4,'Glasgow Braehead','48 Braehead Shopping Centre<br />Kings Inch Road<br />Glasgow<br />G51 4BP',55.869061,-4.356034);
+/*!40000 ALTER TABLE `markers` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `storetimes`
+--
+
+DROP TABLE IF EXISTS `storetimes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `storetimes` (
+  `storeId` int(11) NOT NULL,
+  `mon` varchar(20) NOT NULL,
+  `tue` varchar(20) NOT NULL,
+  `wed` varchar(20) NOT NULL,
+  `thu` varchar(20) NOT NULL,
+  `fri` varchar(20) NOT NULL,
+  `sat` varchar(20) NOT NULL,
+  `sun` varchar(20) NOT NULL,
+  `pk` int(3) NOT NULL,
+  PRIMARY KEY (`pk`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `storetimes`
+--
+
+LOCK TABLES `storetimes` WRITE;
+/*!40000 ALTER TABLE `storetimes` DISABLE KEYS */;
+INSERT INTO `storetimes` VALUES (1,'08:00 - 17:00','08:00 - 17:00','08:00 - 17:00','08:00 - 19:00','08:00 - 17:00','09:00 - 18:00','10:00 - 14:00',1),(2,'08:00 - 17:00','08:00 - 17:00','08:00 - 17:00','08:00 - 19:00','08:00 - 17:00','09:00 - 18:00','10:00 - 14:00',2),(3,'08:00 - 17:00','08:00 - 17:00','08:00 - 17:00','08:00 - 19:00','08:00 - 17:00','09:00 - 18:00','10:00 - 14:00',3),(4,'08:00 - 17:00','08:00 - 17:00','08:00 - 17:00','08:00 - 19:00','08:00 - 17:00','09:00 - 18:00','10:00 - 14:00',4);
+/*!40000 ALTER TABLE `storetimes` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2012-03-29 10:57:42
+
+
+
 --
 -- Structure for view `sales_view_v2`
 --
@@ -618,9 +717,7 @@ DROP TABLE IF EXISTS `sales_view_v2`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sales_view_v2` AS select `sd`.`date` AS `SALE_DATE`,concat(month(`sd`.`date`),'-',year(`sd`.`date`)) AS `SALE_MONTHYEAR`,year(`sd`.`date`) AS `SALE_YEAR`,`sd`.`cashierName` AS `CASHIER_NAME`,`sd`.`storeId` AS `STORE_ID`,`sd`.`itemDiscount` AS `ITEM_DISCOUNT`,`sd`.`customerEmail` AS `CUSTOMER_EMAIL`,concat(`ar`.`forename`,' ',`ar`.`surname`) AS `ARTIST_NAME`,`ar`.`bandName` AS `BAND_NAME`,`ge`.`genreName` AS `GENRE`,`pr`.`name` AS `PRODUCT_NAME`,`pr`.`releaseDate` AS `PRODUCT_RELEASE_DATE`,`pr`.`price` AS `PRODUCT_PRICE`,`st`.`storeName` AS `STORE_NAME`,`st`.`city` AS `STORE_CITY` from ((((`salesdata` `sd` left join `store` `st` on((`sd`.`storeId` = `st`.`storeId`))) left join `product` `pr` on((`sd`.`itemId` = `pr`.`productId`))) left join `artist` `ar` on((`ar`.`artistId` = `pr`.`artistId`))) left join `genre` `ge` on((`ge`.`genreId` = `pr`.`genreId`))) order by `sd`.`date`;
 
---
--- Constraints for dumped tables
---
+
 
 --
 -- Constraints for table `chartpermission`
